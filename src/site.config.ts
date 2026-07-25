@@ -4,7 +4,7 @@
  */
 const SITE = {
   /** 博客标题，用于 <title> 后缀、导航栏、RSS 等 */
-  title: 'AI 生态笔记',
+  title: 'AI 生态学习',
 
   /** 博客描述，用于首页 meta、RSS 等 */
   description: '个人博客，记录 AI 生态学习与思考。',
