@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { SITE } from '../site.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
 
@@ -12,16 +13,16 @@ const latestPost = posts[0];
 const restPosts = posts.slice(1);
 ---
 
-<BaseLayout pageTitle="Learn AI Agent" description="个人博客，记录 AI Agent 学习与思考。">
+<BaseLayout pageTitle={SITE.title} description={SITE.description}>
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-badge">AI Agent</div>
+    <div class="hero-badge">{SITE.heroBadge}</div>
     <h1 class="hero-title">
-      探索 <span class="gradient-text">AI Agent</span><br />
-      的无限可能
+      <span>AI</span>
+      <span class="gradient-text">生态笔记</span>
     </h1>
     <p class="hero-subtitle">
-      从零开始，记录 AI Agent 学习过程中的每一个脚印。<br />
+      从零开始，记录 AI 生态学习过程中的每一个脚印。<br />
       持续精进，分享成长。
     </p>
     <div class="hero-actions">

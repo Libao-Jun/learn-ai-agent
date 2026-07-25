@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { SITE } from '../site.config';
 
 export async function GET(context) {
   const allPosts = await getCollection('blog');
@@ -13,8 +14,8 @@ export async function GET(context) {
   posts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
 
   return rss({
-    title: 'Learn AI Agent',
-    description: '个人博客，记录 AI Agent 学习与思考。',
+    title: SITE.title,
+    description: SITE.description,
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
@@ -24,8 +25,8 @@ export async function GET(context) {
       categories: post.data.tags || [],
     })),
     customData: [
-      '<language>zh-CN</language>',
-      '<copyright>Learn AI Agent</copyright>',
+      `<language>${SITE.language}</language>`,
+      `<copyright>${SITE.copyright}</copyright>`,
       '<generator>Astro</generator>',
       '<docs>https://www.rssboard.org/rss-specification</docs>',
     ].join('\n    '),
