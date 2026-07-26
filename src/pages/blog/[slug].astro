@@ -22,7 +22,7 @@ interface Heading {
 function extractHeadings(body: string): Heading[] {
   // Remove fenced code blocks before extracting headings
   const cleaned = body.replace(/```[\s\S]*?```/g, '');
-  const regex = /^(#{2,3})\s+(.+)$/gm;
+  const regex = /^(#{2,4})\s+(.+)$/gm;
   const headings: Heading[] = [];
   let match;
   while ((match = regex.exec(cleaned)) !== null) {

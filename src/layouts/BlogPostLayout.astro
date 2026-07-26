@@ -70,7 +70,7 @@ const showToc = headings.length >= 2;
           <span class="toc-label">目录</span>
           <ul class="toc-list">
             {headings.map((h) => (
-              <li class:list={['toc-item', { sub: h.depth === 3 }]}>
+              <li class:list={['toc-item', { sub: h.depth === 3, 'sub-sub': h.depth === 4 }]}>
                 <a href={`#${h.slug}`} class="toc-link">{h.text}</a>
               </li>
             ))}
@@ -91,7 +91,7 @@ const showToc = headings.length >= 2;
 
     const slugs = links.map((l) => l.getAttribute('href')!.replace('#', ''));
 
-    const postHeadings = document.querySelectorAll('.post-body h2, .post-body h3');
+    const postHeadings = document.querySelectorAll('.post-body h2, .post-body h3, .post-body h4');
     postHeadings.forEach((h) => {
       const raw = h.textContent?.replace(/[`*_~\[\]()]/g, '').trim() || '';
       const slug = raw
@@ -371,6 +371,11 @@ const showToc = headings.length >= 2;
   .toc-item.sub .toc-link {
     padding-left: 0.85rem;
     font-size: 0.77rem;
+  }
+
+  .toc-item.sub-sub .toc-link {
+    padding-left: 1.6rem;
+    font-size: 0.74rem;
   }
 
   /* ── Responsive ── */
