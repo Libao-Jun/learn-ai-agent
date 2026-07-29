@@ -47,6 +47,16 @@ tags: ["MCP", "A2A"]
   </div>
 </div>
 
+## 智能体通信协议
+- 1️⃣ MCP：智能体与工具的桥梁
+> MCP（Model Context Protocol）由 Anthropic 团队提出，其核心设计理念是**标准化智能体与外部工具/资源的通信方式**。
+
+- 2️⃣ A2A：智能体间的对话协议
+> A2A（Agent-to-Agent Protocol）协议由 Google 团队提出，其核心设计理念是**实现智能体之间的点对点通信**。
+
+- 3️⃣ ANP：智能体网络的基础设施
+> ANP（Agent Network Protocol）是一个概念性的协议框架，其核心设计理念是**构建大规模智能体网络的基础设施**。
+
 ## MCP 协议
 
 ### 为什么使用 MCP
