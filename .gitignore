@@ -21,6 +21,15 @@ node_modules/
 # 日志
 *.log
 
+# 临时文件
+*.tmp
+*.temp
+
+# 编辑器备份
+*.swp
+*~
+*.orig
+
 # Claude Code 会话数据
 .claude/scheduled_tasks.json
 
