@@ -243,36 +243,102 @@ Vibe Coding 改变了开发方式，但没有改变开发本质
 
 ### 产品形态
 
-> **CLI**：终端内快速迭代【读代码 • 改文件 • 跑测试】
+:::note[CLI]
+终端内快速迭代【读代码 • 改文件 • 跑测试】
+:::
 
-> **Cloud/Web**：长任务与并行任务【仓库任务 • PR • 后台运行】
+:::note[Cloud/Web]
+长任务与并行任务【仓库任务 • PR • 后台运行】
+:::
 
-> **Desktop APP**：本地多任务工作台【Agent • Skills • Automations- 自动化】
+:::note[IDE]
+贴近编辑器上下文【解释代码 • 局部修改 • Review】
+:::
 
-> **IDE**：贴近编辑器上下文【解释代码 • 局部修改 • Review】
+:::note[Desktop APP]
+本地多任务工作台【Agent • Skills • Automations 自动化】
+:::
 
-#### 产品对比
+### 产品对比
 
-| 产品               | 更适合             | 典型任务                                | 学习优先级     |
-| ------------------ | ------------------ | --------------------------------------- | -------------- |
+| 产品                   | 更适合             | 典型任务                                | 学习优先级     |
+| ---------------------- | ------------------ | --------------------------------------- | -------------- |
 | **CLI**                | 本地快速迭代       | 修 bug、补测试、跑命令、解释仓库        | 新手优先       |
-| **桌面 App**          | 本地多任务工作台   | 多 agent、Skills、Automations、插件协作 | 进阶优先       |
+| **桌面 App**           | 本地多任务工作台   | 多 agent、Skills、Automations、插件协作 | 进阶优先       |
 | **Cloud / Web**        | 较长任务和并行任务 | 仓库任务、PR、后台分析                  | 团队优先       |
 | **IDE**                | 编辑器上下文       | 局部修改、解释、代码审查                | 日常高频       |
 | **ChatGPT 中的 Codex** | 面向仓库的任务分派 | 连接 GitHub、理解仓库、协作推进         | 按账号能力选择 |
 
-:::tip[快速开始]
-这里可以正常使用 **Markdown**、链接、列表和行内代码。
-:::
+### 产品选择
 
-:::note[说明]
-内容
-:::
+- 任务需要频繁看命令输出：【选 CLI】。
+- 任务需要多个 agent 并行/Skills/Automations：【选择桌面 App】。
+- 任务时间较长、希望后台跑、可能生成 PR：【选 Cloud / Web】。
+- 你正在编辑具体文件：【选 IDE】。
+- 你想从对话里分派仓库级任务：【选 ChatGPT 中的 Codex】。
+
+### 产品与配置
+
+| 配置主题                 | 主要影响入口           | 学习页                 |
+| ------------------------ | ---------------------- | ---------------------- |
+| **AGENTS.md**            | CLI / 桌面 App / Cloud | `AGENTS.md`            |
+| **CLI 选项**             | CLI                    | `CLI 选项与命令`       |
+| **config.toml**          | CLI                    | `配置文件 config.toml` |
+| **Skills**               | App / CLI              | `技能与插件`           |
+| **Worktrees**            | 桌面 App               | `桌面 App`             |
+| **Environments**         | Cloud / App            | `Cloud / Web`          |
+| **Sandbox 与 Approvals** | 全部入口               | `沙盒与审批`           |
+
+### Codex 登录
+
+| 登录方式 | 怎么理解                                                  | 适合场景                           |
+| -------- | --------------------------------------------------------- | ---------------------------------- |
+| ChatGPT  | 使用 ChatGPT/OpenAI 登录，provider 只改请求入口或中转地址 | 想保留官方账号能力                 |
+| API Key  | 使用 API Key登录，按 provider 配置请求接口                | 用 OpenAI API Key / 第三方 API Key |
+
+### config.toml 配置
+
+- 手动配置
+  - `config.toml` 文件，填写 API Key。
+  - `auth.json` 文件，填写 API Key。
+- 自动配置: 第三方工具（CC Switch等）
+
+```sh [config.toml]
+model = "gpt-5-codex" #这里填你想要的模型
+model_reasoning_effort = "high"
+disable_response_storage = true
+preferred_auth_method = "apikey"
+
+[model_providers.ciyuan]
+name = "ciyuan" # 填你的模型提供商名字或者中转站名字，这里以词元为例
+base_url = "https://ciyuan.today/v1" # 填你的模型提供商的请求 URL
+wire_api = "responses" # 这里不要变
+env_key = "OPENAI_API_KEY" # 这里将会通过环境变量的方式注入并启动Codex APP
+requires_openai_auth = false
+```
 
 :::warning[注意]
-内容
+
+- `model_provider` 要和 `[model_providers.xxx]` 里的 xxx 完全一致。
+- `base_url` 通常写到 `/v1`，不要把 `/v1/responses` 整段写进去。
+- `wire_api = "responses"` 表示 Codex 以 `Responses API` 的请求形态访问。
+- `requires_openai_auth = true` 表示使用已有 OpenAI / ChatGPT 登录态。
+
 :::
 
-:::danger[危险]
-内容
-:::
+### 常见问题
+
+| 现象                     | 先检查什么                                                |
+| ------------------------ | --------------------------------------------------------- |
+| 切换后没有生效           | 是否完全重启 Codex，`model_provider` 名称是否一致           |
+| 报认证错误               | API Key 是否有效，环境变量是否被当前 shell 继承           |
+| 报接口路径错误           | `base_url` 是否只写到 `/v1`，不要重复拼上 `/responses`          |
+| 国产模型无法响应         | 上游是否支持 Responses API；不支持时需要 CCX 这类网关转换 |
+| 插件或 Skills 配置不见了 | 切换工具是否覆盖了通用配置，是否有备份或共享配置文件      |
+| 旧会话不可见             | 参考 切换 provider 后历史会话不可见怎么办                 |
+
+### 参考资料
+
+- [Codex 官方文档](https://codex.ai/docs)
+- [CCX- AI API 代理网关](https://benedictking.github.io/ccx/)
+- [CC Switch](https://ccswitch.io/zh/)
