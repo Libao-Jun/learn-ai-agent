@@ -52,8 +52,8 @@
   --font-mono: 'IBM Plex Mono', 'Fira Code', 'Cascadia Code', monospace;
 
   /* Layout */
-  --max-width: 1080px;
-  --max-width-wide: 1080px;
+  --max-width: 1200px;
+  --max-width-wide: 1200px;
   --nav-height: 64px;
 
   /* Radii */
