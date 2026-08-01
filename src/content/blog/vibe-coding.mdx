@@ -5,6 +5,8 @@ description: "用自然语言写代码 —— 你用中文或英文描述想要�
 tags: ["Vibe Coding"]
 ---
 
+import AgentsGuide from '../../components/AgentsGuide.astro';
+
 ## Vibe Coding
 
 ### 本节导读
@@ -325,6 +327,27 @@ requires_openai_auth = false
 - `requires_openai_auth = true` 表示使用已有 OpenAI / ChatGPT 登录态。
 
 :::
+
+### 权限设置
+- **默认权限**：在`沙箱`环境中运行，可以读写当前项目、执行基础命令，遇到危险操作会询问，日常开发（推荐）。
+- **自动审核**：也称“替我审批”，AI 自动判断风险，低风险直接执行	高风险才询问用户确认。
+- **完全访问权限**：允许 Codex 操作电脑上的`几乎所有`文件和资源，风险较高，仅在明确了解操作范围时启用。
+
+:::note[沙箱]
+此处的`沙箱`是指在 Codex 运行时，其工作的`项目目录`。
+:::
+
+### AGENTS.md
+
+:::tip[什么是 AGENTS.md]
+`AGENTS.md` 是 Codex 的自定义指令文件，允许你为 Codex 设置**全局指导**和**工作流规范**。
+Codex 在启动时会自动读取 `AGENTS.md` 文件，通过`「全局配置 + 项目级覆写」`的层级机制，
+让每次任务都能继承一致的工作约定，无论你打开的是哪个代码仓库。
+:::
+
+<AgentsGuide />
+
+### 工作流模式
 
 ### 常见问题
 
