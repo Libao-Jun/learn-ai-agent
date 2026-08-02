@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import remarkDirective from 'remark-directive';
 import remarkCallout from './src/plugins/remark-callout.mjs';
 
@@ -9,7 +10,9 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/learn-ai-agent/' : '/',
   integrations: [sitemap(), mdx()],
   markdown: {
-    remarkPlugins: [remarkDirective, remarkCallout],
+    processor: unified({
+      remarkPlugins: [remarkDirective, remarkCallout],
+    }),
     shikiConfig: {
       theme: 'github-dark',
     },
