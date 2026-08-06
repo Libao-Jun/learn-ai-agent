@@ -5,6 +5,48 @@ description: "Codex 是 OpenAI 推出的云端软件工程智能体（AI Agent�
 tags: ["Codex"]
 ---
 
+## 本节导读
+
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">🎯</div>
+        <div class="sg-item-label">学习目标</div>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">订阅方案</span>
+        <span class="sg-tag">任务六要素</span>
+        <span class="sg-tag">Skills/MCP</span>
+        <span class="sg-tag">全局规则</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">⏱️</div>
+        <div class="sg-item-label">预计阅读</div>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">10</span>
+        <span class="sg-time-unit">min</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">📦</div>
+        <div class="sg-item-label">你将收获</div>
+      </div>
+      <ul class="sg-list">
+        <li>对比三种 Codex 订阅方案，选择最适合自己的方式</li>
+        <li>掌握任务六要素与黄金法则，写出高质量任务描述</li>
+        <li>配置 Skills、MCP、定时任务等进阶能力</li>
+        <li>通过全局规则让 Codex 按你的协作风格工作</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
 ## Codex
 
 :::tip[Codex & ChatGPT]
