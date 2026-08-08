@@ -398,6 +398,17 @@ description: Expert documentation writer for this repository
 
 > 系统梳理 Anthropic 推出的 Agent Skill 规范及其对 AI 能力封装与分发的影响，帮助开发者理解其工程化价值。
 
+#### Agent Skill vs 传统 SKILL.md
+- **过去**：SKILL.md 是技巧
+- **现在**：Agent Skill 是分层架构的一部分
+
+#### Agent Skill 的工程化用法
+
+- **本地目录即能力源**：将 Skill 放入约定目录（如 `.skills/`），IDE 或 Agent 启动时自动发现。
+- **隐式优先**：Agent 根据描述自行判断是否加载 Skill。
+- **显式兜底**：在 Codex 或 IDE 中可手动指定某个 Skill。
+- **脚本即能力落点**：复杂、确定性的操作交由脚本完成，模型负责决策与编排。
+
 ### SpecKit
 
 > 系统化介绍 GitHub SpecKit 如何通过规范驱动软件开发流程，提升协作与自动化水平。
