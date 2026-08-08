@@ -1,0 +1,181 @@
+<section class="agents-guide" aria-label="AGENTS.md 使用指南">
+  <header class="agents-guide__header">
+    <h4>AGENTS.md 是什么？</h4>
+    <p>给 AI Agent 的项目说明书，让 Codex 更懂你的项目</p>
+  </header>
+  <div class="agents-guide__top">
+    <section class="agents-panel agents-panel--blue">
+      <h5>作用</h5>
+      <div class="agents-purpose">
+        <div class="agents-purpose__item">
+          <span class="agents-icon agents-icon--book" aria-hidden="true">▤</span>
+          <strong>README.md</strong>
+          <span>给人看</span>
+        </div>
+        <span class="agents-arrow" aria-hidden="true">→</span>
+        <div class="agents-purpose__item">
+          <span class="agents-icon agents-icon--bot" aria-hidden="true">▣</span>
+          <strong>AGENTS.md</strong>
+          <span>给 AI 看</span>
+        </div>
+      </div>
+    </section>
+    <section class="agents-panel agents-panel--green">
+      <h5>写什么</h5>
+      <div class="agents-topics">
+        <div><span aria-hidden="true">▱</span><b>技术栈</b></div>
+        <div><span aria-hidden="true">□</span><b>项目结构</b></div>
+        <div><span aria-hidden="true">&lt;/&gt;</span><b>编码规范</b></div>
+        <div><span aria-hidden="true">&gt;_</span><b>命令脚本</b></div>
+        <div><span aria-hidden="true">◇</span><b>约束规则</b></div>
+      </div>
+    </section>
+  </div>
+  <div class="agents-guide__flow">
+    <section class="agents-panel agents-panel--purple agents-discovery">
+      <h5>如何发现（优先级从高到低）</h5>
+      <ol>
+        <li><span>⌂</span><div><strong>全局：~/.codex/AGENTS.md</strong><small>个人全局默认规则</small></div></li>
+        <li><span>□</span><div><strong>项目根目录：AGENTS.md</strong><small>项目通用规则</small></div></li>
+        <li><span>□</span><div><strong>子目录：AGENTS.md</strong><small>目录级别规则</small></div></li>
+        <li><span>▧</span><div><strong>子目录：AGENTS.override.md</strong><small>覆盖同级 AGENTS.md，优先级最高</small></div></li>
+      </ol>
+    </section>
+    <span class="agents-flow-arrow agents-flow-arrow--purple" aria-hidden="true">→</span>
+    <section class="agents-panel agents-panel--blue agents-codex">
+      <h5>合并后提供给 Codex</h5>
+      <div class="agents-codex__window">
+        <span class="agents-codex__dots" aria-hidden="true">● ● ●</span>
+        <span class="agents-icon agents-icon--bot" aria-hidden="true">▣</span>
+        <strong>Codex</strong>
+        <i></i><i></i><i></i><i></i>
+      </div>
+    </section>
+    <span class="agents-flow-arrow agents-flow-arrow--green" aria-hidden="true">→</span>
+    <section class="agents-panel agents-panel--green agents-benefits">
+      <h5>带来的好处</h5>
+      <ul>
+        <li>减少重复沟通</li>
+        <li>规则自动生效</li>
+        <li>AI 输出更准确</li>
+        <li>团队规范统一</li>
+        <li>提高开发效率</li>
+      </ul>
+    </section>
+  </div>
+  <div class="agents-guide__bottom">
+    <section class="agents-panel agents-panel--blue agents-example">
+      <h5>示例结构</h5>
+      <div class="agents-tree">
+        <div><strong>~/.codex/</strong><span>▤ AGENTS.md</span></div>
+        <div><strong>project/</strong><span>▤ AGENTS.md</span></div>
+        <div><strong>project/src/</strong><span>▤ AGENTS.md</span></div>
+        <div><strong>project/src/api/</strong><span>▤ AGENTS.override.md</span></div>
+      </div>
+    </section>
+    <section class="agents-panel agents-panel--orange agents-verify">
+      <h5>快速验证</h5>
+      <div><span aria-hidden="true">&gt;_</span><code>codex --ask-for-approval never<br />"Summarize the current instructions."</code></div>
+    </section>
+  </div>
+</section>
+
+<style>
+  .agents-guide {
+    --ag-blue: #1674d1;
+    --ag-green: #22a447;
+    --ag-purple: #8051b6;
+    --ag-orange: #f28a17;
+    margin: 2rem 0 2.5rem;
+    color: var(--color-text);
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .agents-guide * { box-sizing: border-box; }
+  .agents-guide__header { margin-bottom: 1.8rem; text-align: center; }
+  .agents-guide__header h4 { margin: 0; font-size: 1.65rem; line-height: 1.25; }
+  .agents-guide__header p { margin: 0.35rem 0 0 !important; color: var(--color-text-muted); font-size: 1rem; }
+  .agents-guide__top,
+  .agents-guide__bottom { display: grid; grid-template-columns: 0.9fr 1.2fr; gap: 1rem; }
+  .agents-guide__flow { display: grid; grid-template-columns: 1.35fr auto 1fr auto 0.85fr; align-items: center; gap: 0.65rem; margin: 1.7rem 0; }
+  .agents-guide__bottom { grid-template-columns: minmax(0, 1fr) 16rem; }
+
+  .agents-panel { position: relative; min-width: 0; padding: 1.35rem 1rem 1rem; border: 1.5px solid; border-radius: 8px; background: var(--color-bg-alt); }
+  .agents-panel h5 { position: absolute; top: 0; left: 50%; min-width: 6.2rem; margin: 0; padding: 0.18rem 0.8rem; border-radius: 5px; color: #fff; font-size: 0.88rem; text-align: center; letter-spacing: 0; transform: translate(-50%, -50%); white-space: nowrap; }
+  .agents-panel--blue { border-color: color-mix(in srgb, var(--ag-blue) 70%, transparent); }
+  .agents-panel--blue h5 { background: var(--ag-blue); }
+  .agents-panel--green { border-color: color-mix(in srgb, var(--ag-green) 70%, transparent); }
+  .agents-panel--green h5 { background: var(--ag-green); }
+  .agents-panel--purple { border-color: color-mix(in srgb, var(--ag-purple) 50%, transparent); }
+  .agents-panel--purple h5 { background: var(--ag-purple); }
+  .agents-panel--orange { border-color: color-mix(in srgb, var(--ag-orange) 55%, transparent); }
+  .agents-panel--orange h5 { background: var(--ag-orange); }
+
+  .agents-purpose { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; text-align: center; }
+  .agents-purpose__item { display: flex; flex-direction: column; align-items: center; }
+  .agents-purpose__item strong { margin-top: 0.3rem; }
+  .agents-purpose__item span:last-child { color: var(--color-text-muted); }
+  .agents-arrow { color: var(--color-text-muted); font-size: 2rem; font-weight: 300; }
+  .agents-icon { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; color: var(--ag-blue); font: 700 2rem/1 monospace; }
+  .agents-icon--bot { border: 2px solid currentColor; border-radius: 8px; font-size: 1.3rem; }
+
+  .agents-topics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; text-align: center; }
+  .agents-topics div { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+  .agents-topics span { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; color: var(--ag-green); font: 700 1.55rem/1 monospace; }
+  .agents-topics b { font-weight: 500; white-space: nowrap; }
+
+  .agents-discovery { padding: 1rem 0.65rem 0.45rem; }
+  .agents-discovery ol { margin: 0 !important; padding: 0 !important; list-style: none; counter-reset: discovery; }
+  .agents-discovery li { display: grid; grid-template-columns: 1.8rem 2rem 1fr; align-items: center; min-height: 2.9rem; margin: 0 0 0.4rem !important; padding: 0.3rem 0.45rem; border: 1px solid color-mix(in srgb, var(--ag-purple) 20%, var(--color-border)); border-radius: 6px; background: var(--color-bg); counter-increment: discovery; }
+  .agents-discovery li::before { content: counter(discovery); display: grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-left: -2.25rem; border-radius: 50%; background: var(--ag-purple); color: #fff; font-size: 0.7rem; }
+  .agents-discovery li > span { color: var(--ag-blue); font: 700 1.25rem/1 monospace; }
+  .agents-discovery li div { display: flex; flex-direction: column; min-width: 0; }
+  .agents-discovery small { color: var(--color-text-muted); }
+  .agents-discovery strong { overflow-wrap: anywhere; }
+
+  .agents-flow-arrow { font-size: 2.4rem; font-weight: 800; line-height: 1; }
+  .agents-flow-arrow--purple { color: var(--ag-purple); }
+  .agents-flow-arrow--green { color: var(--ag-green); }
+  .agents-codex { padding: 0.65rem; }
+  .agents-codex__window { display: flex; flex-direction: column; align-items: center; min-height: 10.2rem; padding: 0.45rem 0.7rem 0.7rem; border: 1px solid var(--color-border-strong); border-radius: 6px; background: var(--color-bg); }
+  .agents-codex__dots { align-self: flex-start; color: #ef675b; font-size: 0.65rem; letter-spacing: 0.1rem; }
+  .agents-codex__window .agents-icon { margin-top: 0.3rem; }
+  .agents-codex__window i { width: 78%; height: 3px; margin-top: 0.55rem; border-radius: 3px; background: var(--color-border-strong); }
+  .agents-codex__window i:nth-last-child(2) { width: 56%; }
+  .agents-codex__window i:last-child { width: 86%; }
+
+  .agents-benefits { padding-left: 1rem; }
+  .agents-benefits ul { margin: 0 !important; padding: 0 !important; list-style: none; }
+  .agents-benefits li { position: relative; margin: 0.4rem 0 !important; padding-left: 1.35rem; }
+  .agents-benefits li::before { content: '✓'; position: absolute; left: 0; display: grid; place-items: center; width: 1rem; height: 1rem; border: 1.5px solid var(--ag-green); border-radius: 50%; color: var(--ag-green); font-size: 0.65rem; font-weight: 800; }
+
+  .agents-example { padding: 1rem 0.8rem 0.65rem; }
+  .agents-tree { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px dashed var(--ag-blue); }
+  .agents-tree div { position: relative; display: flex; flex-direction: column; gap: 0.45rem; padding: 0.75rem 0.55rem 0; border-right: 1px dashed var(--color-border-strong); text-align: center; }
+  .agents-tree div:last-child { border-right: 0; }
+  .agents-tree div::before { content: ''; position: absolute; top: 0; left: 50%; height: 0.55rem; border-left: 1.5px dashed var(--ag-blue); }
+  .agents-tree span { font-size: 0.75rem; overflow-wrap: anywhere; }
+  .agents-verify { display: flex; align-items: center; padding: 1.15rem 0.75rem 0.65rem; }
+  .agents-verify > div { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.65rem; min-width: 0; }
+  .agents-verify span { font: 700 1.4rem/1 monospace; }
+  .agents-verify code { padding: 0; background: transparent; color: var(--color-text); font-size: 0.69rem; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
+
+  @media (max-width: 900px) {
+    .agents-guide__flow { grid-template-columns: 1fr; gap: 1.6rem; }
+    .agents-flow-arrow { display: none; }
+    .agents-benefits ul { columns: 2; }
+  }
+
+  @media (max-width: 640px) {
+    .agents-guide__header h4 { font-size: 1.35rem; }
+    .agents-guide__header p { font-size: 0.88rem; }
+    .agents-guide__top,
+    .agents-guide__bottom { grid-template-columns: 1fr; gap: 1.6rem; }
+    .agents-topics { grid-template-columns: repeat(3, 1fr); row-gap: 0.9rem; }
+    .agents-tree { grid-template-columns: 1fr 1fr; border-top: 0; }
+    .agents-tree div { border-top: 1.5px dashed var(--ag-blue); }
+    .agents-tree div:nth-child(2) { border-right: 0; }
+    .agents-benefits ul { columns: 1; }
+  }
+</style>

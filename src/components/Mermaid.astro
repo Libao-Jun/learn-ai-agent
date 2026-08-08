@@ -1,0 +1,75 @@
+---
+// Client-side Mermaid diagram renderer
+// Finds mermaid code blocks and renders them as SVG diagrams
+---
+
+<script>
+  import mermaid from "mermaid";
+
+  async function renderMermaid() {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.documentElement.dataset.theme === "light" ? "default" : "dark",
+      securityLevel: "loose",
+      fontFamily: "inherit",
+    });
+
+    // Astro/Shiki versions may expose the language as either an attribute or a class.
+    const mermaidPres = new Set([
+      ...document.querySelectorAll('pre[data-language="mermaid"]'),
+      ...document.querySelectorAll("pre.language-mermaid"),
+      ...document.querySelectorAll('pre > code.language-mermaid, pre > code[data-language="mermaid"]'),
+    ].map((node) => node.tagName === "PRE" ? node : node.parentElement));
+    if (mermaidPres.size === 0) return;
+
+    for (const pre of mermaidPres) {
+      if (!pre) continue;
+      const code = pre.querySelector("code");
+      if (pre.dataset.mermaidRendered === "true") continue;
+      const source = (code?.textContent || pre.textContent || "").trim();
+      if (!source) continue;
+
+      const id = "mermaid-" + Math.random().toString(36).slice(2, 8);
+
+      try {
+        const { svg } = await mermaid.render(id, source);
+        const wrapper = document.createElement("div");
+        wrapper.className = "mermaid-diagram";
+        wrapper.innerHTML = svg;
+        pre.dataset.mermaidRendered = "true";
+        pre.replaceWith(wrapper);
+      } catch (e) {
+        console.error("Mermaid render error:", e);
+      }
+    }
+  }
+
+  // Run on load
+  renderMermaid();
+
+  // Re-run when Astro view transitions swap content
+  document.addEventListener("astro:page-load", () => {
+    renderMermaid();
+  });
+</script>
+
+<style is:global>
+  .mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .mermaid-diagram svg {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* Dark mode title colors fix */
+  [data-theme="dark"] .mermaid-diagram svg text,
+  [data-theme="dark"] .mermaid-diagram svg .label {
+    fill: #e0e0e0 !important;
+  }
+</style>
