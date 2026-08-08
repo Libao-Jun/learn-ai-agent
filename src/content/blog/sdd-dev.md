@@ -615,6 +615,24 @@ OpenSpec 提供一系列命令，覆盖规范管理的全流程。常见命令�
 
 > 规范驱动开发（SDD）理念到实践的演进路径，结合 Martin Fowler 分析与 AI 原生工程视角，阐述从 PromptOps 到 AgentOps 的规范中枢机制。
 
+#### SDD 的核心理念
+
+```txt
+规范Specify 
+   ↓
+规划Plan
+   ↓
+任务分解 Task Decomposition     
+   ↓
+实现与验证 Implement & Verify   
+   ↓
+部署与交付 Deploy & Deliver     
+   ↓                          
+反馈与迭代 Feedback & Iterate
+   ↓   
+规范Specify
+```
+
 ### 一次性应用
 
 > AI 时代的短生命周期软件单元，规范驱动自动生成与验证，任务完成后即销毁。
