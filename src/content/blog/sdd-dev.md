@@ -160,7 +160,7 @@ SDD 理念已在多个开源项目和工具中得到实践，下文介绍几种�
 Rules（规则文件）是一种用于定义 AI 编程助手（AI Coding Assistant）行为准则和开发规范的文档。
 通过在项目中引入 Rules 文件，开发团队能够让 AI 工具准确理解项目的特定要求、技术标准和协作流程，从而提升代码质量与协作效率。
 
-#### Rules作用
+#### Rules 作用
 
 通过合理编写和维护 Rules 文件，可以高效规范 AI 编程助手的行为，提升**团队协作与项目质量**。
 
@@ -617,20 +617,40 @@ OpenSpec 提供一系列命令，覆盖规范管理的全流程。常见命令�
 
 #### SDD 的核心理念
 
-```txt
-规范Specify 
-   ↓
-规划Plan
-   ↓
-任务分解 Task Decomposition     
-   ↓
-实现与验证 Implement & Verify   
-   ↓
-部署与交付 Deploy & Deliver     
-   ↓                          
-反馈与迭代 Feedback & Iterate
-   ↓   
-规范Specify
+```mermaid
+flowchart TB
+    S["规范 Specify"]
+    P["规划 Plan"]
+    T["任务分解 Decompose"]
+    I["实现与验证 Implement &<br/>Verify"]
+    D["部署与交付 Deploy"]
+    F["反馈与迭代 Refine"]
+
+    S --> P --> T --> I --> D --> F
+    F --> S
+
+    style S fill:#64b5f6,stroke:#1565c0,stroke-width:2px,color:#fff
+    style P fill:#ede7f6,stroke:#7e57c2,stroke-width:2px
+    style T fill:#ede7f6,stroke:#7e57c2,stroke-width:2px
+    style I fill:#66bb6a,stroke:#087f23,stroke-width:2px,color:#fff
+    style D fill:#ede7f6,stroke:#7e57c2,stroke-width:2px
+    style F fill:#ede7f6,stroke:#7e57c2,stroke-width:2px
+```
+
+#### SDD 的工程闭环与 AI 融合
+
+```mermaid
+sequenceDiagram
+    participant H as 人类开发者
+    participant AI as AI / Agent
+    participant TC as 系统与工具链
+
+    H->>AI: 编写与审阅规范
+    AI->>AI: 解析与规划
+    AI->>TC: 生成架构与代码
+    TC-->>AI: 测试与验证反馈
+    AI-->>H: 汇报结果与修订建议
+    H->>AI: 更新规范
 ```
 
 ### 一次性应用
