@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE } from '../site.config';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import Mermaid from '../components/Mermaid.astro';
 
 export interface Props {
   pageTitle: string;
@@ -72,6 +73,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="footer-copy">&copy; {new Date().getFullYear()} &mdash; Built with <a href="https://astro.build">Astro</a></p>
     </div>
   </footer>
+  <Mermaid />
 </body>
 </html>
 
