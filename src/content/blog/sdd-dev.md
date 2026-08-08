@@ -261,9 +261,138 @@ Rules 文件可根据适用范围分为不同类型（如：项目级、功能�
 - 定期评估规则执行效果，及时调整。
 - 随项目发展动态调整规则内容。
 
-### AGENTS.md
+### AGENTS.md 规范
 
 > 介绍 AGENTS.md 规范的核心要素、编写方法及其在智能体开发中的作用。
+
+#### 介绍
+AGENTS.md 是用于智能体定义“角色、能力、工具、边界、工作流”的**工程化规范文档**。
+它不是提示词，而是**可执行的操作手册**，确保智能体行为可控、可复现、可测试。
+
+#### 身份定义（Identity）
+用于明确智能体的身份信息，包括名称、角色、专长、技术栈和服务对象。
+- 名称（Name）
+- 角色（Role）
+- 专长（Specialty）
+- 技术栈（Technology Stack）
+- 服务对象（Service Objects）
+
+:::tip[示例]
+你是一个 React 18 + TypeScript + Vite 项目的测试工程师，负责产出高覆盖率的 Jest 与 Playwright 测试。
+:::
+
+#### 项目知识（Project Knowledge）
+
+1️⃣ 文件结构（File Structure）
+
+```sh
+src/ – 读取源代码
+tests/ – 写入测试
+docs/ – 写入文档
+scripts/ – 项目辅助脚本
+config/ – 禁止修改的配置文件
+```
+
+2️⃣ 框架与版本（Framework & Versions）
+
+```md
+React 18
+TypeScript 5.x
+Vite 5
+Tailwind CSS 3.x
+Jest + Playwright
+```
+
+#### 六大工程要素
+- Commands（可执行命令）
+- Testing（测试能力）
+- Project Structure（项目结构）
+- Code Style（代码示例）
+- Git Workflow（版本与提交规范）
+- Boundaries（操作边界）
+
+#### 可执行命令
+智能体依赖可执行命令完成任务，是最重要的工程化规范。
+
+```sh
+npm test --silent
+pytest -v
+npm run build
+npx markdownlint docs/
+npm run dev
+```
+#### 职责范围（Responsibilities）
+智能体必须清楚自身职责边界，确保输出内容规范且高效。
+- 阅读与分析代码
+- 生成文档或测试
+- 根据命令校验生成内容
+- 提供优化建议
+- 遵循统一风格规范
+- 保持输出一致性、结构化
+
+#### 三层边界模型（Boundaries）
+智能体操作需遵循三层边界模型，确保安全与规范。
+
+1️⃣ 必须执行（Always do）
+- 写入 `docs/` 或 `tests/`
+- 使用命令验证输出
+- 严格按照代码示例格式化
+
+2️⃣ 需先询问（Ask first）
+- 增加新依赖
+- 修改项目配置
+- 重写已有文档的大段内容
+
+3️⃣ 禁止操作（Never do）
+- 修改 `src/`（如果 agent 非开发 agent）
+- 删除 failing tests
+- 修改 `config/` 与 CI/CD
+- 提交 secrets
+
+#### 错误处理（Error Handling）
+智能体遇到异常情况时需采取安全措施，避免误操作。
+
+- 遇到不确定情况返回最小安全行动
+- 不强行猜测未知依赖或 API
+- 错误输出必须包含解释与替代方案
+- 路径不存在时必须中止并提示用户检查
+
+#### 质量检查清单（Quality Checklist）
+本节列出 AGENTS.md 规范的检查要点，确保文档工程化标准。
+
+- 是否定义了专精 persona？
+- 是否提供明确可执行命令？
+- 是否包含真实代码示例？
+- 是否标注边界与禁区？
+- 是否声明项目结构？
+- 是否覆盖六大工程要素？
+
+满足以上所有条件的 AGENTS.md 才能作为生产级规范使用。
+
+#### 智能体定义完整示例
+```md
+name: docs_agent
+description: Expert documentation writer for this repository
+
+# Persona
+- 精通 Markdown
+- 理解 TypeScript
+- 从 src/ 读取代码生成 docs/ 文档
+
+# Commands
+- npm run docs:build
+- npx markdownlint docs/
+
+# File Structure
+- 读取：src/
+- 写入：docs/
+- 禁止：config/
+
+# Boundaries
+- Always：写入 docs/，运行 lint
+- Ask first：结构性重写
+- Never：修改 src/
+```
 
 ### Agent Skill
 
