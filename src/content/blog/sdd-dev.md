@@ -99,13 +99,13 @@ SDD 对 AI 基础设施（AI Infra, Artificial Intelligence Infrastructure）提
 #### 代表性工具与项目
 
 SDD 理念已在多个开源项目和工具中得到实践，下文介绍几种典型代表及其核心思想
-- Kiro
-> Kiro 是轻量级 VS Code 插件，遵循 Requirements → Design → Tasks 流程。其特点是直观但繁琐，适合一次性任务。
-- Spec-kit
-> Spec-kit 是 GitHub 出品的 CLI 套件。其核心概念为 Constitution（宪章）——定义架构原则。流程为 Constitution → Specify → Plan → Tasks。该工具仍偏向 spec-first，但为团队协作提供模板化结构。
-- Qoder
-> Qoder 是一个专为 SDD 场景设计的 AI 编程助手，强调“规范即代码”的理念。它支持以结构化 Markdown 编写规范，自动生成项目结构、代码和测试用例，并通过多轮对话协助开发者完善和演进规范。Qoder 集成了 LLM、代码生成、测试与部署等能力，适合团队协作和复杂工程场景，致力于让 AI 成为规范驱动开发流程中的主动参与者和执行者。
 
+- Kiro
+  > Kiro 是轻量级 VS Code 插件，遵循 Requirements → Design → Tasks 流程。其特点是直观但繁琐，适合一次性任务。
+- Spec-kit
+  > Spec-kit 是 GitHub 出品的 CLI 套件。其核心概念为 Constitution（宪章）——定义架构原则。流程为 Constitution → Specify → Plan → Tasks。该工具仍偏向 spec-first，但为团队协作提供模板化结构。
+- Qoder
+  > Qoder 是一个专为 SDD 场景设计的 AI 编程助手，强调“规范即代码”的理念。它支持以结构化 Markdown 编写规范，自动生成项目结构、代码和测试用例，并通过多轮对话协助开发者完善和演进规范。Qoder 集成了 LLM、代码生成、测试与部署等能力，适合团队协作和复杂工程场景，致力于让 AI 成为规范驱动开发流程中的主动参与者和执行者。
 
 #### SDD 在 Agent 规划与治理
 
@@ -119,13 +119,17 @@ SDD 理念已在多个开源项目和工具中得到实践，下文介绍几种�
 > 介绍如何通过自定义 Prompts 来辅助软件开发，提高开发效率和代码质量。
 
 #### 介绍
+
 通过自定义 Prompts，可以高效引导 AI 辅助开发，提升代码质量与团队协作效率。
 
 #### 在开发中的作用
+
 自定义 Prompts（提示词）是规范驱动开发的重要组成部分。通过精心设计的提示词，可以有效指导 AI 编程助手（AI Coding Assistant）参与软件开发过程。
 
 #### 设计原则
+
 :::tip[明确性]
+
 - 使用清晰、具体的指令，避免歧义。
 - 避免模糊的表述，确保 AI 能准确理解需求。
 - 提供足够的上下文信息，便于 AI 做出合理判断。
@@ -133,12 +137,14 @@ SDD 理念已在多个开源项目和工具中得到实践，下文介绍几种�
 :::
 :::warning[结构化]
 结构化设计有助于提升 Prompt 的可读性和可维护性
+
 - 分层组织 Prompt 内容，逻辑清晰。
 - 使用标准化的格式，便于团队协作。
 - 包含必要的元数据，方便追踪和管理。
 
 :::
 :::note[可复用性]
+
 - 创建可复用的 Prompt 模板，减少重复劳动。
 - 支持参数化配置，适应不同场景。
 - 建立 Prompt 库，便于团队共享和积累。
@@ -150,13 +156,16 @@ SDD 理念已在多个开源项目和工具中得到实践，下文介绍几种�
 > 介绍如何通过 Rules 文件（如 Cursor Rules）规范 AI 编程助手的开发行为与项目标准。
 
 #### Rules 介绍
+
 Rules（规则文件）是一种用于定义 AI 编程助手（AI Coding Assistant）行为准则和开发规范的文档。
 通过在项目中引入 Rules 文件，开发团队能够让 AI 工具准确理解项目的特定要求、技术标准和协作流程，从而提升代码质量与协作效率。
 
 #### Rules作用
+
 通过合理编写和维护 Rules 文件，可以高效规范 AI 编程助手的行为，提升**团队协作与项目质量**。
 
 #### Rules 文件结构
+
 在编写 Rules 文件时，建议采用分块结构，便于维护和理解。
 
 1️⃣ 基本结构
@@ -165,50 +174,60 @@ Rules（规则文件）是一种用于定义 AI 编程助手（AI Coding Assista
 
 ```md
 # 项目概述
+
 [项目基本信息和目标]
 
 # 技术栈规范
+
 [使用的技术栈和版本要求]
 
 # 代码规范
+
 [编码标准和最佳实践]
 
 # AI 行为准则
+
 [AI 助手应该遵循的规则]
 ```
 
 2️⃣ Rules 示例文件
+
 ```md
 # Node.js Web 应用项目规范
 
 ## 项目信息
+
 这是一个基于 Node.js 的后端 API 项目，使用 Express 框架。
 
 ## 技术栈
+
 - Node.js 18+
 - Express 4.x
 - MongoDB 6.x
 - JWT 认证
 
 ## 代码规范
+
 - 使用 ES6+ 语法
 - 采用 async/await 处理异步操作
 - 错误优先的回调函数
 - RESTful API 设计
 
 ## AI 助手行为
+
 - 生成代码时必须包含 JSDoc 注释
 - 优先使用内置模块，避免不必要的依赖
 - 安全第一，防止常见的 Web 安全漏洞
 - 性能优化，减少不必要的数据库查询
-
 ```
 
 #### Rules 的类型
+
 Rules 文件可根据适用范围分为不同类型（如：项目级、功能级和团队级等）。
 
 :::tip[项目级 Rules]
 项目级 Rules 适用于整个项目的通用规范，主要包括：
+
 - 技术栈选择
 - 代码风格
 - 项目结构
@@ -218,6 +237,7 @@ Rules 文件可根据适用范围分为不同类型（如：项目级、功能�
 
 :::note[功能级 Rules]
 功能级 Rules 针对特定功能模块设定规范，例如：
+
 - API 设计规范
 - 数据模型定义
 - 错误处理方式
@@ -227,6 +247,7 @@ Rules 文件可根据适用范围分为不同类型（如：项目级、功能�
 
 :::warning[团队级 Rules]
 团队级 Rules 主要用于规范团队协作流程，包括：
+
 - 提交信息格式
 - 代码审查标准
 - 文档编写规范
@@ -235,28 +256,35 @@ Rules 文件可根据适用范围分为不同类型（如：项目级、功能�
 :::
 
 #### Rules 编写最佳实践
+
 1️⃣ 明确性
+
 - 使用清晰简洁的语言，避免歧义。
 - 提供具体的示例，便于理解和执行。
 - 避免模糊的表述，确保规则可落地。
 
 2️⃣ 实用性
+
 - 聚焦最重要的规则，避免冗余。
 - 避免过度限制开发灵活性。
 - 保持规则的可维护性，便于后续调整。
 
 3️⃣ 一致性
+
 - 与团队约定保持一致，避免个人化规则。
 - 定期 review 和更新规则，适应项目发展。
 - 确保所有成员理解并遵循规则。
 
 #### Rules 的执行和维护
+
 1️⃣ 自动化执行（为了提升规则执行效率）
+
 - 将规则集成到 CI/CD 流程，实现自动检查。
 - 使用工具自动检测代码规范，及时发现问题。
 - 提供修复建议，降低人工干预成本。
 
 2️⃣ 持续改进（规则不是一成不变的，应根据实际情况不断优化）
+
 - 收集团队成员反馈，发现规则盲区。
 - 定期评估规则执行效果，及时调整。
 - 随项目发展动态调整规则内容。
@@ -266,11 +294,14 @@ Rules 文件可根据适用范围分为不同类型（如：项目级、功能�
 > 介绍 AGENTS.md 规范的核心要素、编写方法及其在智能体开发中的作用。
 
 #### 介绍
+
 AGENTS.md 是用于智能体定义“角色、能力、工具、边界、工作流”的**工程化规范文档**。
 它不是提示词，而是**可执行的操作手册**，确保智能体行为可控、可复现、可测试。
 
 #### 身份定义（Identity）
+
 用于明确智能体的身份信息，包括名称、角色、专长、技术栈和服务对象。
+
 - 名称（Name）
 - 角色（Role）
 - 专长（Specialty）
@@ -304,6 +335,7 @@ Jest + Playwright
 ```
 
 #### 六大工程要素
+
 - Commands（可执行命令）
 - Testing（测试能力）
 - Project Structure（项目结构）
@@ -312,6 +344,7 @@ Jest + Playwright
 - Boundaries（操作边界）
 
 #### 可执行命令
+
 智能体依赖可执行命令完成任务，是最重要的工程化规范。
 
 ```sh
@@ -321,8 +354,11 @@ npm run build
 npx markdownlint docs/
 npm run dev
 ```
+
 #### 职责范围（Responsibilities）
+
 智能体必须清楚自身职责边界，确保输出内容规范且高效。
+
 - 阅读与分析代码
 - 生成文档或测试
 - 根据命令校验生成内容
@@ -331,25 +367,30 @@ npm run dev
 - 保持输出一致性、结构化
 
 #### 三层边界模型（Boundaries）
+
 智能体操作需遵循三层边界模型，确保安全与规范。
 
 1️⃣ 必须执行（Always do）
+
 - 写入 `docs/` 或 `tests/`
 - 使用命令验证输出
 - 严格按照代码示例格式化
 
 2️⃣ 需先询问（Ask first）
+
 - 增加新依赖
 - 修改项目配置
 - 重写已有文档的大段内容
 
 3️⃣ 禁止操作（Never do）
+
 - 修改 `src/`（如果 agent 非开发 agent）
 - 删除 failing tests
 - 修改 `config/` 与 CI/CD
 - 提交 secrets
 
 #### 错误处理（Error Handling）
+
 智能体遇到异常情况时需采取安全措施，避免误操作。
 
 - 遇到不确定情况返回最小安全行动
@@ -358,6 +399,7 @@ npm run dev
 - 路径不存在时必须中止并提示用户检查
 
 #### 质量检查清单（Quality Checklist）
+
 本节列出 AGENTS.md 规范的检查要点，确保文档工程化标准。
 
 - 是否定义了专精 persona？
@@ -370,25 +412,30 @@ npm run dev
 满足以上所有条件的 AGENTS.md 才能作为生产级规范使用。
 
 #### 智能体定义完整示例
+
 ```md
 name: docs_agent
 description: Expert documentation writer for this repository
 
 # Persona
+
 - 精通 Markdown
 - 理解 TypeScript
 - 从 src/ 读取代码生成 docs/ 文档
 
 # Commands
+
 - npm run docs:build
 - npx markdownlint docs/
 
 # File Structure
+
 - 读取：src/
 - 写入：docs/
 - 禁止：config/
 
 # Boundaries
+
 - Always：写入 docs/，运行 lint
 - Ask first：结构性重写
 - Never：修改 src/
@@ -399,6 +446,7 @@ description: Expert documentation writer for this repository
 > 系统梳理 Anthropic 推出的 Agent Skill 规范及其对 AI 能力封装与分发的影响，帮助开发者理解其工程化价值。
 
 #### Agent Skill vs 传统 SKILL.md
+
 - **过去**：SKILL.md 是技巧
 - **现在**：Agent Skill 是分层架构的一部分
 
@@ -413,9 +461,155 @@ description: Expert documentation writer for this repository
 
 > 系统化介绍 GitHub SpecKit 如何通过规范驱动软件开发流程，提升协作与自动化水平。
 
+#### GitHub SpecKit 介绍
+
+GitHub SpecKit 是一个规范驱动开发（Spec-Driven Development, SDD）的框架和工具集，它通过结构化的规范文档来指导软件开发的全生命周期。
+该系统以“规范即代码”为核心理念，结合多智能体适配、自动化脚本与宪章治理，构建了完整的 SDD 体系。
+
+#### SpecKit 的核心理念
+
+SpecKit 的设计理念包括以下三点
+
+- **规范即代码（Specification as Code）**：将软件规范视为可执行的代码，通过规范来驱动开发、测试和部署。
+- **协作优先（Collaboration First）**：规范文档支持团队协作，版本控制和 review 流程与代码完全一致。
+- **自动化执行（Automation）**：规范不仅指导人工开发，还能驱动自动化工具执行验证和部署。
+
+#### 目的与适用范围
+
+SpecKit 以规范为核心，支持 AI 编码智能体（AI Coding Agent）通过可执行规范将自然语言需求转化为可运行实现。
+
+SpecKit 提供以下核心能力
+
+- **命令行工具（specify）**：项目初始化与环境校验。
+- **模板系统**：通过结构化提示词约束 AI 行为。
+- **命令系统（`/speckit.*`）**：在 AI 智能体内部编排 SDD 工作流。
+- **多智能体支持**：兼容 11+ 种主流 AI 编码助手，自动适配格式。
+- **宪章治理机制**：通过质量门控强制执行架构原则。
+
+#### 规范目录结构
+
+```md
+specs/
+├── README.md # 规范总览
+├── api/ # API 规范
+│ ├── users.yaml
+│ └── products.yaml
+├── database/ # 数据模型规范
+│ ├── schema.sql
+│ └── migrations/
+├── ui/ # 界面规范
+│ ├── components/
+│ └── workflows/
+└── tests/ # 测试规范
+├── unit/
+└── integration/
+```
+
+:::tip[SpecKit 支持多种规范格式]
+
+- `YAML/JSON`：结构化数据规范
+- `Markdown`：文档类规范
+- `SQL`：数据库规范
+- `自定义 DSL`：领域特定规范
+
+:::
+
+#### SpecKit 的核心工具
+
+SpecKit 提供了丰富的工具集，支持规范验证、代码生成、CI/CD 集成和 IDE 插件等能力
+
+- **speckit-cli**：命令行工具，提供规范验证、代码生成等功能。
+- **GitHub 集成**：Pull Request 检查规范变更，自动化 CI/CD 流程，规范文档自动发布。
+- **IDE 插件**：支持主流 IDE 的规范编辑和验证插件。
+
+#### SpecKit 的优势
+
+- **一致性保证**：规范驱动确保实现与设计的一致性，自动化工具防止人为偏离。
+- **协作效率**：规范文档支持并发编辑，版本控制跟踪变更历史，Review 流程规范化。
+- **质量提升**：早期发现设计缺陷，自动化测试覆盖，持续集成验证。
+
+#### 案例分享
+
+SpecKit 已在开源项目和企业应用中广泛落地。典型案例包括
+
+- **API 规范**：使用 OpenAPI 规范定义 REST API。
+- **数据库规范**：使用 SQL DDL 定义数据模型。
+- **测试规范**：使用 Gherkin 定义行为测试。
+- **微服务架构**：规范定义服务接口。
+- **前端组件库**：规范定义组件 API。
+- **数据管道**：规范定义数据流和转换。
+
+#### SpecKit 的核心技术栈
+
+| 组件        | 技术         | 主要用途        |
+| ----------- | ------------ | --------------- |
+| CLI 工具    | Python 3.11+ | 核心应用逻辑    |
+| CLI 框架    | Typer        | 命令行交互      |
+| UI 渲染     | Rich         | 终端输出美化    |
+| HTTP 客户端 | httpx        | GitHub API 通信 |
+| SSL/TLS     | truststore   | 证书校验        |
+| 输入处理    | readchar     | 跨平台键盘输入  |
+| 包管理      | uv           | 安装与分发      |
+| 构建系统    | hatchling    | Python 包构建   |
+
 ### OpenSpec
 
 > OpenSpec 通过本地化、可审计的规范管理，推动 AI 与人类协作的规范驱动开发（SDD）新范式。
+
+#### OpenSpec 介绍
+
+OpenSpec 由 Fission-AI 团队提出，其核心理念是：在写代码之前，人类与 AI 必须先就规范达成共识（align before code）。
+它采用完全本地的目录与 Markdown 文件作为事实来源（source-of-truth），实现跨工具、跨团队的协作一致性，无需依赖云端 Key 或专有服务。
+
+:::note[核心理念]
+
+- **可对齐性（Alignment）**：AI 与人类共享同一份可审阅、可追踪的规格文件。
+- **轻量与可移植性**：所有配置皆为本地 Markdown 与目录结构，便于版本控制与离线审计。
+- **透明与可审计性**：每次变更都会在 openspec/changes/ 下产生明确的 delta（差异）文件，便于审查与回溯。
+- **AI 原生协作**：支持常见 AI coding assistant 的“slash”命令或本地提示文件，使 AI 能读取、生成并应用变更提案。
+
+:::
+
+#### 目录与文件组织
+
+为了便于团队协作与规范管理，OpenSpec 推荐如下目录结构
+
+```md
+openspec/
+├── AGENTS.md # 与不同 AI 工具约定的根级说明
+├── project.md # 项目上下文说明
+├── specs/ # 当前事实（源）的规范集合
+│ └── capability-name/
+│ ├── spec.md
+│ └── design.md
+└── changes/ # 提案（每个提案一个子目录）
+└── change-name/
+├── proposal.md
+├── tasks.md
+└── specs/ # delta specs（只包含变动部分）
+```
+
+#### 支持的 AI 工具与集成目录
+
+| Tool ID        | 展示名             | 本地命令/提示位置                     |
+| -------------- | ------------------ | ------------------------------------- |
+| claude         | Claude Code        | `.claude/commands/openspec/`            |
+| cursor         | Cursor             | `.cursor/commands/openspec-\*.md`      |
+| opencode       | OpenCode           | `.opencode/command/openspec-\*.md`      |
+| kilocode       | Kilo Code          | `.kilocode/workflows/openspec-\*.md`    |
+| windsurf       | Windsurf           | `.windsurf/workflows/openspec-\*.md`    |
+| codex          | Codex              | `~/.codex/prompts/openspec-\*.md`       |
+| github-copilot | GitHub Copilot     | `.github/prompts/openspec-\*.prompt.md` |
+| amazon-q       | Amazon Q Developer | `.amazonq/prompts/openspec-\*.md`       |
+
+#### 核心命令与行为
+OpenSpec 提供一系列命令，覆盖规范管理的全流程。常见命令及其作用如下：
+
+- `init`：在项目根创建 `openspec/` 目录结构，提供交互式工具选择向导，并生成工具提示 stub。
+- `update`：刷新工具 stub 的受管块内容而不覆盖用户自定义区。
+- `list / show`：列出或展示当前提案与规范。
+- `validate`：对提案或规范执行格式与规则检查（可选严格模式）。
+- `archive`：将通过审查的 delta 应用到 `specs/`，并将变更移动到归档目录。
 
 ### 方法论与工程演进
 
