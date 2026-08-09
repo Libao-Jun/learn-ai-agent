@@ -2,7 +2,7 @@
 
 个人技术博客，记录 AI Agent 生态的学习、思考与实践。
 
-基于 [Astro](https://astro.build) v6 构建，静态生成（SSG），追求极致的加载速度和沉浸式阅读体验。采用 **Apple 极简**视觉风格，暗色/亮色双主题支持。
+基于 [Astro](https://astro.build) v6 构建，静态生成（SSG），追求极致的加载速度和沉浸式阅读体验。采用 **Apple 设计风格**（Action Blue + 近黑表面系统），暗色/亮色双主题支持。
 
 🔗 **在线访问**：[humorfrank.github.io/learn-ai-agent](https://humorfrank.github.io/learn-ai-agent/)
 
@@ -10,7 +10,7 @@
 
 ## 功能特性
 
-- 🎨 **Apple 极简风格** — Action Blue 单一强调色、SF Pro 字体栈、Pill 形按钮、平面卡片
+- 🎨 **Apple 设计风格** — Action Blue `#0066cc` 单一强调色、近黑表面系统（无投影）、SF Pro 字体栈、Hero 渐变缎带
 - 🌓 **暗色/亮色双主题** — 自动跟随系统偏好，支持手动切换，localStorage 持久化
 - 📡 **RSS 订阅** — 自动生成 RSS 源，支持 RSS 阅读器订阅
 - 🗺️ **站点地图** — 自动生成 sitemap.xml，优化搜索引擎收录
@@ -19,7 +19,7 @@
 - 🔍 **SEO 友好** — 语义化 HTML + Open Graph meta 标签
 - 🏷️ **标签系统** — 标签云 + 按标签筛选文章，支持中英文混合标签
 - 📖 **文章目录（TOC）** — 自动提取标题生成侧栏导航
-- 🎯 **阅读进度条** — 页面顶部 2px 进度指示
+- 🎯 **阅读进度条** — Action Blue 2px 进度指示，H2 左边栏装饰
 
 ---
 
@@ -51,7 +51,7 @@ learn-ai-agent/
 │   ├── site.config.ts             # 站点元数据（SITE 对象，集中配置）
 │   ├── content.config.ts          # 内容集合 Schema 定义
 │   ├── styles/
-│   │   └── global.css             # 全局设计系统（~700 行，令牌/动画/主题）
+│   │   └── global.css             # 全局设计系统（~547 行，令牌/动画/主题）
 │   ├── plugins/
 │   │   └── remark-callout.mjs     # :::tip/note/warning/danger 指令插件
 │   ├── utils/
@@ -212,31 +212,29 @@ draft: true
 
 | 角色 | 暗色模式 | 亮色模式 |
 |------|---------|---------|
-| 强调色（Action Blue） | `#0066cc` | `#0066cc` |
-| 强调色悬停 | `#0071e3` | `#0071e3` |
-| 页面背景 | `#000000`（纯黑） | `#ffffff`（纯白） |
-| 表面/卡片 | `#1d1d1f`（深灰） | `#ffffff` |
-| 次要表面 | `#f5f5f7`（羊皮纸） | `#f5f5f7`（羊皮纸） |
+| 画布 | `#000000`（纯黑画布） | `#ffffff`（纯白） |
+| 表面/卡片 | `#272729`（暗色瓷砖） | `#ffffff` |
+| 悬停表面 | `#2a2a2c` | `#f5f5f7` |
 | 正文文字 | `#f5f5f7` | `#1d1d1f` |
-| 次要文字 | `#a1a1a6` | `#6e6e73` |
+| 次要文字 | `#a1a1a6` | `#7a7a7a` |
+| 强调色 | `#0066cc`（Action Blue） | `#0066cc` |
 
 ### 字体
 
 | 用途 | 字体栈 |
 |------|--------|
-| 标题/导航 | SF Pro Display → system-ui → Inter |
-| 正文 | SF Pro Text → system-ui → Inter |
-| 代码 | SF Mono → JetBrains Mono → Fira Code |
+| 标题 | SF Pro Display → system-ui → -apple-system → Inter |
+| 正文 | SF Pro Text → system-ui → -apple-system → Inter |
+| 等宽 | SF Mono → JetBrains Mono → Fira Code → ui-monospace |
 
 ### 设计原则
 
-- **单一强调色** — 仅使用 Action Blue（`#0066cc`），无辅助色
-- **无装饰元素** — 无渐变、无霓虹发光、无扫描线、无粒子特效
-- **毛玻璃导航** — `backdrop-filter: saturate(180%) blur(20px)`，44px 高度
-- **Pill 形按钮** — `border-radius: 9999px`，`scale(0.95)` 按压反馈
-- **平面卡片** — 极简 hover 微移 + 微弱阴影，无顶部装饰条
-- **17px 正文** — Apple 标志性正文字号
-- **负向字间距** — 标题使用负向 tracking（"Apple tight" 风格）
+- **近黑表面系统** — 深度通过 3 级颜色明度台阶表达（纯黑→暗色瓷砖→悬停），卡片不使用投影
+- **Apple Pill 按钮** — Action Blue 固体背景，9999px 圆角，`scale(0.95)` 按压反馈
+- **SF Pro 字体栈** — 标题 Display 600、正文 Text 400、标签 Mono 600（不使用 weight 500）
+- **唯一标志性装饰** — Hero 底部 2px Action Blue 渐变缎带（全站唯一装饰元素）
+- **毛玻璃导航** — `backdrop-filter: blur(12px) saturate(160%)`，44px 高度
+- **17px 正文** — Apple 标志性阅读尺寸，标题负向字间距
 
 ---
 

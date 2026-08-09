@@ -1,27 +1,30 @@
-/* ── Design Tokens: Dark Theme (default, Apple-style) ── */
+/* ── Design Tokens: Apple-inspired Action Blue + Near-Black Surface System ── */
 :root {
-  /* Apple dark palette */
+  /* Surface Ladder — Apple dark tile system */
   --color-bg: #000000;
-  --color-bg-alt: #1d1d1f;
-  --color-surface: #1d1d1f;
+  --color-bg-alt: #252527;
+  --color-surface: #272729;
   --color-surface-hover: #2a2a2c;
+  --color-surface-elevated: #2a2a2c;
+
+  /* Ink Scale — warm off-white */
   --color-text: #f5f5f7;
   --color-text-muted: #a1a1a6;
   --color-text-dim: #6e6e73;
 
-  /* Single accent — Action Blue */
+  /* Accent — Single Action Blue (#0066cc) */
   --color-accent: #0066cc;
   --color-accent-hover: #0071e3;
-  --color-accent-soft: rgba(0, 102, 204, 0.12);
-  --color-accent-soft-hover: rgba(0, 102, 204, 0.2);
-  --color-accent-border-subtle: rgba(0, 102, 204, 0.18);
-  --color-accent-glow: #2997ff;
-  --color-accent-selection: rgba(0, 102, 204, 0.2);
+  --color-accent-on-dark: #2997ff;
+  --color-accent-soft: rgba(0, 102, 204, 0.08);
+  --color-accent-soft-hover: rgba(0, 102, 204, 0.12);
+  --color-accent-border-subtle: rgba(0, 102, 204, 0.12);
+  --color-accent-selection: rgba(0, 102, 204, 0.12);
 
-  /* Borders */
+  /* Hairline Borders */
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-strong: rgba(255, 255, 255, 0.14);
-  --color-border-accent: rgba(0, 102, 204, 0.3);
+  --color-border-accent: rgba(0, 102, 204, 0.18);
 
   /* Code */
   --color-code-bg: #1d1d1f;
@@ -30,30 +33,31 @@
   /* Functional */
   --color-btn-on-accent: #ffffff;
   --color-logo-icon-text: #ffffff;
-  --color-nav-backdrop: rgba(29, 29, 31, 0.8);
+  --color-nav-backdrop: rgba(0, 0, 0, 0.8);
 
-  /* Fonts — Apple system stack (SF Pro on macOS/iOS, Inter fallback elsewhere) */
+  /* Fonts — Apple SF Pro stack */
   --font-display: 'SF Pro Display', system-ui, -apple-system, 'Inter', sans-serif;
   --font-body: 'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif;
   --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Layout */
-  --max-width: 980px;
-  --max-width-wide: 980px;
+  --max-width: 1150px;
+  --max-width-wide: 1150px;
   --nav-height: 44px;
 
   /* Radii — Apple scale */
   --radius-sm: 8px;
   --radius: 11px;
+  --radius-md: 11px;
   --radius-lg: 18px;
   --radius-pill: 9999px;
 
-  /* Shadows — minimal, Apple-style (no decorative glow) */
+  /* Shadows — minimal, Apple-style */
   --shadow-sm: none;
   --shadow: none;
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.2);
-  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: none;
 
   /* Easings */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -66,21 +70,23 @@
   --color-bg-alt: #f5f5f7;
   --color-surface: #ffffff;
   --color-surface-hover: #f5f5f7;
+  --color-surface-elevated: #ffffff;
+
   --color-text: #1d1d1f;
-  --color-text-muted: #6e6e73;
+  --color-text-muted: #7a7a7a;
   --color-text-dim: #a1a1a6;
 
   --color-accent: #0066cc;
   --color-accent-hover: #0071e3;
+  --color-accent-on-dark: #0066cc;
   --color-accent-soft: rgba(0, 102, 204, 0.08);
-  --color-accent-soft-hover: rgba(0, 102, 204, 0.14);
+  --color-accent-soft-hover: rgba(0, 102, 204, 0.12);
   --color-accent-border-subtle: rgba(0, 102, 204, 0.12);
-  --color-accent-glow: #0066cc;
-  --color-accent-selection: rgba(0, 102, 204, 0.15);
+  --color-accent-selection: rgba(0, 102, 204, 0.12);
 
   --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-strong: rgba(0, 0, 0, 0.14);
-  --color-border-accent: rgba(0, 102, 204, 0.25);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+  --color-border-accent: rgba(0, 102, 204, 0.18);
 
   --color-code-bg: #f5f5f7;
   --color-code-text: #1d1d1f;
@@ -89,11 +95,8 @@
   --color-logo-icon-text: #ffffff;
   --color-nav-backdrop: rgba(255, 255, 255, 0.8);
 
-  --shadow-sm: none;
-  --shadow: none;
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.1);
-  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* ── Base ── */
@@ -129,14 +132,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.022em;
   color: var(--color-text);
   transition: color 0.35s var(--ease-smooth);
 }
 
-h1 { font-size: 3.5rem; letter-spacing: -0.028em; line-height: 1.07; }
-h2 { font-size: 2.125rem; letter-spacing: -0.022em; }
-h3 { font-size: 1.3125rem; letter-spacing: 0; }
+h1 { font-size: clamp(2.125rem, 5vw, 3.5rem); letter-spacing: -0.005em; line-height: 1.07; }
+h2 { font-size: 1.75rem; letter-spacing: -0.022em; line-height: 1.15; }
+h3 { font-size: 1.3125rem; letter-spacing: 0; line-height: 1.19; }
 
 p { margin: 0 0 1rem; }
 
@@ -156,7 +158,7 @@ pre {
   background: var(--color-code-bg);
   color: var(--color-code-text);
   padding: 1.25rem 1.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow-x: auto;
   font-size: 0.875rem;
   line-height: 1.6;
@@ -174,20 +176,20 @@ code {
 :not(pre) > code {
   background: var(--color-accent-soft);
   color: var(--color-accent);
-  padding: 0.15em 0.5em;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: 0.15em 0.45em;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
   font-size: 0.85em;
   border: 1px solid var(--color-accent-border-subtle);
   transition: background-color 0.35s var(--ease-smooth), color 0.35s var(--ease-smooth), border-color 0.35s var(--ease-smooth);
 }
 
-/* ── Blockquote (clean Apple style) ── */
+/* ── Blockquote — clean left accent bar ── */
 blockquote {
   margin: 1.5rem 0;
   padding: 1rem 1.25rem;
-  background: var(--color-bg-alt);
-  border-left: 3px solid var(--color-accent);
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-accent);
   border-radius: 0 var(--radius) var(--radius) 0;
   font-style: normal;
   color: var(--color-text-muted);
@@ -214,7 +216,7 @@ hr {
 img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
 }
 
 /* ── Time ── */
@@ -222,6 +224,7 @@ time {
   color: var(--color-text-muted);
   font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.016em;
 }
 
 /* ── Selection ── */
@@ -249,7 +252,7 @@ time {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -260,6 +263,62 @@ time {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Morphing float — for hero background orbs */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, -20px) scale(1.08); }
+}
+
+/* Terminal cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Shimmer sweep — for animated borders */
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Accent pulse glow */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(0, 102, 204, 0.12); }
+}
+
+/* Label dot pulse */
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(0, 102, 204, 0); }
+}
+
+/* Hero ribbon drift */
+@keyframes ribbonDrift {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.3; }
+}
+
+/* ── Scroll-triggered reveal ── */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .animate-in {
@@ -301,7 +360,7 @@ time {
 .table-wrapper {
   overflow-x: auto;
   margin: 1.5rem 0;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   -webkit-overflow-scrolling: touch;
 }
@@ -354,18 +413,18 @@ tr:hover td {
   background: var(--color-accent);
 }
 
-/* ── Section Guide Card ── */
+/* ── Section Guide Card (sg-card) ── */
 .sg-card {
   margin: 28px 0;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border-strong);
-  background: var(--color-bg-alt);
+  background: var(--color-surface);
   overflow: hidden;
-  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  transition: border-color 0.35s ease;
 }
 
 .sg-card:hover {
-  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-accent);
 }
 
 .sg-body {
@@ -396,11 +455,11 @@ tr:hover td {
 }
 
 .sg-item-label {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-text-muted);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -412,12 +471,12 @@ tr:hover td {
 
 .sg-tag {
   display: inline-block;
-  padding: 3px 12px;
+  padding: 3px 10px;
   font-size: 0.78rem;
-  font-weight: 500;
+  font-weight: 600;
   background: var(--color-accent-soft);
   color: var(--color-accent);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--color-accent-border-subtle);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -458,7 +517,7 @@ tr:hover td {
 }
 
 .sg-list li::before {
-  content: '›';
+  content: '\203A';
   position: absolute;
   left: -8px;
   color: var(--color-accent);
@@ -467,8 +526,186 @@ tr:hover td {
   line-height: 1.4;
 }
 
+/* ── Primary Button (solid accent + Apple pill) ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.4rem;
+  background: var(--color-accent);
+  color: var(--color-btn-on-accent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  border: none;
+  transition: all 0.2s var(--ease-out);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-btn-on-accent);
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+/* ── Ghost Button (Apple secondary pill) ── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.4rem;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.btn-ghost:hover {
+  background: var(--color-accent);
+  color: var(--color-btn-on-accent);
+}
+
+.btn-ghost:active {
+  transform: scale(0.95);
+}
+
+/* ── Hero Gradient Ribbon (the ONE signature decoration) ── */
+/*   Single-color gradient: accent → transparent, subtle and restrained */
+.hero-ribbon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* ── Responsive ── */
-@media (max-width: 640px) {
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.4rem; }
+
+/* Tablet landscape / Small desktop (≤1024px) */
+@media (max-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+
+  h1 { font-size: clamp(1.85rem, 4.5vw, 2.5rem); }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.15rem; }
+
+  pre {
+    padding: 1rem 1.25rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* Tablet portrait (≤768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.1rem; }
+
+  pre {
+    padding: 0.9rem 1rem;
+    font-size: 0.78rem;
+    margin: 1rem 0;
+  }
+
+  /* Table cells — reduce padding on smaller screens */
+  th, td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* Buttons — full width on mobile */
+  .btn-primary,
+  .btn-ghost {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  blockquote {
+    padding: 0.85rem 1rem;
+    font-size: 0.92rem;
+  }
+
+  hr {
+    margin: 2rem 0;
+  }
+
+  .sg-card {
+    margin: 22px 0;
+  }
+
+  .sg-body {
+    padding: 14px;
+  }
+
+  .sg-item + .sg-item {
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+
+  .sg-time-num {
+    font-size: 1.65rem;
+  }
+}
+
+/* Large phone (≤480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.05rem; }
+
+  pre {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.74rem;
+    border-radius: var(--radius-sm);
+  }
+
+  :not(pre) > code {
+    font-size: 0.8em;
+    padding: 0.12em 0.4em;
+  }
+
+  th, td {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .sg-body {
+    padding: 12px;
+  }
+
+  .sg-item + .sg-item {
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .sg-list li {
+    font-size: 0.82rem;
+    padding-left: 10px;
+  }
+
+  .sg-list li::before {
+    left: -10px;
+    font-size: 0.9rem;
+  }
 }

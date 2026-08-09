@@ -37,7 +37,7 @@ learn-ai-agent/
 │   ├── utils/
 │   │   └── reading-time.ts       # 阅读时间估算工具
 │   ├── styles/
-│   │   └── global.css            # 完整设计系统（~620 行）
+│   │   └── global.css            # 完整设计系统（~547 行）
 │   ├── plugins/
 │   │   └── remark-callout.mjs    # :::tip/note/warning/danger 指令插件
 │   ├── layouts/
@@ -118,37 +118,49 @@ const posts = await getCollection('blog', ({ data }) => {
 
 ### 设计令牌速查
 
-| 类别 | 暗色模式 | 亮色模式 |
-|------|---------|---------|
-| 背景 | `--color-bg: #000000` | `#ffffff` |
-| 表面 | `--color-surface: #1d1d1f` | `#ffffff` |
-| 主文字 | `--color-text: #f5f5f7` | `#1d1d1f` |
-| 次文字 | `--color-text-muted: #a1a1a6` | `#6e6e73` |
-| 强调色 | `--color-accent: #0066cc`（Action Blue） | `#0066cc` |
-| 强调色悬停 | `--color-accent-hover: #0071e3` | `#0071e3` |
+**暗色主题（默认）— Apple 纯黑画布 + 近黑表面系统：**
+
+| 类别 | 令牌 | 暗色值 | 亮色值 |
+|------|------|--------|--------|
+| 画布 | `--color-bg` | `#000000` | `#ffffff` |
+| 表面 | `--color-surface` | `#272729` | `#ffffff` |
+| 悬停表面 | `--color-surface-hover` | `#2a2a2c` | `#f5f5f7` |
+| 抬高表面 | `--color-surface-elevated` | `#2a2a2c` | `#ffffff` |
+| 主文字 | `--color-text` | `#f5f5f7` | `#1d1d1f` |
+| 次文字 | `--color-text-muted` | `#a1a1a6` | `#7a7a7a` |
+| 三级文字 | `--color-text-dim` | `#6e6e73` | `#a1a1a6` |
+| 强调色 | `--color-accent` | `#0066cc`（Action Blue） | `#0066cc` |
+| 强调悬停 | `--color-accent-hover` | `#0071e3` | `#0071e3` |
+| 发丝边框 | `--color-border` | `rgba(255,255,255,0.08)` | `rgba(0,0,0,0.08)` |
+| 暗色链接 | `--color-accent-on-dark` | `#2997ff` | `#0066cc` |
+
+> **近黑表面系统**：深度通过颜色明度台阶表达（纯黑画布 → 暗色瓷砖 → 悬停），卡片不使用 `box-shadow` 表达层级。
 
 ### 字体
 
 | 用途 | 字体栈 |
 |------|--------|
-| 标题/导航 | `SF Pro Display` → `system-ui` → `Inter` |
-| 正文 | `SF Pro Text` → `system-ui` → `Inter` |
-| 代码 | `SF Mono` → `JetBrains Mono` → `Fira Code` |
+| 标题 | `'SF Pro Display', system-ui, -apple-system, 'Inter', sans-serif` |
+| 正文 | `'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif` |
+| **等宽（标签/代码）** | `'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace` |
+
+> **Apple 字体层级**：SF Pro Display（标题 20px+）、SF Pro Text（正文 19px-）、SF Mono（代码/标签）。导航链接使用 SF Pro Text（body 字体），标签 pill 使用 SF Mono。Apple 体系**不使用 weight 500**，字重阶梯为 300 / 400 / 600 / 700。
 
 ### 动画
 
 | 动画名 | 用途 |
 |--------|------|
-| `fadeInUp` | 页面入场（`.animate-in`）和交错子元素（`.stagger`） |
+| `fadeInUp` | 页面入场（`.animate-in`）和交错子元素（`.stagger`），24px 位移 |
 | `fadeIn` | 简单淡入 |
 
 ### 视觉效果
 
-- **毛玻璃导航**：`backdrop-filter: saturate(180%) blur(20px)`，44px 高度，无底部边框
+- **毛玻璃导航**：`backdrop-filter: blur(12px) saturate(160%)`，44px 高度，底部发丝边框
 - **阅读进度条**：Action Blue 单色，2px 高，固定视口顶部
-- **Pill 形按钮**：`border-radius: var(--radius-pill)`（9999px），`scale(0.95)` 按压反馈
-- **平面卡片**：极简 hover（`translateY(-2px)` + 微弱阴影），无顶部装饰条
-- **Apple 排版**：17px 正文，标题负向字间距，系统字体栈（无 Google Fonts）
+- **Apple Pill 按钮**：Action Blue 固体背景，9999px 圆角，`scale(0.95)` 按压反馈，无 inset 阴影
+- **近黑表面卡片**：hover 时背景色向上一级 + 发丝边框加强，**无投影**
+- **Hero 渐变缎带**：底部 2px Action Blue 单色渐变线（全站唯一装饰性元素）
+- **排版**：17px 正文（Apple 标志性尺寸），标题 weight ≤ 600，SF Pro 字体栈；导航用 body 字体 12px/400，标签用 mono + 正向 tracking
 - **视图过渡**：`@view-transition { navigation: auto }` 已启用
 
 ### 代码高亮
@@ -307,7 +319,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 4. **前/后导航** — 「上一篇」= 时间上更旧的（索引 +1），「下一篇」= 更新的（索引 -1）
 5. **代码复制按钮** — 由 `BlogPostLayout.astro` 的 `initCodeCopy()` 脚本在 `<pre>` 上注入复制按钮
 6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
-7. **Apple 极简色板** — 单一 Action Blue `#0066cc`，无辅助色，无霓虹发光，无装饰性渐变
+7. **Apple 设计色板** — 单一 Action Blue `#0066cc` 强调色，近黑表面系统（纯黑→暗色瓷砖→悬停，无投影），SF Pro 字体栈（无 weight 500），Hero 底部唯一装饰缎带
 
 ## CI/CD
 

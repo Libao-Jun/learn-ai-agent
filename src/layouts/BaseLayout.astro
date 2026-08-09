@@ -197,11 +197,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .nav-link {
     padding: 0.4rem 1rem;
     border-radius: var(--radius-sm);
-    font-size: 0.88rem;
-    font-weight: 500;
-    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 400;
+    font-family: var(--font-body);
     color: var(--color-text-muted);
     background: none;
+    letter-spacing: -0.01em;
     transition: all 0.2s var(--ease-smooth);
     position: relative;
   }
@@ -266,7 +267,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .footer-col a {
     display: block;
     padding: 0.2rem 0;
-    font-size: 0.88rem;
+    font-size: 1.0625rem;
+    line-height: 2.41;
     color: var(--color-text-muted);
     background: none;
     transition: color 0.2s;
@@ -347,18 +349,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     border-color: var(--color-accent);
   }
 
-  @media (max-width: 640px) {
-    .back-to-top {
-      bottom: 1.25rem;
-      right: 1rem;
-    }
-    .footer-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  }
-
   /* ── Responsive ── */
+
+  /* Tablet (≤768px) */
   @media (max-width: 768px) {
     .nav-bar {
       padding: 0 1rem;
@@ -375,6 +368,69 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     .nav-link {
       padding: 0.35rem 0.7rem;
       font-size: 0.85rem;
+    }
+
+    .site-footer {
+      padding: 2.5rem 1.5rem 1.25rem;
+    }
+  }
+
+  /* Large phone (≤480px) */
+  @media (max-width: 480px) {
+    .nav-bar {
+      padding: 0 0.75rem;
+    }
+
+    main {
+      padding: 0 0.85rem;
+    }
+
+    nav {
+      gap: 0;
+    }
+
+    .nav-link {
+      padding: 0.3rem 0.55rem;
+      font-size: 0.8rem;
+    }
+
+    .site-footer {
+      margin-top: 4rem;
+      padding: 2rem 1rem 1rem;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-col a {
+      font-size: 0.95rem;
+      line-height: 2.2;
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+    }
+
+    .back-to-top {
+      bottom: 1rem;
+      right: 0.75rem;
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .back-to-top {
+      bottom: 1.25rem;
+      right: 1rem;
     }
   }
 </style>

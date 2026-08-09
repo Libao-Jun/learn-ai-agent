@@ -7,6 +7,46 @@ tags: ["SDD", "Vibe Coding", "AI", "MCP", "A2A", "规范驱动开发"]
 
 ## 本节导读
 
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">🎯</div>
+        <div class="sg-item-label">学习目标</div>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">SDD 核心概念</span>
+        <span class="sg-tag">对比 TDD/BDD/MDD</span>
+        <span class="sg-tag">Spec→Plan→Tasks→Implement</span>
+        <span class="sg-tag">代表工具与生态</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">⏱️</div>
+        <div class="sg-item-label">预计阅读</div>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">10</span>
+        <span class="sg-time-unit">min</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">📌</div>
+        <div class="sg-item-label">收获要点</div>
+      </div>
+      <ul class="sg-list">
+        <li>理解规范驱动开发（SDD）的方法论与核心理念</li>
+        <li>搞懂 SDD / TDD / BDD / MDD 四者的区别与适用场景</li>
+        <li>掌握 SDD 的五阶段自动化流程：规范→计划→任务→实现→部署</li>
+        <li>了解 Kiro、Spec-kit、Qoder 等 SDD 工具生态</li>
+        <li>理解 SDD 在 AI Agent 规划与治理中的应用</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## 规范驱动开发（SDD）
 
 ### 概述

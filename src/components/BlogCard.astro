@@ -39,17 +39,32 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <style>
   .card {
     position: relative;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     transition: all 0.3s var(--ease-smooth);
-    box-shadow: var(--shadow-sm);
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius-lg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.35s var(--ease-smooth);
+    box-shadow: 0 0 24px 6px rgba(0, 102, 204, 0.10);
   }
 
   .card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-card-hover);
+    background: var(--color-surface-hover);
     border-color: var(--color-border-strong);
+  }
+
+  .card:hover::after {
+    opacity: 1;
   }
 
   .card-link {
@@ -142,14 +157,49 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     padding: 0.1rem 0.5rem;
     background: var(--color-accent-soft);
     color: var(--color-accent);
-    border-radius: 100px;
-    font-size: 0.68rem;
+    border: 1px solid var(--color-accent-border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.66rem;
     font-weight: 600;
-    font-family: var(--font-display);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
   }
 
   .card-tag-more {
     background: var(--color-bg-alt);
     color: var(--color-text-dim);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .card-link {
+      padding: 1.25rem 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-link {
+      padding: 1rem 1rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+    }
+
+    .card-tag {
+      font-size: 0.62rem;
+    }
+
+    .card-meta time {
+      font-size: 0.72rem;
+    }
   }
 </style>
