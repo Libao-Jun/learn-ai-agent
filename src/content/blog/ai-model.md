@@ -47,9 +47,12 @@ tags: ['AI 模型','模型竞技场','模型排行榜','选择模型']
   </div>
 </div>
 
+## OpenRouter — 大语言模型的统一接口
+[[OpenRouter](https://openrouter.ai/)] 大语言模型的统一接口，价格更低，运行时间更长，且无需订阅费用。
+
 ## LMArena — 模型排行榜
 
-[LMArena](https://lmarena.ai/) 查看各种 AI 模型在数学、编程、创意写作等领域的文本到文本任务总体排名。
+[[LMArena](https://lmarena.ai/)] 查看各种 AI 模型在数学、编程、创意写作等领域的文本到文本任务总体排名。
 
 > - 直接看排行榜（Leaderboard）
 > - 先选你要做的方向（通用对话 / 编程 / 视觉）
@@ -57,7 +60,7 @@ tags: ['AI 模型','模型竞技场','模型排行榜','选择模型']
 
 ## Artificial Analysis — 独立评测
 
-[Artificial Analysis](https://artificialanalysis.ai/) 对 AI 模型的独立分析，帮助你了解领域概况，选择最佳模型和提供商。
+[[Artificial Analysis](https://artificialanalysis.ai/)] 对 AI 模型的独立分析，帮助你了解领域概况，选择最佳模型和提供商。
 
 > - **智力**：独立评估的 AI 模型智能水平
 > - **速度**：模型的响应速度和延迟
