@@ -2,7 +2,7 @@
 title: "AI Agent 协议"
 date: 2026-05-28
 description: "AI Agent 如何与外部世界对话？ 就像互联网需要 HTTP 协议，AI Agent 也需要标准化的通信协议。本章介绍两个最主流的 Agent 协议：MCP 和 A2A，它们分别解决了 AI 与工具、Agent 与 Agent 之间的通信问题。"
-tags: ["MCP", "A2A"]
+tags: ["MCP", "A2A", "ANP", "Agent", "AI"]
 ---
 
 ## 本节导读

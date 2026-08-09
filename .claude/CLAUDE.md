@@ -120,13 +120,15 @@ const posts = await getCollection('blog', ({ data }) => {
 
 | 类别 | 暗色模式 | 亮色模式 |
 |------|---------|---------|
-| 背景 | `--color-bg: #0a0e17` | `#ffffff` |
-| 表面 | `--color-surface: #1a2234` | `#ffffff` |
-| 主文字 | `--color-text: #e8ecf4` | `#1a1a2e` |
-| 次文字 | `--color-text-muted: #7b8ba5` | `#475569` |
-| 强调色 | `--color-accent: #04d9a0`（绿） | `#4f46e5`（靛蓝） |
-| 强调光晕 | `--color-accent-glow: #00ffbd` | `#6366f1` |
-| 辅助色 | `--color-accent-secondary: #6366f1` | `#0ea5e9` |
+| 背景 | `--color-bg: #0a0a0f` | `#f8fafc`（冷调白） |
+| 表面 | `--color-surface: #111827` | `#ffffff` |
+| 主文字 | `--color-text: #e2e8f0` | `#0f172a` |
+| 次文字 | `--color-text-muted: #94a3b8` | `#475569` |
+| 强调色 | `--color-accent: #00d4ff`（科技蓝） | `#0284c7`（深蓝） |
+| 强调光晕 | `--color-accent-glow: #22d3ee` | `#0ea5e9` |
+| 辅助色 | `--color-accent-secondary: #a78bfa`（淡紫） | `#7c3aed`（紫） |
+| 霓虹蓝 | `--color-neon-cyan: #38bdf8` | `#0284c7` |
+| 霓虹紫 | `--color-neon-magenta: #c4b5fd` | `#8b5cf6` |
 
 ### 字体
 
@@ -143,17 +145,27 @@ const posts = await getCollection('blog', ({ data }) => {
 | `fadeInUp` | 页面入场（`.animate-in`）和交错子元素（`.stagger`） |
 | `gradientShift` | 渐变文字、Logo、sg-card 顶部条（背景位移动画） |
 | `float` | 环境光晕上下浮动（8s 循环） |
-| `particleFloat` | Hero 粒子光点浮动 |
+| `particleFloat` | Hero 粒子光点浮动（5s，opacity + translateY + scale） |
 | `pulseGlow` | 脉冲发光（可用于关注按钮） |
+| `neonPulse` | 蓝色霓虹边框呼吸（3s，box-shadow 循环） |
+| `neonPulseCyan` | 同上，青色版 |
+| `neonPulseMagenta` | 同上，紫色版 |
+| `twinkle` | 星场闪烁（opacity 0.3 ↔ 0.9，各星不同时长） |
+| `borderBreath` | 边框颜色在蓝色和青色之间交替（4s） |
+| `hudCornerPulse` | HUD 角标透明度脉冲（3s） |
 
 ### 视觉效果
 
 - **颗粒纹理**：`body::before` SVG 噪声覆盖层（opacity 0.025 暗色 / 0.012 亮色）
-- **双环境光晕**：右上绿色 + 左下蓝紫色径向渐变（`filter: blur(120px)`）
-- **星场背景**：10 个 CSS 径向渐变微光点
+- **扫描线**：`body::after` CRT 扫描线叠加（3px 间隔，opacity 0.35 暗色 / 0.25 亮色）
+- **三色环境光晕**：右上蓝色（500px）+ 左下青色（400px）+ 中部紫色（350px），模糊 120px，浮动动画
+- **星场背景**：10 个独立 `<span>` 星点，蓝色/青色交替，`twinkle` 闪烁动画
 - **玻璃拟态**：blockquote 使用 `backdrop-filter: blur(20px)`，带 accent 左栏和装饰引号
 - **阅读进度条**：渐变色（accent → secondary → glow），固定视口顶部
-- **Hero 粒子**：8 个 accent 色光点，独立浮动动画延迟
+- **Hero 粒子**：8 个霓虹光点（蓝/青/紫三色），`particleFloat` 动画
+- **HUD 角标**：Hero 四角 L 形括号装饰，脉冲动画，移动端隐藏
+- **电路网格**：CSS grid 线条图案 + 径向遮罩，浮动动画
+- **终端代码块**：代码块包裹在 `.terminal-block` 中，顶部红黄绿圆点 + 语言标签 + 复制按钮
 - **视图过渡**：`@view-transition { navigation: auto }` 已启用
 
 ### 代码高亮
@@ -310,8 +322,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 2. **sg-card 保持手写 HTML** — 不组件化，因为 `.md` 文件无法导入 Astro 组件
 3. **TOC 锚点** — 服务端 `extractHeadings()` 和客户端 slug 生成算法需保持一致
 4. **前/后导航** — 「上一篇」= 时间上更旧的（索引 +1），「下一篇」= 更新的（索引 -1）
-5. **代码复制按钮** — 由 `BlogPostLayout.astro` 脚本自动注入，hover pre 块时显示
-6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹
+5. **终端代码块** — 由 `BlogPostLayout.astro` 的 `initTerminalBlocks()` 脚本自动注入 `.terminal-block` 包裹和 `.terminal-bar` 标题栏，复制按钮在终端栏内
+6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
+7. **扫描线 + 噪点层级** — 扫描线 z-index: 9998，噪点 z-index: 9999，两者均为 fixed + pointer-events: none
+8. **霓虹色板** — 主色科技蓝 `#00d4ff`，辅助色青 `#38bdf8` / 紫 `#c4b5fd`，仅用于光晕、边框、粒子等装饰，不影响文字可读性
 
 ## CI/CD
 

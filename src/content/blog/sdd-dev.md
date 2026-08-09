@@ -2,7 +2,7 @@
 title: "规范驱动开发（SDD）"
 date: 2026-08-06
 description: "规范驱动开发（SDD）是一种软件开发方法，它强调在开发过程中使用规范来指导开发过程。"
-tags: ["规范驱动开发", "SDD"]
+tags: ["SDD", "Vibe Coding", "AI", "MCP", "A2A", "规范驱动开发"]
 ---
 
 ## 本节导读

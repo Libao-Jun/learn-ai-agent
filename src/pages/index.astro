@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { SITE } from '../site.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BlogCard from '../components/BlogCard.astro';
+import { getReadingTime } from '../utils/reading-time';
 
 const posts = await getCollection('blog', ({ data }) => {
   return import.meta.env.PROD ? !data.draft : true;
@@ -28,8 +29,39 @@ const restPosts = posts.slice(1);
       <a href={`${base}/blog`} class="btn-primary">阅读文章</a>
       <a href={`${base}/about`} class="btn-ghost">了解更多</a>
     </div>
-    <!-- Decorative grid -->
+    <div class="hero-keywords">
+      <span>MCP</span>
+      <span class="kw-sep">·</span>
+      <span>Claude Code</span>
+      <span class="kw-sep">·</span>
+      <span>Agent</span>
+      <span class="kw-sep">·</span>
+      <span>Skills</span>
+      <span class="kw-sep">·</span>
+      <span>LLM</span>
+      <span class="kw-sep">·</span>
+      <span>SDD</span>
+    </div>
+    <!-- Floating particles (multicolor neon) -->
+    <div class="hero-particles" aria-hidden="true">
+      <span class="particle particle-blue" style="top:8%;left:62%;animation-delay:0s"></span>
+      <span class="particle particle-cyan" style="top:25%;left:78%;animation-delay:1.2s"></span>
+      <span class="particle particle-purple" style="top:45%;left:70%;animation-delay:2.4s"></span>
+      <span class="particle particle-blue" style="top:65%;left:58%;animation-delay:0.6s"></span>
+      <span class="particle particle-cyan" style="top:15%;left:48%;animation-delay:1.8s"></span>
+      <span class="particle particle-purple" style="top:55%;left:85%;animation-delay:3s"></span>
+      <span class="particle particle-cyan" style="top:75%;left:42%;animation-delay:0.3s"></span>
+      <span class="particle particle-blue" style="top:35%;left:40%;animation-delay:2.1s"></span>
+    </div>
+    <!-- Decorative circuit grid -->
     <div class="hero-grid" aria-hidden="true"></div>
+    <!-- HUD corner decorations -->
+    <div class="hud-corners" aria-hidden="true">
+      <span class="hud-corner hud-tl"></span>
+      <span class="hud-corner hud-tr"></span>
+      <span class="hud-corner hud-bl"></span>
+      <span class="hud-corner hud-br"></span>
+    </div>
   </section>
 
   <!-- Featured post -->
@@ -81,6 +113,8 @@ const restPosts = posts.slice(1);
             date={post.data.date}
             slug={post.id}
             description={post.data.description}
+            tags={post.data.tags}
+            readingTime={getReadingTime(post.body || '')}
           />
         ))}
       </div>
@@ -108,7 +142,7 @@ const restPosts = posts.slice(1);
     font-weight: 600;
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
-    animation: fadeInUp 0.5s var(--ease-out) both;
+    animation: fadeInUp 0.5s var(--ease-out) both, borderBreath 4s ease-in-out 0.5s infinite;
   }
 
   .hero-title {
@@ -185,19 +219,121 @@ const restPosts = posts.slice(1);
     background: var(--color-surface);
   }
 
+  /* ── Hero Particles ── */
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFloat 5s ease-in-out infinite;
+  }
+  .particle-blue {
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--glow-dot), 0 0 12px var(--glow-btn);
+  }
+  .particle-cyan {
+    background: var(--color-neon-cyan);
+    box-shadow: 0 0 6px var(--glow-cyan-strong), 0 0 12px var(--glow-cyan);
+  }
+  .particle-purple {
+    background: var(--color-neon-magenta);
+    box-shadow: 0 0 6px var(--glow-magenta-strong), 0 0 12px var(--glow-magenta);
+  }
+
+  @keyframes particleFloat {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+    20% { opacity: 0.8; }
+    50% { opacity: 0.4; transform: translateY(-25px) scale(1.3); }
+    80% { opacity: 0.15; }
+  }
+
+  /* ── Hero Keywords ── */
+  .hero-keywords {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-text-dim);
+    animation: fadeInUp 0.6s var(--ease-out) 0.35s both;
+  }
+
+  .kw-sep {
+    color: var(--color-border-strong);
+  }
+
+  /* ── Circuit Grid ── */
   .hero-grid {
     position: absolute;
-    top: 0;
-    right: -10%;
-    width: 400px;
-    height: 400px;
+    top: 5%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
     background-image:
       linear-gradient(var(--color-border) 1px, transparent 1px),
       linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0.4;
-    mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
+    background-size: 35px 35px;
+    opacity: 0.3;
+    mask-image: radial-gradient(circle at 40% 40%, black 25%, transparent 70%);
+    -webkit-mask-image: radial-gradient(circle at 40% 40%, black 25%, transparent 70%);
+    animation: float 10s ease-in-out infinite;
+  }
+
+  /* ── HUD Corners ── */
+  .hud-corners {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hud-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    animation: hudCornerPulse 3s ease-in-out infinite;
+  }
+  .hud-corner::before,
+  .hud-corner::after {
+    content: '';
+    position: absolute;
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--glow-dot), 0 0 14px var(--glow-btn);
+  }
+  .hud-corner::before { width: 100%; height: 1.5px; }
+  .hud-corner::after  { width: 1.5px; height: 100%; }
+
+  .hud-tl { top: 0; left: 0; animation-delay: 0s; }
+  .hud-tl::before { top: 0; left: 0; }
+  .hud-tl::after  { top: 0; left: 0; }
+
+  .hud-tr { top: 0; right: 0; animation-delay: 0.8s; }
+  .hud-tr::before { top: 0; right: 0; }
+  .hud-tr::after  { top: 0; right: 0; }
+
+  .hud-bl { bottom: 0; left: 0; animation-delay: 1.6s; }
+  .hud-bl::before { bottom: 0; left: 0; }
+  .hud-bl::after  { bottom: 0; left: 0; }
+
+  .hud-br { bottom: 0; right: 0; animation-delay: 2.4s; }
+  .hud-br::before,
+  .hud-br::after {
+    background: var(--color-neon-magenta);
+    box-shadow: 0 0 6px var(--glow-magenta-strong), 0 0 14px var(--glow-magenta);
+  }
+
+  @media (max-width: 768px) {
+    .hud-corners { display: none; }
   }
 
   /* ── Section Label ── */

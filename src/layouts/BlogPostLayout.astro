@@ -7,11 +7,19 @@ interface Heading {
   depth: number;
 }
 
+interface PrevNextPost {
+  id: string;
+  data: { title: string; description?: string };
+}
+
 export interface Props {
   title: string;
   date: Date;
   tags?: string[];
   headings?: Heading[];
+  readingTime?: number;
+  prevPost?: PrevNextPost | null;
+  nextPost?: PrevNextPost | null;
 }
 
 const {
@@ -19,6 +27,9 @@ const {
   date,
   tags = [],
   headings = [],
+  readingTime,
+  prevPost,
+  nextPost,
 } = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -42,6 +53,7 @@ const showToc = headings.length >= 2;
 
         <div class="post-meta">
           <time datetime={date.toISOString()}>{formattedDate}</time>
+          {readingTime && <span class="post-reading-time">约 {readingTime} 分钟</span>}
           {tags.length > 0 && (
             <div class="post-tags">
               {tags.map((tag) => (
@@ -57,6 +69,21 @@ const showToc = headings.length >= 2;
       </div>
 
       <footer class="post-footer">
+        <!-- Prev / Next navigation -->
+        <nav class="prev-next-nav">
+          {prevPost ? (
+            <a href={`${base}/blog/${prevPost.id}`} class="prev-next-link prev">
+              <span class="prev-next-label">&larr; 上一篇</span>
+              <span class="prev-next-title">{prevPost.data.title}</span>
+            </a>
+          ) : <div class="prev-next-spacer" />}
+          {nextPost ? (
+            <a href={`${base}/blog/${nextPost.id}`} class="prev-next-link next">
+              <span class="prev-next-label">下一篇 &rarr;</span>
+              <span class="prev-next-title">{nextPost.data.title}</span>
+            </a>
+          ) : <div class="prev-next-spacer" />}
+        </nav>
         <nav class="post-footer-nav">
           <a href={`${base}/blog`} class="back-link">&larr; 文章列表</a>
         </nav>
@@ -154,6 +181,60 @@ const showToc = headings.length >= 2;
   }
 
   initToc();
+
+  // Wrap tables for responsive scrolling
+  document.querySelectorAll('.post-body table').forEach((table) => {
+    if (!table.parentElement?.classList.contains('table-wrapper')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode?.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+
+  // Code copy buttons
+  (function initTerminalBlocks() {
+    const pres = document.querySelectorAll('.post-body pre');
+    pres.forEach((pre) => {
+      if (pre.closest('.terminal-block')) return;
+
+      const code = pre.querySelector('code');
+      const langClass = code?.className.match(/language-(\w+)/)?.[1] || '';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'terminal-block';
+
+      const bar = document.createElement('div');
+      bar.className = 'terminal-bar';
+      bar.innerHTML = '<span class="terminal-dots"><span class="tdot tdot-red"></span><span class="tdot tdot-yellow"></span><span class="tdot tdot-green"></span></span><span class="terminal-lang">' + langClass + '</span>';
+
+      const btn = document.createElement('button');
+      btn.className = 'code-copy-btn terminal-copy';
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      btn.setAttribute('aria-label', '复制代码');
+      btn.title = '复制代码';
+      btn.addEventListener('click', async () => {
+        const codeText = pre.querySelector('code')?.textContent || pre.textContent || '';
+        try {
+          await navigator.clipboard.writeText(codeText);
+          btn.classList.add('copied');
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+          }, 2000);
+        } catch { /* clipboard API not available */ }
+      });
+
+      bar.appendChild(btn);
+      pre.parentNode?.insertBefore(wrapper, pre);
+      wrapper.appendChild(bar);
+      wrapper.appendChild(pre);
+      pre.style.margin = '0';
+      pre.style.borderTopLeftRadius = '0';
+      pre.style.borderTopRightRadius = '0';
+    });
+  })();
 </script>
 
 <style>
@@ -215,6 +296,12 @@ const showToc = headings.length >= 2;
     font-variant-numeric: tabular-nums;
   }
 
+  .post-reading-time {
+    color: var(--color-text-dim);
+    font-size: 0.82rem;
+    font-family: var(--font-display);
+  }
+
   .post-tags {
     display: flex;
     gap: 0.4rem;
@@ -224,19 +311,22 @@ const showToc = headings.length >= 2;
   .tag-pill {
     display: inline-block;
     padding: 0.15rem 0.55rem;
-    background: none;
-    color: var(--color-text-dim);
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
     font-family: var(--font-display);
-    transition: color 0.2s ease;
-    border: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-accent-border-subtle);
   }
 
   .tag-pill:hover {
-    color: var(--color-text);
-    background: none;
+    background: var(--color-accent-soft-hover);
+    color: var(--color-accent-glow);
+    box-shadow: 0 0 12px var(--glow-tag-hover), inset 0 0 4px rgba(0, 212, 255, 0.08);
+    border-color: var(--color-border-accent);
+    transform: translateY(-1px);
   }
 
   /* ── Post Body ── */
@@ -342,11 +432,172 @@ const showToc = headings.length >= 2;
     color: var(--color-accent-glow);
   }
 
+  /* ── Code Copy Button ── */
+  .code-copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    padding: 0;
+    z-index: 1;
+  }
+
+  .post-body :global(pre):hover .code-copy-btn,
+  .code-copy-btn:focus-visible {
+    opacity: 1;
+  }
+
+  .code-copy-btn:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-accent);
+    border-color: var(--color-border-accent);
+  }
+
+  .code-copy-btn.copied {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  /* ── Terminal Block ── */
+  .terminal-block {
+    margin: 1.5rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md), 0 0 10px var(--glow-tech);
+    transition: box-shadow 0.3s var(--ease-smooth);
+  }
+
+  .terminal-block:hover {
+    box-shadow: var(--shadow-md), 0 0 20px var(--glow-btn);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #0d0d1a;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  [data-theme="light"] .terminal-bar {
+    background: #1e1e2e;
+    color: #e0e0e0;
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .tdot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .tdot-red    { background: #ff5f57; }
+  .tdot-yellow { background: #febc2e; }
+  .tdot-green  { background: #28c840; box-shadow: 0 0 6px rgba(40, 200, 64, 0.5); }
+
+  .terminal-lang {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-dim);
+    text-align: center;
+    user-select: none;
+  }
+
+  .terminal-copy {
+    position: static;
+    opacity: 1;
+  }
+
   /* ── Post Footer ── */
   .post-footer {
     margin-top: 4rem;
     padding-top: 2rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  /* ── Prev / Next Navigation ── */
+  .prev-next-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .prev-next-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: all 0.25s var(--ease-smooth);
+    background-image: none;
+  }
+
+  .prev-next-link:hover {
+    border-color: var(--color-border-accent);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
+    background: var(--color-surface-hover);
+  }
+
+  .prev-next-link.next {
+    text-align: right;
+  }
+
+  .prev-next-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--font-display);
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .prev-next-title {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .prev-next-link:hover .prev-next-title {
+    color: var(--color-accent);
+  }
+
+  .prev-next-spacer { display: none; }
+
+  @media (max-width: 640px) {
+    .prev-next-nav {
+      grid-template-columns: 1fr;
+    }
+    .prev-next-link.next {
+      text-align: left;
+    }
   }
 
   /* ── Right Sidebar TOC ── */
@@ -368,7 +619,7 @@ const showToc = headings.length >= 2;
     font-size: 0.68rem;
     font-weight: 500;
     letter-spacing: 0.06em;
-    color: var(--color-text-dim);
+    color: var(--color-text-muted);
     margin-bottom: 1rem;
   }
 
@@ -387,7 +638,7 @@ const showToc = headings.length >= 2;
     padding: 0.28rem 0;
     font-size: 0.8rem;
     line-height: 1.45;
-    color: var(--color-text-dim);
+    color: var(--color-text-muted);
     text-decoration: none;
     transition: color 0.2s ease;
   }
