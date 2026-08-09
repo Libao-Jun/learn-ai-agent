@@ -4,9 +4,11 @@ export interface Props {
   date: Date;
   slug: string;
   description?: string;
+  tags?: string[];
+  readingTime?: number;
 }
 
-const { title, date, slug, description } = Astro.props;
+const { title, date, slug, description, tags = [], readingTime } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -17,26 +19,52 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <span class="card-arrow" aria-hidden="true">&rarr;</span>
     </div>
     {description && <p class="card-desc">{description}</p>}
-    <time datetime={date.toISOString()}>
-      {date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-    </time>
+    {tags.length > 0 && (
+      <div class="card-tags">
+        {tags.slice(0, 3).map((tag) => (
+          <span class="card-tag">#{tag}</span>
+        ))}
+        {tags.length > 3 && <span class="card-tag card-tag-more">+{tags.length - 3}</span>}
+      </div>
+    )}
+    <div class="card-meta">
+      <time datetime={date.toISOString()}>
+        {date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      {readingTime && <span class="card-reading-time">约 {readingTime} 分钟</span>}
+    </div>
   </a>
 </article>
 
 <style>
   .card {
     position: relative;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     transition: all 0.3s var(--ease-smooth);
-    box-shadow: var(--shadow-sm);
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius-lg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.35s var(--ease-smooth);
+    box-shadow: 0 0 24px 6px rgba(0, 102, 204, 0.10);
   }
 
   .card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-card-hover);
-    border-color: var(--color-border-accent);
+    transform: translateY(-2px);
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+  }
+
+  .card:hover::after {
+    opacity: 1;
   }
 
   .card-link {
@@ -65,10 +93,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     line-height: 1.35;
     color: var(--color-text);
     transition: color 0.2s;
-  }
-
-  .card:hover .card-title {
-    color: var(--color-accent);
   }
 
   .card-desc {
@@ -101,7 +125,81 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .card time {
     display: block;
     font-size: 0.8rem;
-    margin-top: 0.75rem;
     color: var(--color-text-dim);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .card-meta time {
+    margin-top: 0;
+  }
+
+  .card-reading-time {
+    font-size: 0.78rem;
+    color: var(--color-text-dim);
+    font-family: var(--font-display);
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .card-tag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.66rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+
+  .card-tag-more {
+    background: var(--color-bg-alt);
+    color: var(--color-text-dim);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .card-link {
+      padding: 1.25rem 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-link {
+      padding: 1rem 1rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+    }
+
+    .card-tag {
+      font-size: 0.62rem;
+    }
+
+    .card-meta time {
+      font-size: 0.72rem;
+    }
   }
 </style>

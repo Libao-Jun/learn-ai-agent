@@ -2,7 +2,7 @@
 title: "Agent Skills"
 date: 2026-05-22
 description: "Agent 是智能体，Skills 是技能的意思，Agent Skills（智能体技能）是将专业知识、工作流规范固化为可复用资产的核心工具。"
-tags: ["Skill", "Skills 技能", "skill-creator"]
+tags: ["Skills", "Claude Code", "AI", "Agent"]
 ---
 
 # Agent Skills（智能体技能）
@@ -57,7 +57,7 @@ tags: ["Skill", "Skills 技能", "skill-creator"]
 - Agent Skills（代理技能）是可重用的指令集，用于扩展编码代理的功能。
 - `Agent Skills = 行为规范 + 专业知识 + 使用时机的组合`
 
-## Agent Skills 的工作原
+## Agent Skills 的工作原理
 
 Agent Skills 的关键是渐进式披露，分三层加载
 

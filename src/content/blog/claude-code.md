@@ -2,7 +2,7 @@
 title: 'Claude Code 快速上手指南'
 date: 2026-05-27
 description: 'Claude Code 是 Anthropic 官方出品的 AI 原生编码工具，它将大型语言模型的能力直接集成到终端中，让你可以用自然语言与 AI 协作完成编程任务。不同于传统的代码补全工具，Claude Code 能够理解整个项目的上下文，执行复杂的开发任务，从代码生成到重构、从调试到文档编写，它都能胜任。'
-tags: ['AI', 'Claude Code', 'Claude Code 参考资料']
+tags: ['AI', 'Claude Code', 'DeepSeek', 'MCP', 'Skills']
 ---
 
 ## 本节导读
@@ -651,7 +651,7 @@ code ./.claude/settings.json
 - [Claude Code 开源地址](https://github.com/anthropics/claude-code)
 - [Claude Code 官方文档](https://code.claude.com/docs/zh-CN/overview)
 - [DeepSeek Anthropic API](https://api-docs.deepseek.com/zh-cn/guides/anthropic_api)
-- [智谱大模型接入 Claude Code](ttps://docs.bigmodel.cn/cn/coding-plan/tool/claude#claude-code)
+- [智谱大模型接入 Claude Code](https://docs.bigmodel.cn/cn/coding-plan/tool/claude#claude-code)
 
 ## Claude Code 参考资料
 

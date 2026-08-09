@@ -59,12 +59,12 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: var(--font-display);
-    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     margin-bottom: 0.75rem;
   }
 
@@ -73,13 +73,12 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     height: 6px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 8px var(--glow-dot);
   }
 
   .page-title {
     font-family: var(--font-display);
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0 0 0.25rem;
   }
 
@@ -105,12 +104,10 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     border-radius: var(--radius);
     background-image: none;
     transition: all 0.25s var(--ease-smooth);
-    box-shadow: var(--shadow-sm);
   }
 
   .tag-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
     border-color: var(--color-border-accent);
     background: var(--color-surface-hover);
   }
@@ -123,10 +120,11 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
   }
 
   .tag-name {
-    font-family: var(--font-display);
+    font-family: var(--font-mono);
     font-weight: 600;
     color: var(--color-text);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
   }
 
   .tag-card:hover .tag-name {
@@ -134,13 +132,13 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
   }
 
   .tag-count {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     color: var(--color-text-dim);
     background: var(--color-bg-alt);
     padding: 0.1rem 0.45rem;
     border-radius: 100px;
     font-weight: 600;
-    font-family: var(--font-display);
+    font-family: var(--font-mono);
   }
 
   .empty-state {
@@ -148,4 +146,57 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     text-align: center;
     color: var(--color-text-muted);
   }
-</style>
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .tags-page {
+      margin-top: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 1.65rem;
+    }
+
+    .page-count {
+      font-size: 0.82rem;
+    }
+
+    .tag-card {
+      padding: 0.45rem 0.85rem;
+    }
+
+    .tag-name {
+      font-size: 0.74rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .tags-page {
+      margin-top: 1rem;
+    }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.4rem;
+    }
+
+    .tag-cloud {
+      gap: 0.45rem;
+    }
+
+    .tag-card {
+      padding: 0.4rem 0.75rem;
+    }
+
+    .tag-name {
+      font-size: 0.7rem;
+    }
+
+    .tag-count {
+      font-size: 0.62rem;
+    }
+  }</style>

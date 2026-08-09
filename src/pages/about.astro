@@ -1,6 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../site.config';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+const tags = [...new Set(posts.flatMap(p => p.data.tags))];
+const totalChars = posts.reduce((acc, p) => acc + (p.body?.length || 0), 0);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout pageTitle="关于我" description="关于我和这个博客">
@@ -13,19 +21,51 @@ import { SITE } from '../site.config';
       <h1 class="page-title">关于我</h1>
     </header>
 
+    <!-- Stats -->
+    <div class="about-stats">
+      <div class="stat-item">
+        <span class="stat-num">{posts.length}</span>
+        <span class="stat-label">篇文章</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">{tags.length}</span>
+        <span class="stat-label">个标签</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">{Math.round(totalChars / 400)}</span>
+        <span class="stat-label">分钟阅读</span>
+      </div>
+    </div>
+
     <div class="about-content">
       <div class="about-intro">
-        <p class="about-greeting">Hi，我是 {SITE.author}</p>
-        <p>这个博客记录了我的 AI 生态学习过程 —— 从零开始，一步步探索和成长。</p>
+        <p class="about-greeting">Hi，我是 {SITE.author} 👋</p>
+        <p>这个博客记录了我的 <strong>AI 生态学习</strong>过程 —— 从零开始，一步步探索 AI Agent、MCP 协议、Claude Code、Skills 技能体系等领域。</p>
         <p>这里会分享我在学习过程中的思考、笔记和心得。如果你也在学习类似的技能，希望这些内容能对你有所启发。</p>
       </div>
 
       <div class="about-divider"></div>
 
       <div class="about-section">
+        <h2>🧠 知识领域</h2>
+        <div class="knowledge-cloud">
+          <a href={`${base}/tags/AI`} class="knowledge-tag">AI Agent</a>
+          <a href={`${base}/tags/MCP`} class="knowledge-tag">MCP 协议</a>
+          <a href={`${base}/tags/Claude Code`} class="knowledge-tag">Claude Code</a>
+          <a href={`${base}/tags/Codex`} class="knowledge-tag">Codex</a>
+          <a href={`${base}/tags/Skills`} class="knowledge-tag">Agent Skills</a>
+          <a href={`${base}/tags/Prompt`} class="knowledge-tag">Prompt 工程</a>
+          <a href={`${base}/tags/SDD`} class="knowledge-tag">SDD</a>
+          <a href={`${base}/tags/AI 模型`} class="knowledge-tag">AI 模型</a>
+          <a href={`${base}/tags/多模态`} class="knowledge-tag">多模态</a>
+        </div>
+      </div>
+
+      <div class="about-divider"></div>
+
+      <div class="about-section">
         <h2>关于这个博客</h2>
-        <p>使用 <a href="https://astro.build">Astro</a> 构建，追求简洁、快速的阅读体验。</p>
-        <p>专注于内容本身，减少不必要的干扰。每一篇文章都是学习路上的真实记录。</p>
+        <p>使用 <a href="https://astro.build">Astro</a> 构建，追求简洁、快速的阅读体验。专注于内容本身，减少不必要的干扰。每一篇文章都是学习路上的真实记录。</p>
       </div>
 
       <div class="about-divider"></div>
@@ -61,12 +101,12 @@ import { SITE } from '../site.config';
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-family: var(--font-display);
-    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     margin-bottom: 0.75rem;
   }
 
@@ -75,14 +115,80 @@ import { SITE } from '../site.config';
     height: 6px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 8px var(--glow-dot);
   }
 
   .page-title {
     font-family: var(--font-display);
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
+  }
+
+  /* ── Stats ── */
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.25s var(--ease-smooth), background 0.25s var(--ease-smooth);
+  }
+
+  .stat-item:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-accent);
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-top: 0.35rem;
+    font-weight: 600;
+  }
+
+  /* ── Knowledge Cloud ── */
+  .knowledge-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .knowledge-tag {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    background-image: none;
+    transition: all 0.2s var(--ease-smooth);
+  }
+
+  .knowledge-tag:hover {
+    background: var(--color-accent-soft-hover);
+    transform: translateY(-1px);
+    color: var(--color-accent);
   }
 
   .about-content {
@@ -123,14 +229,104 @@ import { SITE } from '../site.config';
     color: var(--color-accent);
     border: 1px solid var(--color-border-accent);
     border-radius: var(--radius-sm);
-    font-family: var(--font-display);
-    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
     transition: all 0.2s var(--ease-smooth);
   }
 
   .tech-item:hover {
     background: var(--color-accent-soft);
-    box-shadow: 0 0 12px var(--glow-tech);
   }
-</style>
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .about {
+      margin-top: 1.5rem;
+    }
+
+    .page-title {
+      font-size: 1.65rem;
+    }
+
+    .about-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .stat-item {
+      padding: 1rem 0.75rem;
+    }
+
+    .stat-num {
+      font-size: 1.65rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+    }
+
+    .about-greeting {
+      font-size: 1.15rem;
+    }
+
+    .about-section h2 {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about {
+      margin-top: 1rem;
+    }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.4rem;
+    }
+
+    .about-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-item {
+      padding: 0.85rem 0.5rem;
+    }
+
+    .stat-num {
+      font-size: 1.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+    }
+
+    .about-greeting {
+      font-size: 1.05rem;
+    }
+
+    .about-content {
+      font-size: 0.92rem;
+    }
+
+    .about-section h2 {
+      font-size: 1.1rem;
+    }
+
+    .about-divider {
+      margin: 1.5rem 0;
+    }
+
+    .knowledge-tag,
+    .tech-item {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+    }
+  }</style>

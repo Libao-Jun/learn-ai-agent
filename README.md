@@ -1,117 +1,282 @@
-# Learn-AI-Agent
+# Learn AI Agent
 
-个人技术博客，记录 AI Agent 学习过程中的思考与实践。
+个人技术博客，记录 AI Agent 生态的学习、思考与实践。
 
-基于 [Astro](https://astro.build) 构建，采用静态生成，追求极致的加载速度和纯净的阅读体验。
+基于 [Astro](https://astro.build) v6 构建，静态生成（SSG），追求极致的加载速度和沉浸式阅读体验。采用 **Apple 设计风格**（Action Blue + 近黑表面系统），暗色/亮色双主题支持。
+
+🔗 **在线访问**：[humorfrank.github.io/learn-ai-agent](https://humorfrank.github.io/learn-ai-agent/)
+
+---
+
+## 功能特性
+
+- 🎨 **Apple 设计风格** — Action Blue `#0066cc` 单一强调色、近黑表面系统（无投影）、SF Pro 字体栈、Hero 渐变缎带
+- 🌓 **暗色/亮色双主题** — 自动跟随系统偏好，支持手动切换，localStorage 持久化
+- 📡 **RSS 订阅** — 自动生成 RSS 源，支持 RSS 阅读器订阅
+- 🗺️ **站点地图** — 自动生成 sitemap.xml，优化搜索引擎收录
+- 📱 **响应式布局** — 适配 375px / 768px / 1200px+ 断点
+- ⚡ **零 JavaScript 运行时** — 纯静态 HTML 输出，极致加载性能
+- 🔍 **SEO 友好** — 语义化 HTML + Open Graph meta 标签
+- 🏷️ **标签系统** — 标签云 + 按标签筛选文章，支持中英文混合标签
+- 📖 **文章目录（TOC）** — 自动提取标题生成侧栏导航
+- 🎯 **阅读进度条** — Action Blue 2px 进度指示，H2 左边栏装饰
+
+---
 
 ## 技术栈
 
-- **框架**：[Astro](https://astro.build) v6
-- **内容**：Markdown 内容集合（Content Collections）
-- **样式**：纯 CSS（CSS Variables + Fraunces 字体 + 暖色调 Editorial 风格）
-- **代码高亮**：[Shiki](https://shiki.style)（github-dark 主题）
-- **RSS**：[@astrojs/rss](https://docs.astro.build/zh-cn/guides/rss/)
-- **站点地图**：[@astrojs/sitemap](https://docs.astro.build/zh-cn/guides/integrations-guide/sitemap/)
-- **部署**：静态文件，兼容 Netlify / Vercel / GitHub Pages
+| 类别 | 技术 |
+|------|------|
+| 框架 | [Astro](https://astro.build) v6（静态 SSG） |
+| 内容 | Markdown / MDX 内容集合（Content Layer API） |
+| 样式 | 纯 CSS（CSS Custom Properties 设计令牌） |
+| 代码高亮 | [Shiki](https://shiki.style)（github-dark 主题） |
+| 图表 | [Mermaid](https://mermaid.js.org)（客户端渲染） |
+| Markdown 扩展 | `remark-directive`（`:::tip` / `:::note` / `:::warning` / `:::danger`） |
+| RSS | [@astrojs/rss](https://docs.astro.build/zh-cn/guides/rss/) |
+| 站点地图 | [@astrojs/sitemap](https://docs.astro.build/zh-cn/guides/integrations-guide/sitemap/) |
+| 部署 | GitHub Pages（GitHub Actions 自动部署） |
+| 包管理 | pnpm v10 |
+
+---
 
 ## 目录结构
 
 ```
 learn-ai-agent/
+├── .github/workflows/deploy.yml   # CI/CD：推送 main → 构建 → 部署
 ├── public/
-│   ├── favicon.svg
-│   └── robots.txt
+│   └── favicon.svg
 ├── src/
-│   ├── components/
-│   │   └── BlogCard.astro          # 文章卡片组件
-│   ├── content/
-│   │   └── blog/                    # 博客文章（Markdown）
-│   ├── layouts/
-│   │   ├── BaseLayout.astro        # 基础布局（导航、页脚）
-│   │   └── BlogPostLayout.astro    # 文章详情布局
-│   ├── pages/
-│   │   ├── index.astro             # 首页
-│   │   ├── about.astro             # 关于页
-│   │   ├── rss.xml.js              # RSS 订阅源
-│   │   ├── blog/
-│   │   │   ├── index.astro         # 文章列表
-│   │   │   └── [slug].astro        # 文章详情动态路由
-│   │   └── tags/
-│   │       ├── index.astro         # 标签列表
-│   │       └── [tag].astro         # 按标签筛选文章
+│   ├── site.config.ts             # 站点元数据（SITE 对象，集中配置）
+│   ├── content.config.ts          # 内容集合 Schema 定义
 │   ├── styles/
-│   │   └── global.css              # 全局样式与设计变量
-│   └── content.config.ts           # 内容集合 Schema 定义
+│   │   └── global.css             # 全局设计系统（~547 行，令牌/动画/主题）
+│   ├── plugins/
+│   │   └── remark-callout.mjs     # :::tip/note/warning/danger 指令插件
+│   ├── utils/
+│   │   └── reading-time.ts        # 阅读时间估算（中英文自适应）
+│   ├── layouts/
+│   │   ├── BaseLayout.astro       # HTML 骨架：导航、页脚、主题
+│   │   └── BlogPostLayout.astro   # 文章布局：头部、正文、TOC 侧栏、前后导航
+│   ├── components/
+│   │   ├── BlogCard.astro         # 文章卡片（标题/描述/标签/阅读时间/日期）
+│   │   ├── ThemeToggle.astro      # 暗色/亮色主题切换按钮
+│   │   └── Mermaid.astro          # 客户端 Mermaid 图表渲染
+│   ├── pages/
+│   │   ├── index.astro            # 首页：Hero + 特色文章 + 文章网格
+│   │   ├── about.astro            # 关于页：统计 + 知识领域 + 技术栈
+│   │   ├── robots.txt.ts          # 动态 robots.txt
+│   │   ├── rss.xml.js             # RSS Feed 生成
+│   │   ├── blog/
+│   │   │   ├── index.astro        # 文章列表（全部文章，按时间倒序）
+│   │   │   └── [slug].astro       # 文章详情（动态路由）
+│   │   └── tags/
+│   │       ├── index.astro        # 标签云（按文章数排序）
+│   │       └── [tag].astro        # 按标签过滤的文章列表
+│   └── content/
+│       └── blog/                   # 博客文章（.md / .mdx）
 ├── astro.config.mjs
 ├── package.json
 ├── pnpm-lock.yaml
 └── tsconfig.json
 ```
 
+---
+
 ## 快速开始
 
+### 环境要求
+
+- [Node.js](https://nodejs.org) ≥ 22
+- [pnpm](https://pnpm.io) ≥ 10
+
+### 本地开发
+
 ```bash
+# 克隆仓库
+git clone https://github.com/libao-jun/learn-ai-agent.git
+cd learn-ai-agent
+
 # 安装依赖
 pnpm install
 
-# 启动开发服务器
+# 启动开发服务器（http://localhost:4321）
 pnpm dev
 
-# 构建生产版本
+# 构建生产版本（输出到 dist/）
 pnpm build
 
-# 预览生产版本
+# 预览生产构建（http://localhost:4321）
 pnpm preview
 ```
 
-## 添加新文章
+---
 
-在 `src/content/blog/` 目录下创建 `.md` 文件，添加 YAML frontmatter：
+## 内容创作
 
-```md
+### 创建新文章
+
+在 `src/content/blog/` 目录下创建 `.md` 或 `.mdx` 文件：
+
+```yaml
 ---
 title: '文章标题'
-date: 2026-01-01
-description: '文章摘要，显示在卡片中。'
-tags: ['标签1', '标签2']
-draft: false   # true 时仅开发环境可见
+date: 2026-08-09
+description: '一句话描述，50 字以内，含关键词，吸引点击'
+tags: ['主标签', '副标签1', '副标签2']
 ---
-
-文章正文内容...
 ```
 
-保存后 Astro 会自动识别并生成页面，无需修改任何代码。
+### 文章结构
 
-## 设计特点
+每篇文章建议包含「本节导读」章节，使用 `sg-card` 组件展示学习目标、阅读时间和收获要点：
 
-- **暖色调 Editorial 风格** — 奶油底色搭配赤陶色点缀，Fraunces 衬线标题字体
-- **毛玻璃导航栏** — `backdrop-filter` 模糊效果，随页面滚动固定
-- **阅读进度条** — 页面顶部渐变进度指示
-- **卡片悬浮动效** — 文章卡片 hover 时的抬升与箭头滑入
-- **交错入场动画** — 文章列表依次淡入，提升视觉层次
-- **标签云** — 带文章计数的卡片式标签展示
-- **RSS 订阅** — 自动生成 RSS 源，支持阅读器订阅
+```md
+## 本节导读
+
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <span class="sg-item-icon">🎯</span>
+        <span class="sg-item-label">学习目标</span>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">了解 XXX 的基本概念</span>
+        <span class="sg-tag">掌握 XXX 的使用方法</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <span class="sg-item-icon">⏱️</span>
+        <span class="sg-item-label">预计阅读</span>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">8</span>
+        <span class="sg-time-unit">分钟</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <span class="sg-item-icon">📌</span>
+        <span class="sg-item-label">收获要点</span>
+      </div>
+      <ul class="sg-list">
+        <li>要点一</li>
+        <li>要点二</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+### 标注框
+
+文章内可使用 `:::tip`、`:::note`、`:::warning`、`:::danger` 创建标注框：
+
+```md
+:::tip[标题]
+提示内容
+:::
+
+:::warning
+警告内容（标题可选）
+:::
+```
+
+### 标签规范
+
+- **技术专有名词保持英文**：`AI`, `MCP`, `A2A`, `Claude Code`, `Codex`, `Skills`, `SDD`
+- **概念/领域可用中文**：`多模态`, `全栈`, `工具集`
+- **每篇文章至少 3 个标签**
+- 避免冗余标签（如同时打 `Claude Code` 和 `Claude Code 参考资料`）
+
+### 草稿文章
+
+设置 `draft: true` 后，文章仅在本地开发环境可见，生产构建时自动排除：
+
+```yaml
+---
+title: '草稿标题'
+date: 2026-08-09
+draft: true
+---
+```
+
+---
+
+## 设计系统
+
+### 配色
+
+| 角色 | 暗色模式 | 亮色模式 |
+|------|---------|---------|
+| 画布 | `#000000`（纯黑画布） | `#ffffff`（纯白） |
+| 表面/卡片 | `#272729`（暗色瓷砖） | `#ffffff` |
+| 悬停表面 | `#2a2a2c` | `#f5f5f7` |
+| 正文文字 | `#f5f5f7` | `#1d1d1f` |
+| 次要文字 | `#a1a1a6` | `#7a7a7a` |
+| 强调色 | `#0066cc`（Action Blue） | `#0066cc` |
+
+### 字体
+
+| 用途 | 字体栈 |
+|------|--------|
+| 标题 | SF Pro Display → system-ui → -apple-system → Inter |
+| 正文 | SF Pro Text → system-ui → -apple-system → Inter |
+| 等宽 | SF Mono → JetBrains Mono → Fira Code → ui-monospace |
+
+### 设计原则
+
+- **近黑表面系统** — 深度通过 3 级颜色明度台阶表达（纯黑→暗色瓷砖→悬停），卡片不使用投影
+- **Apple Pill 按钮** — Action Blue 固体背景，9999px 圆角，`scale(0.95)` 按压反馈
+- **SF Pro 字体栈** — 标题 Display 600、正文 Text 400、标签 Mono 600（不使用 weight 500）
+- **唯一标志性装饰** — Hero 底部 2px Action Blue 渐变缎带（全站唯一装饰元素）
+- **毛玻璃导航** — `backdrop-filter: blur(12px) saturate(160%)`，44px 高度
+- **17px 正文** — Apple 标志性阅读尺寸，标题负向字间距
+
+---
 
 ## 部署
 
-项目输出纯静态文件（`dist/`），已配置 GitHub Actions 自动部署到 GitHub Pages。
+项目输出纯静态文件到 `dist/`，已配置 GitHub Actions 自动部署到 GitHub Pages。
 
-- **部署分支**：`main`（仅 main 分支推送时触发）
-- **包管理**：pnpm（通过 Corepack 管理）
+### 部署流程
 
-### base 路径说明
+```text
+推送 main 分支 → GitHub Actions 触发 → pnpm install → pnpm build → 部署到 GitHub Pages
+```
 
-项目配置了 `base: '/learn-ai-agent/'`（仅在构建时生效）：
+### Base 路径
 
-- **开发环境**（`pnpm dev`）：base 为 `/`，直接访问 `localhost:4321/`
-- **生产构建**（`pnpm build`）：base 为 `/learn-ai-agent/`，所有链接自动带正确前缀
+项目部署于 GitHub Pages 子路径 `/learn-ai-agent/`：
 
-### GitHub Pages 设置
+| 环境 | Base 路径 |
+|------|----------|
+| 开发（`pnpm dev`） | `/` |
+| 生产（`pnpm build`） | `/learn-ai-agent/` |
 
-1. 进入仓库 **Settings > Pages > Source**，选择 **GitHub Actions**
-2. 推送代码到 `main` 分支即可自动触发部署
+所有内部链接通过 `import.meta.env.BASE_URL` 自动计算，无需手动处理。
+
+### 部署到其他平台
+
+`dist/` 目录为纯静态文件，可直接部署到 Netlify、Vercel、Cloudflare Pages 等平台。部署时注意配置 **Base 路径** 为 `/` 或自定义子路径。
+
+---
+
+## 项目约定
+
+详细的项目架构、组件 Props、设计令牌和内容规范请参阅 [CLAUDE.md](./.claude/CLAUDE.md)。
+
+核心约束：
+- 禁止修改构建配置文件（`astro.config.mjs`、`package.json`、`tsconfig.json`、`content.config.ts`）
+- 所有颜色通过 CSS 自定义属性（design tokens）引用，禁止硬编码色值
+- 暗色/亮色双主题必须同步适配
+- 响应式需在 375px / 768px / 1200px 三个断点验证
+
+---
 
 ## License
 
 MIT
-
