@@ -2,6 +2,8 @@
 
 本文件为 Claude Code (claude.ai/code) 在此仓库中工作时提供指导。
 
+> 🔄 **自维护机制**：每次对项目进行修改后（新增组件、调整布局、优化样式、修改内容规范等），必须检查并同步更新本文件。详见文末「CLAUDE.md 自动维护」章节。
+
 ## 常用命令
 
 ```bash
@@ -10,21 +12,63 @@ pnpm build            # 生产构建到 dist/
 pnpm preview          # 预览生产构建
 ```
 
-包管理器为 **pnpm v10**（在 `package.json` 中强制指定）。未配置测试运行器。
+包管理器为 **pnpm v10**（`package.json` 中强制指定）。无测试运行器。
+
+> ⚠️ **禁止修改构建配置文件**（`astro.config.mjs`、`package.json`、`tsconfig.json`、`content.config.ts`），除非用户明确要求。
 
 ## 项目概述
 
-一个关于 AI Agent 学习的个人技术博客，使用 **Astro v6**（静态 SSG）构建，部署到 GitHub Pages：`humorfrank.github.io/learn-ai-agent/`。
+一个关于 **AI Agent 学习**的个人技术博客，使用 **Astro v6**（静态 SSG）构建，部署到 GitHub Pages：`humorfrank.github.io/learn-ai-agent/`。
 
-核心依赖：`astro`、`@astrojs/rss`、`@astrojs/sitemap`。
+核心依赖：`astro`、`@astrojs/rss`、`@astrojs/sitemap`、`@astrojs/mdx`、`mermaid`、`remark-directive`。
+
+站点配置集中在 `src/site.config.ts`（`SITE` 对象），包含标题、描述、作者等信息，修改一处全局生效。
 
 ## 项目架构
+
+### 文件地图
+
+```text
+learn-ai-agent/
+├── astro.config.mjs              # 站点/构建配置（勿改）
+├── src/
+│   ├── site.config.ts            # 站点元数据（SITE 对象）
+│   ├── content.config.ts         # 内容集合 schema 定义（勿改）
+│   ├── utils/
+│   │   └── reading-time.ts       # 阅读时间估算工具
+│   ├── styles/
+│   │   └── global.css            # 完整设计系统（~620 行）
+│   ├── plugins/
+│   │   └── remark-callout.mjs    # :::tip/note/warning/danger 指令插件
+│   ├── layouts/
+│   │   ├── BaseLayout.astro      # HTML 骨架：<head>、导航、页脚、主题、进度条
+│   │   └── BlogPostLayout.astro  # 继承 BaseLayout：文章头部、正文、TOC 侧栏、前/后导航
+│   ├── components/
+│   │   ├── BlogCard.astro        # 文章卡片（标题、描述、标签、阅读时间、日期）
+│   │   ├── ThemeToggle.astro     # 暗色/亮色主题切换按钮
+│   │   ├── Mermaid.astro         # 客户端 Mermaid 图表渲染
+│   │   └── AgentsGuide.astro     # AGENTS.md 指南组件（当前未使用）
+│   ├── pages/
+│   │   ├── index.astro           # 首页：Hero + 特色文章 + 文章网格
+│   │   ├── about.astro           # 关于页：统计 + 知识领域 + 技术栈
+│   │   ├── blog/
+│   │   │   ├── index.astro       # 文章列表（全部文章）
+│   │   │   └── [slug].astro      # 单篇文章（动态路由 + 前/后导航）
+│   │   ├── tags/
+│   │   │   ├── index.astro       # 标签云（按文章数排序）
+│   │   │   └── [tag].astro       # 按标签过滤的文章列表
+│   │   ├── robots.txt.ts         # 动态 robots.txt
+│   │   └── rss.xml.js            # RSS Feed 生成
+│   └── content/
+│       └── blog/                 # 12 篇 Markdown/MDX 文章
+└── .github/workflows/deploy.yml  # CI/CD：推送 main → 构建 → 部署 GitHub Pages
+```
 
 ### 布局层级
 
 ```text
-BaseLayout.astro          ← HTML 骨架：<head>、导航栏、主题脚本、页脚、视图过渡
-  └─ BlogPostLayout.astro ← 继承上述：文章头部、正文、文末
+BaseLayout.astro          ← HTML 骨架：<head>、导航栏、主题脚本、页脚、视图过渡、环境光效
+  └─ BlogPostLayout.astro ← 继承上述：文章头部（标题/日期/标签/阅读时间）、正文、TOC 侧栏、前/后导航
        └─ [slug].astro    ← 通过 getStaticPaths + render() 获取单篇博客
 ```
 
@@ -42,11 +86,23 @@ Schema 字段：
 - `tags`（string[]）— 默认 `[]`
 - `draft`（bool）— 默认 `false`
 
-博客文章存放在 `src/content/blog/*.md`。`[slug].astro` 页面通过 `getStaticPaths()` + `render()` 生成静态页面。
+博客文章存放在 `src/content/blog/*.md`（12 篇 `.md` + 1 篇 `.mdx`）。`[slug].astro` 页面通过 `getStaticPaths()` + `render()` 生成静态页面。
 
 ### 草稿文章
 
-`index.astro` 和 `blog/index.astro` 仅在正式环境（`import.meta.env.PROD`）下过滤 `draft: true` 的文章。开发时草稿可见。
+所有获取文章的页面使用统一模式过滤草稿：
+
+```js
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+```
+
+`index.astro`、`blog/index.astro`、`tags/[tag].astro`、`[slug].astro` 均采用此模式。
+
+---
+
+## 设计系统
 
 ### 主题系统
 
@@ -55,27 +111,207 @@ Schema 字段：
 关键实现细节：
 
 - **防闪烁**：`BaseLayout.astro` 中的内联 `<script is:inline>` 在首帧渲染前从 `localStorage` 读取并设置属性
+- **优先级**：localStorage > 系统偏好 > 暗色默认
 - **切换组件**：`ThemeToggle.astro` 使用原生 JS 事件监听器处理切换
 - **Token 层级**：暗色主题变量在 `:root`，亮色主题覆盖在 `[data-theme="light"]`
-- **强调色**：暗色模式绿色（`#04d9a0`），亮色模式靛蓝色（`#4f46e5`）
+- **过渡**：所有主题相关属性使用 `0.35s var(--ease-smooth)` 平滑过渡
 
-### 基础路径处理
+### 设计令牌速查
 
-站点部署于 GitHub Pages 子路径 `/learn-ai-agent/`。所有内部链接通过 `import.meta.env.BASE_URL.replace(/\/$/, '')` 计算基础路径 — `BaseLayout.astro` 和 `BlogCard.astro` 中均采用此方式。开发时 `BASE_URL` 为 `/`，正式环境（`astro.config.mjs` 配置）为 `/learn-ai-agent/`。
+| 类别 | 暗色模式 | 亮色模式 |
+|------|---------|---------|
+| 背景 | `--color-bg: #0a0e17` | `#ffffff` |
+| 表面 | `--color-surface: #1a2234` | `#ffffff` |
+| 主文字 | `--color-text: #e8ecf4` | `#1a1a2e` |
+| 次文字 | `--color-text-muted: #7b8ba5` | `#475569` |
+| 强调色 | `--color-accent: #04d9a0`（绿） | `#4f46e5`（靛蓝） |
+| 强调光晕 | `--color-accent-glow: #00ffbd` | `#6366f1` |
+| 辅助色 | `--color-accent-secondary: #6366f1` | `#0ea5e9` |
 
-### 设计系统
+### 字体
 
-`src/styles/global.css` 定义完整的 CSS 自定义属性体系（颜色、阴影、圆角、缓动函数）。主要视觉特性：
+| 用途 | 字体栈 |
+|------|--------|
+| 标题/导航 | `Space Grotesk` → `Noto Sans SC` → system-ui |
+| 正文 | `Noto Sans SC` → `Space Grotesk` → system-ui |
+| 代码 | `IBM Plex Mono` → `Fira Code` → monospace |
 
-- 颗粒纹理覆盖层（`body::before` SVG 噪声，极低透明度）
-- 玻璃拟态引用块（`backdrop-filter: blur(20px)`）
-- 交错入场动画（`.stagger` + `nth-child` 延迟）
-- 阅读进度条（渐变色，固定视口顶部，`BaseLayout.astro` 中滚动监听器驱动）
-- 章节导读卡片（`.sg-card` — 见下文）
+### 动画
 
-### 章节导读卡片
+| 动画名 | 用途 |
+|--------|------|
+| `fadeInUp` | 页面入场（`.animate-in`）和交错子元素（`.stagger`） |
+| `gradientShift` | 渐变文字、Logo、sg-card 顶部条（背景位移动画） |
+| `float` | 环境光晕上下浮动（8s 循环） |
+| `particleFloat` | Hero 粒子光点浮动 |
+| `pulseGlow` | 脉冲发光（可用于关注按钮） |
 
-每篇 `.md` 博客文章顶部有一段原始 HTML 的 `.sg-card` 块，包含学习目标、预计阅读时间和收获要点。这是项目约定，直接在 Markdown 中以 HTML 形式编写，非 Astro 组件。
+### 视觉效果
+
+- **颗粒纹理**：`body::before` SVG 噪声覆盖层（opacity 0.025 暗色 / 0.012 亮色）
+- **双环境光晕**：右上绿色 + 左下蓝紫色径向渐变（`filter: blur(120px)`）
+- **星场背景**：10 个 CSS 径向渐变微光点
+- **玻璃拟态**：blockquote 使用 `backdrop-filter: blur(20px)`，带 accent 左栏和装饰引号
+- **阅读进度条**：渐变色（accent → secondary → glow），固定视口顶部
+- **Hero 粒子**：8 个 accent 色光点，独立浮动动画延迟
+- **视图过渡**：`@view-transition { navigation: auto }` 已启用
+
+### 代码高亮
+
+Shiki 使用 `github-dark` 主题。代码块自动注入复制按钮（`BlogPostLayout.astro` 脚本实现）。
+
+### 章节导读卡片（sg-card）
+
+每篇博客文章顶部有一段 `.sg-card` 的 HTML 块，包含学习目标、预计阅读时间和收获要点。**直接以原始 HTML 形式写在 Markdown 中**，非 Astro 组件。
+
+sg-card 的顶部渐变条带有 `gradientShift` 动画。样式定义在 `global.css`。
+
+---
+
+## 组件 Props 速查
+
+### BlogCard
+
+```ts
+interface Props {
+  title: string;           // 文章标题
+  date: Date;              // 发布日期
+  slug: string;            // 文章 ID（用于链接）
+  description?: string;    // 文章描述（限制 2 行）
+  tags?: string[];         // 标签列表（显示前 3 个，超出显示 +N）
+  readingTime?: number;    // 估算阅读时间（分钟）
+}
+```
+
+### BlogPostLayout
+
+```ts
+interface Props {
+  title: string;
+  date: Date;
+  tags?: string[];
+  headings?: Heading[];        // { text, slug, depth } — 用于 TOC
+  readingTime?: number;
+  prevPost?: { id: string; data: { title: string; description?: string } } | null;
+  nextPost?: { id: string; data: { title: string; description?: string } } | null;
+}
+```
+
+TOC 仅在 `headings.length >= 2` 时显示。`prevPost` 按时间倒序，「上一篇」= 更旧的文章。
+
+### BaseLayout
+
+```ts
+interface Props {
+  pageTitle: string;       // 用于 <title> 后缀
+  description?: string;    // 用于 <meta name="description">
+}
+```
+
+---
+
+## 内容创作规范
+
+### Frontmatter 模板
+
+```yaml
+---
+title: '文章标题'
+date: 2026-08-09
+description: '一句话描述，50 字以内，含关键词，吸引点击'
+tags: ['主标签', '副标签1', '副标签2']
+---
+```
+
+### 标签规范
+
+- **技术专有名词保持英文**：`AI`, `MCP`, `A2A`, `Claude Code`, `Codex`, `Skills`, `SDD`
+- **概念/领域可用中文**：`多模态`, `全栈`, `工具集`
+- **避免冗余标签**：不要同时用 `Claude Code` 和 `Claude Code 参考资料`
+- **每篇文章至少 3 个标签**
+
+### 文章结构
+
+```md
+## 本节导读
+
+<div class="sg-card">…</div>    ← 章节导读卡片（必选）
+
+## 核心内容第一节
+…正文…
+
+## 核心内容第二节
+…正文…
+```
+
+### 交叉引用
+
+每篇文章末尾推荐添加「延伸阅读」或文章导航表，参考 `ai-tools.md` 末尾的「附录：本系列文章导航」表格。
+
+内部链接格式：`[文章标题](/learn-ai-agent/blog/slug/)`
+
+### 可用指令
+
+文章内可使用 `:::tip`、`:::note`、`:::warning`、`:::danger` 创建标注框：
+
+```md
+:::tip[标题]
+提示内容
+:::
+```
+
+由 `remark-callout.mjs` 插件转换为 `<aside class="md-callout md-callout-tip">`。
+
+---
+
+## 工具模块
+
+### `src/utils/reading-time.ts`
+
+```ts
+export function getReadingTime(body: string): number
+```
+
+- 中文：~400 字/分钟
+- 英文：~200 词/分钟
+- 自动剥离 Markdown 语法（代码块、图片、链接、HTML 标签）
+- 最小返回 1 分钟
+
+所有使用 `BlogCard` 的页面均需导入此工具并传入 `readingTime={getReadingTime(post.body || '')}`。
+
+---
+
+## 基础路径处理
+
+站点部署于 GitHub Pages 子路径 `/learn-ai-agent/`。所有内部链接通过以下方式计算基础路径：
+
+```js
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+```
+
+开发时 `BASE_URL` 为 `/`，正式环境为 `/learn-ai-agent/`。`BaseLayout.astro`、`BlogPostLayout.astro`、`BlogCard.astro` 及所有页面均采用此方式。
+
+---
+
+## CSS 约定
+
+- 全局样式在 `src/styles/global.css`
+- 组件/页面级样式使用 Astro scoped `<style>` 块
+- 主题过渡统一使用 `0.35s var(--ease-smooth)`
+- 交互过渡使用 `0.2s ~ 0.3s var(--ease-smooth)` 或 `var(--ease-out)`
+- 需要穿透 scoping 时使用 `:global()` 选择器
+- 表格样式：全局定义基础样式，`BlogPostLayout` 脚本在客户端将 `<table>` 包裹在 `.table-wrapper` 中实现响应式滚动
+
+---
+
+## 已知约定
+
+1. **禁止修改构建配置** — `astro.config.mjs`、`package.json`、`tsconfig.json`、`content.config.ts` 不要动
+2. **sg-card 保持手写 HTML** — 不组件化，因为 `.md` 文件无法导入 Astro 组件
+3. **TOC 锚点** — 服务端 `extractHeadings()` 和客户端 slug 生成算法需保持一致
+4. **前/后导航** — 「上一篇」= 时间上更旧的（索引 +1），「下一篇」= 更新的（索引 -1）
+5. **代码复制按钮** — 由 `BlogPostLayout.astro` 脚本自动注入，hover pre 块时显示
+6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹
 
 ## CI/CD
 
@@ -85,15 +321,45 @@ Schema 字段：
 检出 → 配置 pnpm + Node 22 → pnpm install --frozen-lockfile → pnpm build → 部署到 GitHub Pages
 ```
 
-## Skills
+---
 
-项目专属技能位于 `.claude/skills/`：
+## CLAUDE.md 自动维护
 
-- `astro-blog-init` — 初始化 Astro 博客项目
-- `auto-extract-doc` — 提取和分类 Markdown 文档
-- `deploy-github-actions` — 配置 GitHub Actions 部署
-- `markdown-format` — 按 markdown.com.cn 标准格式化 Markdown
-- `security-scan` — 扫描敏感信息和安全风险
-- `skill-creator` — 创建和修改 Agent 技能
+本文件是项目的**核心知识库**，记录架构、设计系统、组件规范、内容约定等一切关键信息。每次对项目进行修改后，**必须检查本文件是否需要同步更新**。
 
-已安装的第三方技能（记录在 `skills-lock.json`）：`frontend-design`、`skill-creator`（来自 `anthropics/skills`）。
+### 触发条件
+
+以下变更发生时，对应章节必须检查并更新：
+
+| 变更类型 | 需检查的章节 | 典型操作 |
+|---------|-------------|---------|
+| 新增/删除组件 | 文件地图、组件 Props 速查 | 更新文件树、添加/删除 Props 接口 |
+| 修改组件 Props | 组件 Props 速查 | 更新接口定义和注释 |
+| 新增/删除页面 | 文件地图、布局层级 | 更新路由和层级关系 |
+| 调整设计令牌 | 设计令牌速查 | 更新颜色/字体/动画表格 |
+| 新增动画/特效 | 动画表、视觉效果 | 添加条目并注明用途 |
+| 新增工具模块 | 工具模块 | 添加函数签名和用法说明 |
+| 新增内容规范 | 内容创作规范 | 添加新的规范条目 |
+| 调整布局结构 | 文件地图、布局层级 | 更新层级关系和文件描述 |
+| 修改 CI/CD 流程 | CI/CD | 更新部署流程图 |
+| 标签命名变更 | 标签规范 | 更新标签示例和规范说明 |
+| 新增约束/约定 | 已知约定 | 追加新的约定条目 |
+
+### 执行流程
+
+每次完成项目修改后，按以下步骤自检：
+
+1. **比对变更**：列出本次修改涉及的所有文件
+2. **对照上表**：找到对应的 CLAUDE.md 章节
+3. **逐项更新**：
+   - 更新的数据（如令牌值、文件路径）保持精确
+   - 新增的内容遵循现有格式和排版
+   - 删除过时信息，不留残留
+4. **验证一致性**：确认文件地图中的路径与实际文件一致，Props 定义与源码一致
+
+### 维护原则
+
+- **精确性优先**：令牌值、路径、接口签名必须与源码完全一致
+- **增量更新**：只修改变更涉及的部分，不重写整个文件
+- **保持结构**：不随意调整章节顺序或标题层级，保持文档结构稳定
+- **新旧兼顾**：新增内容时保留仍有价值的旧内容，不随意删除现有约定
