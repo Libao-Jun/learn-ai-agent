@@ -18,9 +18,7 @@ const restPosts = posts.slice(1);
   <!-- Hero -->
   <section class="hero">
     <div class="hero-badge">{SITE.heroBadge}</div>
-    <h1 class="hero-title">
-      <span class="gradient-text">{SITE.title}</span>
-    </h1>
+    <h1 class="hero-title">{SITE.title}</h1>
     <p class="hero-subtitle">
       从零开始，记录 AI 生态学习过程中的每一个脚印。<br />
       持续精进，分享成长。
@@ -41,26 +39,6 @@ const restPosts = posts.slice(1);
       <span>LLM</span>
       <span class="kw-sep">·</span>
       <span>SDD</span>
-    </div>
-    <!-- Floating particles (multicolor neon) -->
-    <div class="hero-particles" aria-hidden="true">
-      <span class="particle particle-blue" style="top:8%;left:62%;animation-delay:0s"></span>
-      <span class="particle particle-cyan" style="top:25%;left:78%;animation-delay:1.2s"></span>
-      <span class="particle particle-purple" style="top:45%;left:70%;animation-delay:2.4s"></span>
-      <span class="particle particle-blue" style="top:65%;left:58%;animation-delay:0.6s"></span>
-      <span class="particle particle-cyan" style="top:15%;left:48%;animation-delay:1.8s"></span>
-      <span class="particle particle-purple" style="top:55%;left:85%;animation-delay:3s"></span>
-      <span class="particle particle-cyan" style="top:75%;left:42%;animation-delay:0.3s"></span>
-      <span class="particle particle-blue" style="top:35%;left:40%;animation-delay:2.1s"></span>
-    </div>
-    <!-- Decorative circuit grid -->
-    <div class="hero-grid" aria-hidden="true"></div>
-    <!-- HUD corner decorations -->
-    <div class="hud-corners" aria-hidden="true">
-      <span class="hud-corner hud-tl"></span>
-      <span class="hud-corner hud-tr"></span>
-      <span class="hud-corner hud-bl"></span>
-      <span class="hud-corner hud-br"></span>
     </div>
   </section>
 
@@ -142,7 +120,7 @@ const restPosts = posts.slice(1);
     font-weight: 600;
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
-    animation: fadeInUp 0.5s var(--ease-out) both, borderBreath 4s ease-in-out 0.5s infinite;
+    animation: fadeInUp 0.5s var(--ease-out) both;
   }
 
   .hero-title {
@@ -152,15 +130,6 @@ const restPosts = posts.slice(1);
     letter-spacing: -0.04em;
     line-height: 1.15;
     animation: fadeInUp 0.6s var(--ease-out) 0.1s both;
-  }
-
-  .gradient-text {
-    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-glow) 40%, var(--color-accent-secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% 200%;
-    animation: gradientShift 6s ease-in-out infinite;
   }
 
   .hero-subtitle {
@@ -184,19 +153,20 @@ const restPosts = posts.slice(1);
     padding: 0.65rem 1.5rem;
     background: var(--color-accent);
     color: var(--color-btn-on-accent);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-pill);
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
-    transition: all 0.25s var(--ease-smooth);
-    box-shadow: 0 0 20px var(--glow-btn);
+    transition: all 0.2s var(--ease-smooth);
   }
 
   .btn-primary:hover {
-    background: var(--color-accent-glow);
-    box-shadow: 0 0 30px var(--glow-btn-hover);
-    transform: translateY(-1px);
+    background: var(--color-accent-hover);
     color: var(--color-btn-on-accent);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.95);
   }
 
   .btn-ghost {
@@ -204,55 +174,22 @@ const restPosts = posts.slice(1);
     align-items: center;
     padding: 0.65rem 1.5rem;
     background: transparent;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-sm);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-pill);
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
-    transition: all 0.25s var(--ease-smooth);
+    transition: all 0.2s var(--ease-smooth);
   }
 
   .btn-ghost:hover {
-    color: var(--color-text);
-    border-color: var(--color-text-muted);
-    background: var(--color-surface);
-  }
-
-  /* ── Hero Particles ── */
-  .hero-particles {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    opacity: 0;
-    animation: particleFloat 5s ease-in-out infinite;
-  }
-  .particle-blue {
     background: var(--color-accent);
-    box-shadow: 0 0 6px var(--glow-dot), 0 0 12px var(--glow-btn);
-  }
-  .particle-cyan {
-    background: var(--color-neon-cyan);
-    box-shadow: 0 0 6px var(--glow-cyan-strong), 0 0 12px var(--glow-cyan);
-  }
-  .particle-purple {
-    background: var(--color-neon-magenta);
-    box-shadow: 0 0 6px var(--glow-magenta-strong), 0 0 12px var(--glow-magenta);
+    color: var(--color-btn-on-accent);
   }
 
-  @keyframes particleFloat {
-    0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
-    20% { opacity: 0.8; }
-    50% { opacity: 0.4; transform: translateY(-25px) scale(1.3); }
-    80% { opacity: 0.15; }
+  .btn-ghost:active {
+    transform: scale(0.95);
   }
 
   /* ── Hero Keywords ── */
@@ -271,69 +208,6 @@ const restPosts = posts.slice(1);
 
   .kw-sep {
     color: var(--color-border-strong);
-  }
-
-  /* ── Circuit Grid ── */
-  .hero-grid {
-    position: absolute;
-    top: 5%;
-    right: -5%;
-    width: 350px;
-    height: 350px;
-    background-image:
-      linear-gradient(var(--color-border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
-    background-size: 35px 35px;
-    opacity: 0.3;
-    mask-image: radial-gradient(circle at 40% 40%, black 25%, transparent 70%);
-    -webkit-mask-image: radial-gradient(circle at 40% 40%, black 25%, transparent 70%);
-    animation: float 10s ease-in-out infinite;
-  }
-
-  /* ── HUD Corners ── */
-  .hud-corners {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .hud-corner {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    animation: hudCornerPulse 3s ease-in-out infinite;
-  }
-  .hud-corner::before,
-  .hud-corner::after {
-    content: '';
-    position: absolute;
-    background: var(--color-accent);
-    box-shadow: 0 0 6px var(--glow-dot), 0 0 14px var(--glow-btn);
-  }
-  .hud-corner::before { width: 100%; height: 1.5px; }
-  .hud-corner::after  { width: 1.5px; height: 100%; }
-
-  .hud-tl { top: 0; left: 0; animation-delay: 0s; }
-  .hud-tl::before { top: 0; left: 0; }
-  .hud-tl::after  { top: 0; left: 0; }
-
-  .hud-tr { top: 0; right: 0; animation-delay: 0.8s; }
-  .hud-tr::before { top: 0; right: 0; }
-  .hud-tr::after  { top: 0; right: 0; }
-
-  .hud-bl { bottom: 0; left: 0; animation-delay: 1.6s; }
-  .hud-bl::before { bottom: 0; left: 0; }
-  .hud-bl::after  { bottom: 0; left: 0; }
-
-  .hud-br { bottom: 0; right: 0; animation-delay: 2.4s; }
-  .hud-br::before,
-  .hud-br::after {
-    background: var(--color-neon-magenta);
-    box-shadow: 0 0 6px var(--glow-magenta-strong), 0 0 14px var(--glow-magenta);
-  }
-
-  @media (max-width: 768px) {
-    .hud-corners { display: none; }
   }
 
   /* ── Section Label ── */
@@ -355,7 +229,6 @@ const restPosts = posts.slice(1);
     height: 6px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 8px var(--glow-dot);
   }
 
   /* ── Featured ── */
@@ -377,9 +250,8 @@ const restPosts = posts.slice(1);
 
   .featured-card:hover {
     border-color: var(--color-border-accent);
-    box-shadow: var(--shadow-glow);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
-    background: var(--color-surface-hover);
   }
 
   .featured-content {
@@ -476,10 +348,6 @@ const restPosts = posts.slice(1);
 
     .hero-title {
       font-size: 2.4rem;
-    }
-
-    .hero-grid {
-      display: none;
     }
 
     .featured-card {

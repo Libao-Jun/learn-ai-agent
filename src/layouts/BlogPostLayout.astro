@@ -193,23 +193,16 @@ const showToc = headings.length >= 2;
   });
 
   // Code copy buttons
-  (function initTerminalBlocks() {
+  (function initCodeCopy() {
     const pres = document.querySelectorAll('.post-body pre');
     pres.forEach((pre) => {
-      if (pre.closest('.terminal-block')) return;
-
-      const code = pre.querySelector('code');
-      const langClass = code?.className.match(/language-(\w+)/)?.[1] || '';
+      if (pre.querySelector('.code-copy-btn')) return;
 
       const wrapper = document.createElement('div');
-      wrapper.className = 'terminal-block';
-
-      const bar = document.createElement('div');
-      bar.className = 'terminal-bar';
-      bar.innerHTML = '<span class="terminal-dots"><span class="tdot tdot-red"></span><span class="tdot tdot-yellow"></span><span class="tdot tdot-green"></span></span><span class="terminal-lang">' + langClass + '</span>';
+      wrapper.style.position = 'relative';
 
       const btn = document.createElement('button');
-      btn.className = 'code-copy-btn terminal-copy';
+      btn.className = 'code-copy-btn';
       btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
       btn.setAttribute('aria-label', '复制代码');
       btn.title = '复制代码';
@@ -226,13 +219,9 @@ const showToc = headings.length >= 2;
         } catch { /* clipboard API not available */ }
       });
 
-      bar.appendChild(btn);
       pre.parentNode?.insertBefore(wrapper, pre);
-      wrapper.appendChild(bar);
+      wrapper.appendChild(btn);
       wrapper.appendChild(pre);
-      pre.style.margin = '0';
-      pre.style.borderTopLeftRadius = '0';
-      pre.style.borderTopRightRadius = '0';
     });
   })();
 </script>
@@ -323,10 +312,8 @@ const showToc = headings.length >= 2;
 
   .tag-pill:hover {
     background: var(--color-accent-soft-hover);
-    color: var(--color-accent-glow);
-    box-shadow: 0 0 12px var(--glow-tag-hover), inset 0 0 4px rgba(0, 212, 255, 0.08);
+    color: var(--color-accent-hover);
     border-color: var(--color-border-accent);
-    transform: translateY(-1px);
   }
 
   /* ── Post Body ── */
@@ -378,7 +365,7 @@ const showToc = headings.length >= 2;
   }
 
   .post-body :global(.md-callout-note) {
-    --callout-color: var(--color-accent-secondary);
+    --callout-color: var(--color-text-muted);
   }
 
   .post-body :global(.md-callout-warning) {
@@ -429,7 +416,7 @@ const showToc = headings.length >= 2;
   }
 
   .post-body :global(a):hover {
-    color: var(--color-accent-glow);
+    color: var(--color-accent-hover);
   }
 
   /* ── Code Copy Button ── */
@@ -469,64 +456,6 @@ const showToc = headings.length >= 2;
     border-color: var(--color-accent);
   }
 
-  /* ── Terminal Block ── */
-  .terminal-block {
-    margin: 1.5rem 0;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-md), 0 0 10px var(--glow-tech);
-    transition: box-shadow 0.3s var(--ease-smooth);
-  }
-
-  .terminal-block:hover {
-    box-shadow: var(--shadow-md), 0 0 20px var(--glow-btn);
-  }
-
-  .terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: #0d0d1a;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  [data-theme="light"] .terminal-bar {
-    background: #1e1e2e;
-    color: #e0e0e0;
-  }
-
-  .terminal-dots {
-    display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-
-  .tdot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-
-  .tdot-red    { background: #ff5f57; }
-  .tdot-yellow { background: #febc2e; }
-  .tdot-green  { background: #28c840; box-shadow: 0 0 6px rgba(40, 200, 64, 0.5); }
-
-  .terminal-lang {
-    flex: 1;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--color-text-dim);
-    text-align: center;
-    user-select: none;
-  }
-
-  .terminal-copy {
-    position: static;
-    opacity: 1;
-  }
-
   /* ── Post Footer ── */
   .post-footer {
     margin-top: 4rem;
@@ -556,9 +485,8 @@ const showToc = headings.length >= 2;
 
   .prev-next-link:hover {
     border-color: var(--color-border-accent);
-    box-shadow: var(--shadow-glow);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-1px);
-    background: var(--color-surface-hover);
   }
 
   .prev-next-link.next {

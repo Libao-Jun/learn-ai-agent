@@ -47,29 +47,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
 
   .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover);
-    border-color: var(--color-border-accent);
-  }
-
-  /* Neon top-edge glow bar on hover */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-neon-cyan), var(--color-accent), transparent);
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.35s var(--ease-smooth);
-    z-index: 1;
-    box-shadow: 0 0 8px var(--glow-dot), 0 0 20px var(--glow-btn);
-  }
-
-  .card:hover::before {
-    opacity: 1;
+    border-color: var(--color-border-strong);
   }
 
   .card-link {
@@ -98,10 +78,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     line-height: 1.35;
     color: var(--color-text);
     transition: color 0.2s;
-  }
-
-  .card:hover .card-title {
-    color: var(--color-accent);
   }
 
   .card-desc {
@@ -170,11 +146,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 0.68rem;
     font-weight: 600;
     font-family: var(--font-display);
-    transition: all 0.2s var(--ease-smooth);
-  }
-
-  .card:hover .card-tag {
-    box-shadow: 0 0 6px var(--glow-tag-hover);
   }
 
   .card-tag-more {

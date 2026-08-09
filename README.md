@@ -2,7 +2,7 @@
 
 个人技术博客，记录 AI Agent 生态的学习、思考与实践。
 
-基于 [Astro](https://astro.build) v6 构建，静态生成（SSG），追求极致的加载速度和沉浸式阅读体验。采用**科技蓝 × 赛博朋克**视觉风格，暗色/亮色双主题支持。
+基于 [Astro](https://astro.build) v6 构建，静态生成（SSG），追求极致的加载速度和沉浸式阅读体验。采用 **Apple 极简**视觉风格，暗色/亮色双主题支持。
 
 🔗 **在线访问**：[humorfrank.github.io/learn-ai-agent](https://humorfrank.github.io/learn-ai-agent/)
 
@@ -10,7 +10,7 @@
 
 ## 功能特性
 
-- 🎨 **科技蓝赛博朋克风格** — 霓虹光晕、扫描线、CRT 噪点纹理、HUD 角标装饰
+- 🎨 **Apple 极简风格** — Action Blue 单一强调色、SF Pro 字体栈、Pill 形按钮、平面卡片
 - 🌓 **暗色/亮色双主题** — 自动跟随系统偏好，支持手动切换，localStorage 持久化
 - 📡 **RSS 订阅** — 自动生成 RSS 源，支持 RSS 阅读器订阅
 - 🗺️ **站点地图** — 自动生成 sitemap.xml，优化搜索引擎收录
@@ -19,8 +19,7 @@
 - 🔍 **SEO 友好** — 语义化 HTML + Open Graph meta 标签
 - 🏷️ **标签系统** — 标签云 + 按标签筛选文章，支持中英文混合标签
 - 📖 **文章目录（TOC）** — 自动提取标题生成侧栏导航
-- 🎯 **阅读进度条** — 页面顶部渐变进度指示
-- 🖥️ **终端风格代码块** — 红黄绿圆点 + 语言标签 + 一键复制按钮
+- 🎯 **阅读进度条** — 页面顶部 2px 进度指示
 
 ---
 
@@ -58,14 +57,14 @@ learn-ai-agent/
 │   ├── utils/
 │   │   └── reading-time.ts        # 阅读时间估算（中英文自适应）
 │   ├── layouts/
-│   │   ├── BaseLayout.astro       # HTML 骨架：导航、页脚、主题、环境光效
+│   │   ├── BaseLayout.astro       # HTML 骨架：导航、页脚、主题
 │   │   └── BlogPostLayout.astro   # 文章布局：头部、正文、TOC 侧栏、前后导航
 │   ├── components/
 │   │   ├── BlogCard.astro         # 文章卡片（标题/描述/标签/阅读时间/日期）
 │   │   ├── ThemeToggle.astro      # 暗色/亮色主题切换按钮
 │   │   └── Mermaid.astro          # 客户端 Mermaid 图表渲染
 │   ├── pages/
-│   │   ├── index.astro            # 首页：Hero + 粒子 + 特色文章 + 文章网格
+│   │   ├── index.astro            # 首页：Hero + 特色文章 + 文章网格
 │   │   ├── about.astro            # 关于页：统计 + 知识领域 + 技术栈
 │   │   ├── robots.txt.ts          # 动态 robots.txt
 │   │   ├── rss.xml.js             # RSS Feed 生成
@@ -213,41 +212,31 @@ draft: true
 
 | 角色 | 暗色模式 | 亮色模式 |
 |------|---------|---------|
-| 主强调色 | `#00d4ff`（科技蓝） | `#0284c7`（深蓝） |
-| 辅助强调色 | `#a78bfa`（淡紫） | `#7c3aed`（紫） |
-| 强调光晕 | `#22d3ee`（青） | `#0ea5e9` |
-| 页面背景 | `#0a0a0f` | `#f8fafc` |
-| 正文文字 | `#e2e8f0` | `#0f172a` |
+| 强调色（Action Blue） | `#0066cc` | `#0066cc` |
+| 强调色悬停 | `#0071e3` | `#0071e3` |
+| 页面背景 | `#000000`（纯黑） | `#ffffff`（纯白） |
+| 表面/卡片 | `#1d1d1f`（深灰） | `#ffffff` |
+| 次要表面 | `#f5f5f7`（羊皮纸） | `#f5f5f7`（羊皮纸） |
+| 正文文字 | `#f5f5f7` | `#1d1d1f` |
+| 次要文字 | `#a1a1a6` | `#6e6e73` |
 
-### 视觉特效
+### 字体
 
-- **CRT 扫描线** — `repeating-linear-gradient` 实现 3px 间隔扫描线叠加
-- **颗粒纹理** — SVG `feTurbulence` 噪声覆盖层，模拟 CRT 屏幕质感
-- **环境光晕** — 3 个固定定位的径向渐变光晕（蓝/青/紫），`blur(120px)` + 浮动动画
-- **星场背景** — 10 个独立星点元素，`twinkle` 闪烁动画（蓝/青交替）
-- **Hero 粒子** — 8 个霓虹光点（蓝/青/紫三色），`particleFloat` 浮动动画
-- **HUD 角标** — Hero 四角 L 形括号装饰，`hudCornerPulse` 脉冲动画
-- **玻璃拟态** — 导航栏和引用块使用 `backdrop-filter: blur()` 毛玻璃效果
-- **终端代码块** — 代码块包裹为终端窗口，顶部红黄绿圆点 + 语言标签 + 复制按钮
-- **渐变标题** — 首页标题使用 `blue → purple` 渐变动画文字
-- **阅读进度条** — 蓝→紫→青三色渐变，固定视口顶部
+| 用途 | 字体栈 |
+|------|--------|
+| 标题/导航 | SF Pro Display → system-ui → Inter |
+| 正文 | SF Pro Text → system-ui → Inter |
+| 代码 | SF Mono → JetBrains Mono → Fira Code |
 
-### 动画
+### 设计原则
 
-| 动画 | 用途 |
-|------|------|
-| `fadeInUp` | 页面/组件入场淡入上移 |
-| `gradientShift` | 渐变背景位移动画（标题、Logo、卡片顶部条） |
-| `float` | 环境光晕上下浮动（8s） |
-| `particleFloat` | Hero 粒子浮动（5s，opacity + translateY + scale） |
-| `neonPulse` | 蓝色霓虹边框呼吸（3s，box-shadow 循环） |
-| `neonPulseCyan` | 同上，青色版 |
-| `neonPulseMagenta` | 同上，紫色版 |
-| `twinkle` | 星场闪烁（opacity 0.3 ↔ 0.9，各星不同时长） |
-| `borderBreath` | 边框颜色在蓝/青之间交替（4s） |
-| `hudCornerPulse` | HUD 角标透明度脉冲（3s） |
-| `shimmer` | 骨架屏闪烁扫描 |
-| `pulseGlow` | 呼吸光晕（2s） |
+- **单一强调色** — 仅使用 Action Blue（`#0066cc`），无辅助色
+- **无装饰元素** — 无渐变、无霓虹发光、无扫描线、无粒子特效
+- **毛玻璃导航** — `backdrop-filter: saturate(180%) blur(20px)`，44px 高度
+- **Pill 形按钮** — `border-radius: 9999px`，`scale(0.95)` 按压反馈
+- **平面卡片** — 极简 hover 微移 + 微弱阴影，无顶部装饰条
+- **17px 正文** — Apple 标志性正文字号
+- **负向字间距** — 标题使用负向 tracking（"Apple tight" 风格）
 
 ---
 

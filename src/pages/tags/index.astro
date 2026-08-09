@@ -73,7 +73,6 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     height: 6px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 8px var(--glow-dot);
   }
 
   .page-title {
@@ -110,7 +109,7 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
 
   .tag-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
+    box-shadow: var(--shadow-card-hover);
     border-color: var(--color-border-accent);
     background: var(--color-surface-hover);
   }

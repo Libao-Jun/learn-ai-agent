@@ -41,7 +41,7 @@ learn-ai-agent/
 │   ├── plugins/
 │   │   └── remark-callout.mjs    # :::tip/note/warning/danger 指令插件
 │   ├── layouts/
-│   │   ├── BaseLayout.astro      # HTML 骨架：<head>、导航、页脚、主题、进度条
+│   │   ├── BaseLayout.astro      # HTML 骨架：<head>、导航、页脚、主题、进度条（Apple 风格）
 │   │   └── BlogPostLayout.astro  # 继承 BaseLayout：文章头部、正文、TOC 侧栏、前/后导航
 │   ├── components/
 │   │   ├── BlogCard.astro        # 文章卡片（标题、描述、标签、阅读时间、日期）
@@ -67,7 +67,7 @@ learn-ai-agent/
 ### 布局层级
 
 ```text
-BaseLayout.astro          ← HTML 骨架：<head>、导航栏、主题脚本、页脚、视图过渡、环境光效
+BaseLayout.astro          ← HTML 骨架：<head>、导航栏、主题脚本、页脚、视图过渡
   └─ BlogPostLayout.astro ← 继承上述：文章头部（标题/日期/标签/阅读时间）、正文、TOC 侧栏、前/后导航
        └─ [slug].astro    ← 通过 getStaticPaths + render() 获取单篇博客
 ```
@@ -120,52 +120,35 @@ const posts = await getCollection('blog', ({ data }) => {
 
 | 类别 | 暗色模式 | 亮色模式 |
 |------|---------|---------|
-| 背景 | `--color-bg: #0a0a0f` | `#f8fafc`（冷调白） |
-| 表面 | `--color-surface: #111827` | `#ffffff` |
-| 主文字 | `--color-text: #e2e8f0` | `#0f172a` |
-| 次文字 | `--color-text-muted: #94a3b8` | `#475569` |
-| 强调色 | `--color-accent: #00d4ff`（科技蓝） | `#0284c7`（深蓝） |
-| 强调光晕 | `--color-accent-glow: #22d3ee` | `#0ea5e9` |
-| 辅助色 | `--color-accent-secondary: #a78bfa`（淡紫） | `#7c3aed`（紫） |
-| 霓虹蓝 | `--color-neon-cyan: #38bdf8` | `#0284c7` |
-| 霓虹紫 | `--color-neon-magenta: #c4b5fd` | `#8b5cf6` |
+| 背景 | `--color-bg: #000000` | `#ffffff` |
+| 表面 | `--color-surface: #1d1d1f` | `#ffffff` |
+| 主文字 | `--color-text: #f5f5f7` | `#1d1d1f` |
+| 次文字 | `--color-text-muted: #a1a1a6` | `#6e6e73` |
+| 强调色 | `--color-accent: #0066cc`（Action Blue） | `#0066cc` |
+| 强调色悬停 | `--color-accent-hover: #0071e3` | `#0071e3` |
 
 ### 字体
 
 | 用途 | 字体栈 |
 |------|--------|
-| 标题/导航 | `Space Grotesk` → `Noto Sans SC` → system-ui |
-| 正文 | `Noto Sans SC` → `Space Grotesk` → system-ui |
-| 代码 | `IBM Plex Mono` → `Fira Code` → monospace |
+| 标题/导航 | `SF Pro Display` → `system-ui` → `Inter` |
+| 正文 | `SF Pro Text` → `system-ui` → `Inter` |
+| 代码 | `SF Mono` → `JetBrains Mono` → `Fira Code` |
 
 ### 动画
 
 | 动画名 | 用途 |
 |--------|------|
 | `fadeInUp` | 页面入场（`.animate-in`）和交错子元素（`.stagger`） |
-| `gradientShift` | 渐变文字、Logo、sg-card 顶部条（背景位移动画） |
-| `float` | 环境光晕上下浮动（8s 循环） |
-| `particleFloat` | Hero 粒子光点浮动（5s，opacity + translateY + scale） |
-| `pulseGlow` | 脉冲发光（可用于关注按钮） |
-| `neonPulse` | 蓝色霓虹边框呼吸（3s，box-shadow 循环） |
-| `neonPulseCyan` | 同上，青色版 |
-| `neonPulseMagenta` | 同上，紫色版 |
-| `twinkle` | 星场闪烁（opacity 0.3 ↔ 0.9，各星不同时长） |
-| `borderBreath` | 边框颜色在蓝色和青色之间交替（4s） |
-| `hudCornerPulse` | HUD 角标透明度脉冲（3s） |
+| `fadeIn` | 简单淡入 |
 
 ### 视觉效果
 
-- **颗粒纹理**：`body::before` SVG 噪声覆盖层（opacity 0.025 暗色 / 0.012 亮色）
-- **扫描线**：`body::after` CRT 扫描线叠加（3px 间隔，opacity 0.35 暗色 / 0.25 亮色）
-- **三色环境光晕**：右上蓝色（500px）+ 左下青色（400px）+ 中部紫色（350px），模糊 120px，浮动动画
-- **星场背景**：10 个独立 `<span>` 星点，蓝色/青色交替，`twinkle` 闪烁动画
-- **玻璃拟态**：blockquote 使用 `backdrop-filter: blur(20px)`，带 accent 左栏和装饰引号
-- **阅读进度条**：渐变色（accent → secondary → glow），固定视口顶部
-- **Hero 粒子**：8 个霓虹光点（蓝/青/紫三色），`particleFloat` 动画
-- **HUD 角标**：Hero 四角 L 形括号装饰，脉冲动画，移动端隐藏
-- **电路网格**：CSS grid 线条图案 + 径向遮罩，浮动动画
-- **终端代码块**：代码块包裹在 `.terminal-block` 中，顶部红黄绿圆点 + 语言标签 + 复制按钮
+- **毛玻璃导航**：`backdrop-filter: saturate(180%) blur(20px)`，44px 高度，无底部边框
+- **阅读进度条**：Action Blue 单色，2px 高，固定视口顶部
+- **Pill 形按钮**：`border-radius: var(--radius-pill)`（9999px），`scale(0.95)` 按压反馈
+- **平面卡片**：极简 hover（`translateY(-2px)` + 微弱阴影），无顶部装饰条
+- **Apple 排版**：17px 正文，标题负向字间距，系统字体栈（无 Google Fonts）
 - **视图过渡**：`@view-transition { navigation: auto }` 已启用
 
 ### 代码高亮
@@ -176,7 +159,7 @@ Shiki 使用 `github-dark` 主题。代码块自动注入复制按钮（`BlogPos
 
 每篇博客文章顶部有一段 `.sg-card` 的 HTML 块，包含学习目标、预计阅读时间和收获要点。**直接以原始 HTML 形式写在 Markdown 中**，非 Astro 组件。
 
-sg-card 的顶部渐变条带有 `gradientShift` 动画。样式定义在 `global.css`。
+sg-card 样式定义在 `global.css`。
 
 ---
 
@@ -322,10 +305,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 2. **sg-card 保持手写 HTML** — 不组件化，因为 `.md` 文件无法导入 Astro 组件
 3. **TOC 锚点** — 服务端 `extractHeadings()` 和客户端 slug 生成算法需保持一致
 4. **前/后导航** — 「上一篇」= 时间上更旧的（索引 +1），「下一篇」= 更新的（索引 -1）
-5. **终端代码块** — 由 `BlogPostLayout.astro` 的 `initTerminalBlocks()` 脚本自动注入 `.terminal-block` 包裹和 `.terminal-bar` 标题栏，复制按钮在终端栏内
+5. **代码复制按钮** — 由 `BlogPostLayout.astro` 的 `initCodeCopy()` 脚本在 `<pre>` 上注入复制按钮
 6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
-7. **扫描线 + 噪点层级** — 扫描线 z-index: 9998，噪点 z-index: 9999，两者均为 fixed + pointer-events: none
-8. **霓虹色板** — 主色科技蓝 `#00d4ff`，辅助色青 `#38bdf8` / 紫 `#c4b5fd`，仅用于光晕、边框、粒子等装饰，不影响文字可读性
+7. **Apple 极简色板** — 单一 Action Blue `#0066cc`，无辅助色，无霓虹发光，无装饰性渐变
 
 ## CI/CD
 
