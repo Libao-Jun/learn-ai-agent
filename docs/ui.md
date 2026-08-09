@@ -274,7 +274,7 @@ border-bottom: 1px solid var(--color-border);
 
 ## 4. 动效与交互
 
-> **设计原则**：动效服务于科技感，但克制于 Apple 极简美学。使用纯 CSS 实现（无 JS 动画库），关键帧动画仅用于氛围层（orbs、光标、缎带），功能性反馈保持瞬发（hover/active ≤ 0.3s）。
+> **设计原则**：动效服务于科技感，但克制于 Apple 极简美学。CSS 关键帧动画用于氛围层（orbs、光标、缎带），GSAP 驱动 Canvas 粒子网络背景，功能性反馈保持瞬发（hover/active ≤ 0.3s）。
 
 ### 4.1 过渡规范
 
@@ -557,6 +557,155 @@ Hero 底部关键词行和 badge、标题、副标题、CTA 按钮使用 `fadeIn
 - **无 JS 动画库**：所有持续动画使用 CSS `@keyframes`，仅滚动揭示使用原生 IntersObserver（passive）
 - **`pointer-events: none`**：所有装饰性动画元素（orbs、::before/::after 伪元素）不参与交互
 - **`prefers-reduced-motion` 尊重**：未来可添加 `@media (prefers-reduced-motion: reduce)` 降级策略
+
+#### 4.6.11 GSAP 粒子网络背景（Canvas + GSAP）
+
+> 使用 GSAP 动画引擎驱动多层 Canvas 粒子系统，作为 Hero 区域的赛博科技动态背景。包含发光粒子网络、脉冲 Hub 节点、数据包传输、鼠标涟漪波纹和光标光晕 — 营造"数字神经网络 + 数据流"的高科技氛围。
+
+**系统架构 — 5 层叠加渲染**：
+
+```
+┌─────────────────────────────────────────────┐
+│  Layer 5: 鼠标光标光晕 (radial gradient)     │  ← 80px 跟随光晕
+│  Layer 4: 鼠标涟漪波纹 (expanding rings)    │  ← GSAP 驱动扩散
+│  Layer 3: Hub 节点脉冲环 (ring pulses)      │  ← 3–5 个枢纽节点周期性脉冲
+│  Layer 2: 数据包 (traveling bright dots)    │  ← 沿连线飞行的高亮光点
+│  Layer 1: 粒子网络 (particles + glow lines)  │  ← 80 粒子 + 发光连线
+│  Layer 0: 运动拖尾 (fade-clear trail)       │  ← 半透明清除，产生残影
+└─────────────────────────────────────────────┘
+```
+
+**技术栈**：
+
+| 层 | 技术 | 用途 |
+|----|------|------|
+| 动画引擎 | GSAP 3.x (`gsap` npm 包) | 粒子漂移、数据包飞行、Hub 脉冲、涟漪扩散 |
+| 渲染层 | HTML5 Canvas 2D API + `requestAnimationFrame` | 60fps 实时渲染，shadowBlur 发光 |
+| 模块封装 | `src/scripts/particle-network.ts` | 独立 TypeScript 类（~320 行），完整生命周期 |
+
+**核心参数**：
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `particleCount` | 80 | 粒子总数（含 Hub 节点） |
+| `hubCount` | 5 | 枢纽节点数（大尺寸 + 脉冲环 + 强发光） |
+| `packetCount` | 18 | 飞行数据包数量（沿连线传输的高亮光点） |
+| `connectDistance` | 150px | 粒子连线最大距离 |
+| `baseOpacity` | 0.55 | 全局透明度基准 |
+| 粒子半径 | 0.8–4.5px | 普通 0.8–3.3px，Hub 2.5–4.5px |
+| 粒子透明度 | 0.25–0.85 | 随机，Hub 0.6–0.9 |
+| 数据包大小 | 1.2–3px | 含发光 halo + 白色核心 |
+
+**颜色调色板**（多色相微量偏移，增加视觉深度）：
+
+| 模式 | 粒子色系 | Hub 色系 | 数据包色系 | 连线色 |
+|------|----------|----------|------------|--------|
+| 暗色 | `#2997ff`, `#4da6ff`, `#0071e3`, `#66b8ff`, `#3399ff` | `#66b8ff`, `#4da6ff`, `#80ccff` | `#ffffff`, `#b3dfff`, `#e6f4ff` | `rgba(0,102,204,0.10)` / 近距离 `rgba(41,151,255,0.25)` |
+| 亮色 | `#0066cc`, `#0071e3`, `#005bb5`, `#1a7fd4`, `#3388cc` | `#0071e3`, `#1a7fd4`, `#0066cc` | `#0066cc`, `#0071e3`, `#1a7fd4` | `rgba(0,102,204,0.06)` / 近距离 `rgba(0,102,204,0.14)` |
+
+颜色调色板固定编码于模块内，通过 `MutationObserver` 监听 `data-theme` 实现暗色/亮色自动切换。粒子颜色随时间微调 hueOffset，产生缓慢的色相漂移。
+
+**GSAP 动画明细**：
+
+| 动画对象 | GSAP 方法 | 时长 | 缓动 | 说明 |
+|----------|-----------|------|------|------|
+| 粒子漂移 | `gsap.to(p, { targetX, targetY })` | 3–10s | `sine.inOut` | 到达后自动指派新目标，无限循环 |
+| 数据包飞行 | `gsap.to(packet, { progress: 1 })` | 1.2–4.2s | `power1.inOut` | 到达终点后切换端点继续飞行 |
+| Hub 脉冲环 | `gsap.to(hub, { ringRadius, ringAlpha })` | 1.5–3s | `power2.out` | 半径 0→80–120px，alpha 0.5→0 |
+| 鼠标涟漪 | `gsap.to(ripple, { radius, alpha })` | 1.2s | `power2.out` | 半径 0→120px，alpha 0.5→0 |
+
+**视觉效果详解**：
+
+**① 发光粒子（shadowBlur glow）**：
+- 所有粒子使用 Canvas `shadowBlur` 产生发光效果
+- 普通粒子：5px + 速度加成 blur
+- Hub 节点：12px blur，带白色核心亮点
+- 较大粒子（radius > 1.5px）有双层结构：发光外圈 + 白色内核
+
+**② 智能连线**：
+- 连线透明度与距离线性反比
+- 距离 < 52px 的粒子使用高亮连线（`lineBright`，更粗更亮）
+- Hub 节点之间额外绘制加粗发光连线（双倍距离阈值，180px）
+- 连线使用 `shadowBlur` 产生微光
+
+**③ 数据包传输**：
+- 18 个高亮光点沿粒子连线飞行
+- 双层绘制：外圈发光 halo（彩色）+ 内核亮点（白色）
+- 优先选择附近粒子作为传输路径
+- 到达终点后自动切换下一段路径
+
+**④ Hub 节点脉冲**：
+- 5 个枢纽节点周期性发出扩展圆环
+- 环从节点中心向外扩散并淡出
+- 各节点脉冲相位错开（staggered start）
+
+**⑤ 鼠标涟漪**：
+- 鼠标移动距离 > 40px 时生成涟漪
+- 从鼠标位置向外扩散的圆形波纹
+- 使用 accent 色描边，逐渐扩大并淡出
+
+**⑥ 光标光晕**：
+- 鼠标在 Hero 区域内时显示 80px 径向渐变光晕
+- 中心 `rgba(41,151,255,0.06)` → 边缘完全透明
+- 柔和的环境光效果
+
+**⑦ 运动拖尾**：
+- 每帧使用半透明覆盖代替完全清除（`fillRect(rgba,0.07)`）
+- 粒子快速移动时留下短暂残影拖尾
+- 暗色/亮色模式使用对应背景色
+
+**鼠标力场**：
+- 80px 内：强吸引力（粒子向光标汇聚）
+- 80–250px：微弱排斥力（外圈粒子向外推移）
+- 形成"双区域力场"效果 — 光标附近粒子聚集，外围粒子散开
+
+**渲染循环（rAF，60fps）**：
+
+```
+requestAnimationFrame 循环
+  ├─ fade-clear (0.07 alpha → 运动拖尾)
+  ├─ 粒子位置更新 (lerp → target + mouse force field)
+  ├─ 连线绘制 (二重循环，distance-gated，亮度分级)
+  ├─ 数据包绘制 (双层：halo + core)
+  ├─ 鼠标涟漪绘制 (expanding rings)
+  ├─ Hub 脉冲环绘制
+  ├─ 粒子绘制 (shadowBlur glow + core highlight)
+  ├─ Hub 互联线绘制 (加粗发光)
+  └─ 光标光晕绘制 (radial gradient, 80px)
+```
+
+**响应式策略**：
+
+- **Desktop (≥769px)**：完整 5 层粒子系统运行
+- **Tablet + Phone (≤768px)**：Canvas 隐藏（`display: none`），移端零开销
+
+**生命周期管理**：
+
+`ParticleNetwork` 类提供 `init()` / `destroy()` 方法：
+- `init()`：创建 80 粒子 + 5 Hub + 18 数据包，绑定 ResizeObserver / MutationObserver / mouse 事件，启动所有 GSAP 补间和 rAF
+- `destroy()`：取消 rAF，杀死所有 GSAP tweens，断开 Observer，清理粒子/Hub/包/涟漪数组，移除事件监听
+- Canvas 尺寸通过 `ResizeObserver` 自动适配（devicePixelRatio ≤ 2x）
+
+**性能设计**：
+
+| 措施 | 说明 |
+|------|------|
+| `devicePixelRatio` 上限 2x | 避免 3x Retina 像素量翻 2.25 倍 |
+| Canvas 独立图层 | 不影响 DOM layout/paint |
+| `pointer-events: none` | 完全跳过浏览器 hit-testing |
+| 移动端关闭 | ≤768px Canvas `display: none`，零渲染开销 |
+| GSAP 轻量缓动 | `sine.inOut` / `power1.inOut` / `power2.out` |
+| rAF 帧率同步 | 浏览器原生调度，不超帧 |
+| 粒子数 80 | 低数量保证高帧率，靠视觉效果弥补 |
+| 半透明清除 | 避免每帧 `clearRect` + 全量重绘的开销 |
+
+**文件位置**：
+
+| 文件 | 说明 |
+|------|------|
+| `src/scripts/particle-network.ts` | 粒子网络核心类（~320 行，5 层渲染） |
+| `src/pages/index.astro` | `<canvas>` 元素 + CSS + 初始化脚本 |
+| `package.json` | 依赖 `gsap: ^3.15.0` |
 
 ---
 
@@ -972,6 +1121,7 @@ blockquote {
 | **P1** | **响应式设计（3 级断点）** | `global.css` + 全部 `.astro` 页面/组件/布局     |
 | **P2** | 亮色主题适配               | `global.css`                                    |
 | **P2** | 进度条、滚动条             | `global.css`                                    |
+| **P2** | **GSAP 粒子网络背景**      | `index.astro` + `particle-network.ts` + `package.json` |
 
 ---
 
@@ -979,7 +1129,7 @@ blockquote {
 
 1. **不修改任何业务逻辑** — 仅限 CSS 和视觉层标记（HTML class/结构微调）
 2. **不修改构建配置文件** — `astro.config.mjs`、`package.json`、`tsconfig.json`、`content.config.ts`
-3. **不引入新依赖** — 所有效果用纯 CSS 实现
+3. **不引入新依赖** — 除 GSAP（Canvas 粒子层动画引擎）外，所有效果用纯 CSS 实现
 4. **不引入外部字体加载** — SF Pro 仅在 macOS/iOS 本地可用，其他平台降级为 system-ui/Inter
 5. **响应式保持** — 所有改动需在 375px / 768px / 1200px 三个断点验证
 6. **暗色 + 亮色双主题同步适配**
@@ -1011,4 +1161,5 @@ blockquote {
 - [x] 暗色 + 亮色双主题视觉效果一致
 - [x] 移动端（375px）/ iPad（768px）/ PC（1025px+）三断点布局正常，无溢出
 - [x] 卡片网格响应式列数切换（3→2→1）
+- [x] GSAP 粒子网络背景正常工作（粒子漂移 + 连线 + 鼠标交互 + 主题适配 + 移动端隐藏）
 - [x] `pnpm build` 零错误通过
