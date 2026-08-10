@@ -91,54 +91,96 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
   .tag-cloud {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
 
+  /*
+    ── Tag Pill: cssbuttons-io gradient style ──
+    Ref: uiverse.io/cssbuttons-io/wonderful-baboon-62
+    Signature: vibrant gradient bg, no border, glow shadow, white text, scale on hover
+  */
   .tag-card {
-    display: flex;
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.55rem 1rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background-image: none;
-    transition: all 0.25s var(--ease-smooth);
+    gap: 0.4rem;
+    padding: 0.55rem 1.2rem;
+    text-decoration: none;
+    cursor: pointer;
+
+    /* ── The gradient — Action Blue spectrum ── */
+    background: linear-gradient(
+      144deg,
+      #0066cc,
+      #2997ff 50%,
+      #00a8ff
+    );
+
+    /* No border — gradient defines the visual edge */
+    border: none;
+    border-radius: var(--radius-pill);
+
+    /* Soft glow beneath */
+    box-shadow:
+      rgba(0, 102, 204, 0.25) 0 8px 24px -6px;
+
+    /* Smooth everything */
+    transition:
+      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.3s var(--ease-smooth);
   }
 
+  /* ── Hover: pop + stronger glow ── */
   .tag-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-border-accent);
-    background: var(--color-surface-hover);
+    transform: scale(1.06);
+    box-shadow:
+      rgba(0, 102, 204, 0.35) 0 15px 35px -4px,
+      rgba(0, 168, 255, 0.15) 0 8px 20px -4px;
   }
 
+  /* ── Hash symbol — semi-transparent white ── */
   .tag-hash {
-    color: var(--color-accent);
+    color: rgba(255, 255, 255, 0.65);
     font-weight: 700;
-    font-size: 0.85rem;
-    opacity: 0.6;
+    font-size: 0.88rem;
+    line-height: 1;
+    transition: color 0.3s var(--ease-smooth);
+    margin-right: -0.02rem;
   }
 
+  .tag-card:hover .tag-hash {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* ── Tag name — crisp white on gradient ── */
   .tag-name {
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
     font-weight: 600;
-    color: var(--color-text);
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
+    color: #ffffff;
+    font-size: 0.88rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
-  .tag-card:hover .tag-name {
-    color: var(--color-accent);
-  }
-
+  /* ── Count badge — translucent white chip on gradient ── */
   .tag-count {
-    font-size: 0.68rem;
-    color: var(--color-text-dim);
-    background: var(--color-bg-alt);
-    padding: 0.1rem 0.45rem;
-    border-radius: 100px;
+    font-size: 0.7rem;
     font-weight: 600;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.18);
+    padding: 0.12rem 0.5rem;
+    border-radius: 100px;
+    line-height: 1.35;
+    margin-left: 0.15rem;
+    transition:
+      color 0.3s var(--ease-smooth),
+      background 0.3s var(--ease-smooth);
+  }
+
+  .tag-card:hover .tag-count {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.3);
   }
 
   .empty-state {
@@ -161,12 +203,29 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
       font-size: 0.82rem;
     }
 
+    .tag-cloud {
+      gap: 0.6rem;
+    }
+
     .tag-card {
-      padding: 0.45rem 0.85rem;
+      padding: 0.48rem 1rem;
+    }
+
+    .tag-card:hover {
+      transform: scale(1.04);
     }
 
     .tag-name {
-      font-size: 0.74rem;
+      font-size: 0.82rem;
+    }
+
+    .tag-hash {
+      font-size: 0.82rem;
+    }
+
+    .tag-count {
+      font-size: 0.66rem;
+      padding: 0.1rem 0.45rem;
     }
   }
 
@@ -185,18 +244,29 @@ const sortedTags = allTags.sort((a, b) => (tagCounts.get(b) || 0) - (tagCounts.g
     }
 
     .tag-cloud {
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
 
     .tag-card {
-      padding: 0.4rem 0.75rem;
+      padding: 0.42rem 0.85rem;
+    }
+
+    .tag-card:hover {
+      transform: scale(1.04);
+      box-shadow:
+        rgba(0, 102, 204, 0.3) 0 10px 25px -4px;
     }
 
     .tag-name {
-      font-size: 0.7rem;
+      font-size: 0.78rem;
+    }
+
+    .tag-hash {
+      font-size: 0.78rem;
     }
 
     .tag-count {
-      font-size: 0.62rem;
+      font-size: 0.64rem;
+      padding: 0.08rem 0.4rem;
     }
   }</style>
