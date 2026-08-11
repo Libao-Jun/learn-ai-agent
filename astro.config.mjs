@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import remarkDirective from 'remark-directive';
 import remarkCallout from './src/plugins/remark-callout.mjs';
+import rehypeCodeBlocks from './src/plugins/rehype-code-blocks.mjs';
 
 export default defineConfig({
   site: 'https://libao-jun.github.io',
@@ -12,6 +13,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [remarkDirective, remarkCallout],
+      rehypePlugins: [rehypeCodeBlocks],
     }),
     shikiConfig: {
       theme: 'github-dark',

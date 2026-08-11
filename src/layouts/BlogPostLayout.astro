@@ -192,38 +192,21 @@ const showToc = headings.length >= 2;
     }
   });
 
-  // Code copy buttons
-  (function initCodeCopy() {
-    const pres = document.querySelectorAll('.post-body pre');
-    pres.forEach((pre) => {
-      if (pre.querySelector('.code-copy-btn')) return;
+  // Code copy buttons — event delegation (wrapper & button are build-time generated)
+  document.querySelector('.post-body')?.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest('.code-copy-btn');
+    if (!btn) return;
 
-      const wrapper = document.createElement('div');
-      wrapper.style.position = 'relative';
+    const wrapper = btn.closest('.code-block-wrapper');
+    const code = wrapper?.querySelector('code')?.textContent || '';
+    if (!code) return;
 
-      const btn = document.createElement('button');
-      btn.className = 'code-copy-btn';
-      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-      btn.setAttribute('aria-label', '复制代码');
-      btn.title = '复制代码';
-      btn.addEventListener('click', async () => {
-        const codeText = pre.querySelector('code')?.textContent || pre.textContent || '';
-        try {
-          await navigator.clipboard.writeText(codeText);
-          btn.classList.add('copied');
-          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-          setTimeout(() => {
-            btn.classList.remove('copied');
-            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-          }, 2000);
-        } catch { /* clipboard API not available */ }
-      });
-
-      pre.parentNode?.insertBefore(wrapper, pre);
-      wrapper.appendChild(btn);
-      wrapper.appendChild(pre);
-    });
-  })();
+    try {
+      await navigator.clipboard.writeText(code);
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 2000);
+    } catch { /* clipboard API not available */ }
+  });
 </script>
 
 <style>
@@ -420,41 +403,69 @@ const showToc = headings.length >= 2;
     color: var(--color-accent-hover);
   }
 
-  /* ── Code Copy Button ── */
-  .code-copy-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 6px;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    opacity: 0;
-    transition: all 0.2s ease;
-    padding: 0;
-    z-index: 1;
+  /* ── Code Block Wrapper ── */
+  :global(.code-block-wrapper) {
+    position: relative;
+    margin: 1.5rem 0;
   }
 
-  .post-body :global(pre):hover .code-copy-btn,
-  .code-copy-btn:focus-visible {
+  :global(.code-block-wrapper pre) {
+    margin: 0;
+    padding-right: 3.5rem;
+  }
+
+  /* ── Code Copy Button ── */
+  :global(.code-copy-btn) {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid color-mix(in srgb, var(--color-code-text) 22%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--color-code-bg) 82%, white);
+    color: color-mix(in srgb, var(--color-code-text) 72%, transparent);
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+    opacity: 0;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  }
+
+  :global(.code-block-wrapper:hover .code-copy-btn),
+  :global(.code-copy-btn:focus-visible) {
     opacity: 1;
   }
 
-  .code-copy-btn:hover {
-    background: var(--color-surface-hover);
-    color: var(--color-accent);
-    border-color: var(--color-border-accent);
+  :global(.code-copy-btn:hover) {
+    background: color-mix(in srgb, var(--color-code-bg) 68%, white);
+    color: var(--color-code-text);
+    border-color: color-mix(in srgb, var(--color-code-text) 42%, transparent);
   }
 
-  .code-copy-btn.copied {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+  :global(.code-copy-btn.copied) {
+    color: #8bd881;
+    border-color: color-mix(in srgb, #8bd881 55%, transparent);
+  }
+
+  /* Toggle between copy / check icons */
+  :global(.code-copy-btn .copy-icon) {
+    display: block;
+  }
+
+  :global(.code-copy-btn .check-icon) {
+    display: none;
+  }
+
+  :global(.code-copy-btn.copied .copy-icon) {
+    display: none;
+  }
+
+  :global(.code-copy-btn.copied .check-icon) {
+    display: block;
   }
 
   /* ── Post Footer ── */
@@ -696,9 +707,11 @@ const showToc = headings.length >= 2;
       padding-top: 1.5rem;
     }
 
-    .code-copy-btn {
+    :global(.code-copy-btn) {
       width: 28px;
       height: 28px;
+      top: 0.5rem;
+      right: 0.5rem;
     }
   }
 
