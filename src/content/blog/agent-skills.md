@@ -269,11 +269,27 @@ Describe the scenarios where this skill should be used.
 - 每个 commit 都可以记录 Skills 的变更
 - 可以回滚到旧版本
 
+## 常用 SKILLS
+
+| SKILL                                                                    | 说明                                                                                   |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| antfu/skills                                                             | 基于 Vue 3.5。始终使用带有 `<script setup lang="ts">` 的 Composition API 进行开发。    |
+| vueuse/vueuse-skills                                                     | 用于 VueUse 开发的技能。                                                               |
+| ui-ux-pro-max                                                            | 适用于复杂界面和交互设计的先进 UI/UX 设计模式。                                        |
+| frontend-design                                                          | 前端界面独具特色，属于专业级水准。通过精心设计，它们刻意避免了那种千篇一律的 AI 风格。 |
+| skill-creator                                                            | 技能创造者，用于创建 AI Agent Skill 的工具。                                           |
+| find-skills                                                              | 寻找技能/发掘才能，可以直接在代理会话中，从 skills.sh 网站获取并安装各种技能。         |
+| brainstorming                                                            | 头脑风暴/集思广益，将各种想法转化为具体的设计方案                                      |
+| onmax/nuxt-skills                                                        | 用于 Nuxt 开发的代理技能                                                               |
+| [code-review-skill](https://github.com/awesome-skills/code-review-skill) | 代码审查专项，覆盖 React / Vue / Rust / TypeScript                                     |
+
 ## Skills 相关资源整理
 
 | 资源说明                            | 链接                                                                                                                  |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | 开放代理技能生态系统                | [skills.sh](https://www.skills.sh/)                                                                                   |
+| 官方代理人技能                      | [officialskills.sh](https://officialskills.sh/)                                                                       |
+| Agent Skills Marketplace            | [SkillsMP](https://skillsmp.com/zh)                                                                                   |
 | 专为中国用户优化的 AI Skills 社区   | [skillhub.cn](https://skillhub.cn/)                                                                                   |
 | 发现并探索由社区构建的 Agent Skills | [skillsmp.com](https://skillsmp.com/zh)                                                                               |
 | Skills 教程                         | [Skills 教程](https://www.runoob.com/ai-agent/skills-agent.html)                                                      |
