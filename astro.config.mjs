@@ -9,6 +9,9 @@ import rehypeCodeBlocks from './src/plugins/rehype-code-blocks.mjs';
 export default defineConfig({
   site: 'https://libao-jun.github.io',
   base: process.env.NODE_ENV === 'production' ? '/learn-ai-agent/' : '/',
+  devToolbar: {
+    enabled: false,
+  },
   integrations: [sitemap(), mdx()],
   markdown: {
     processor: unified({

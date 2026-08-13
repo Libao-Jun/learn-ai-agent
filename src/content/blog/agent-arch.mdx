@@ -1,0 +1,48 @@
+---
+title: Agent 架构
+date: 2026-08-13
+description: Agent 架构是将多个 AI 模型调用、工具使用、数据处理步骤有序组合成一条自动化流水线的系统。
+tags: ["Agent 架构", "Agent Architecture",]
+---
+import AgentArchitectureDiagram from '../../components/AgentArchitectureDiagram.astro';
+
+## Agent 架构图
+
+<AgentArchitectureDiagram />
+
+## Agent 架构介绍
+
+### Agent（智能体）
+在 AI 应用开发中，`Agent（智能体）`是指能够感知环境、自主做出决策、并采取行动的 AI 系统。
+
+### Agent 架构
+`Agent 架构`是指 Agent 系统中各个组件的组织方式，决定了 Agent 的能力边界、可靠性、灵活性和适用场景。
+
+
+### Agent 的工作方式本质
+Agent 的工作方式本质上是一个`循环（Loop）`——感知当前状态，推理下一步，执行行动，再次感知……直到任务完成。
+
+```mermaid
+graph LR
+    A[感知环境] --> B[推理决策]
+    B --> C[执行行动]
+    C -->|观察结果，继续循环| A
+```
+
+## 常用架构
+
+### 架构一：单 Agent 循环
+
+```mermaid
+graph TB
+    A[用户任务输入] --> B[感知 - 收集上下文<br>读取文件、获取状态]
+    B --> C[Agent输入]
+    C --> D[推理 - 决定下一步<br>分析情况，选择工具]
+    D --> F[行动 - 调用工具<br>Bash / Read / Edit...]
+    F -.->|继续循环| B
+```
+### 架构二：规划 + 执行（Plan & Execute）
+### 架构三：多 Agent 协作（Multi-Agent）
+### 架构四：反思与自我修正（Reflection）
+### 架构五：RAG + Agent（检索增强型智能体）
+### 架构六：工作流编排（Workflow / DAG）
