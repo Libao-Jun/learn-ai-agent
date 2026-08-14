@@ -5,6 +5,46 @@ description: AI Workflow（AI 工作流）是将多个 AI 模型调用、工具�
 tags: ["Workflow", "AI Workflow", "工作流"]
 ---
 
+## 本节导读
+
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">🎯</div>
+        <div class="sg-item-label">学习目标</div>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">能力三层次</span>
+        <span class="sg-tag">Workflow 模式</span>
+        <span class="sg-tag">核心要素</span>
+        <span class="sg-tag">框架选型</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">⏱️</div>
+        <div class="sg-item-label">预计阅读</div>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">8</span>
+        <span class="sg-time-unit">min</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">📦</div>
+        <div class="sg-item-label">你将收获</div>
+      </div>
+      <ul class="sg-list">
+        <li>理解 AI Workflow 的三个能力层次与演进逻辑</li>
+        <li>掌握六种常见 Workflow 模式及其适用场景</li>
+        <li>学会用决策树选择合适的编排框架</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 ## AI 能力的三个层次
 
 AI 的能力是逐步「进化」出来的：从**单次问答**，到 **Chain 链式调用**，再到 **AI Workflow（含 Agent）**，每进一层，AI 能完成的任务就越复杂。
