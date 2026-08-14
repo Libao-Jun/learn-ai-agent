@@ -24,25 +24,312 @@ Agent 的工作方式本质上是一个`循环（Loop）`——感知当前状�
 
 ```mermaid
 graph LR
-    A[感知环境] --> B[推理决策]
+    A0[用户输入]--->A[感知环境]
+    A --> B[推理决策]
     B --> C[执行行动]
-    C -->|观察结果，继续循环| A
+    C -->|完成| D[输出结果]
+    C -->|观察结果，未完成，继续循环| A
 ```
 
 ## 常用架构
 
-### 架构一：单 Agent 循环
-
+### 架构一：单 Agent 循环（Single Agent Loop）
+1️⃣ 单 Agent 循环简图 
 ```mermaid
-graph TB
-    A[用户任务输入] --> B[感知 - 收集上下文<br>读取文件、获取状态]
-    B --> C[Agent输入]
-    C --> D[推理 - 决定下一步<br>分析情况，选择工具]
-    D --> F[行动 - 调用工具<br>Bash / Read / Edit...]
-    F -.->|继续循环| B
+graph TD
+    A[用户输入任务/需求] --> |Agent感知模块|B[感知 ● 收集上下文<br>（读取文件、获取状态）]
+    B --> |Agent推理模块|C[LLM 推理 ● 决定下一步<br>（分析情况，选择工具）]
+    C -->|完成| D[输出结果]
+    C -->|Agent行动模块| E[行动 ● 调用工具<br>（Bash/Read/Edit...）]
+    E -.-> F[继续循环]
+    F -.-> B
+
+    style A fill:#ced4da,stroke:#868e96,stroke-width:2px
+    style B fill:#99e9f2,stroke:#22b8cf,stroke-width:2px
+    style C fill:#d0bfff,stroke:#845ef7,stroke-width:2px
+    style D fill:#98FB98,stroke:#228B22,stroke-width:2px
+    style E fill:#f9d3e3,stroke:#a76283,stroke-width:2px
+    
+    classDef processClass fill:#87CEEB,stroke:#4682B4,stroke-width:2px
+    classDef decisionClass fill:#F0E68C,stroke:#DAA520,stroke-width:2px
+    
+    class B processClass
+    class C decisionClass
+```
+2️⃣ 单 Agent 循环详图
+```mermaid
+sequenceDiagram
+    autonumber
+    actor 用户 as 👤 用户
+    participant Agent as 🤖 Agent核心
+    participant 感知 as 📡 感知模块
+    participant 推理 as 🧠 推理模块
+    participant 行动 as ⚡ 行动模块
+    participant 工具 as 🛠️ 工具集
+
+    用户->>Agent: 📝 任务输入
+    
+    loop 🔄 Agent循环
+        Agent->>感知: 收集上下文
+        感知-->>Agent: 文件内容 / 状态信息
+        
+        Agent->>推理: 分析决策
+        推理-->>Agent: 下一步计划
+        
+        alt 需要执行工具
+            Agent->>行动: 调用工具
+            行动->>工具: Bash / Read / Edit
+            工具-->>行动: 执行结果
+            行动-->>Agent: 返回结果
+            
+            Note over Agent: 继续下一轮循环
+            
+        else 任务完成
+            Agent-->>用户: ✅ 输出结果
+            Note over Agent: 循环结束
+        end
+    end
 ```
 ### 架构二：规划 + 执行（Plan & Execute）
+
+1️⃣ 大体流程版本
+```mermaid
+graph TD
+    subgraph Planning[规划阶段]
+        A[用户任务] --> B[规划器（Planner）<br>生成分步执行计划]
+        B --> C[执行计划<br>步骤1：收集信息<br>步骤2：分析处理<br>步骤3：输出结果]
+    
+    end
+    
+    subgraph Execution[执行阶段]
+        C --> D[执行器（Executor）<br>依序完成每个步骤]
+        D --> |完成任务|E[输出结果]
+        D --> |未完成任务|F[继续下一轮循环]
+    end
+    
+    F -.->|动态重新规划<br>（可选）| C
+    
+    style A fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    
+    style Planning fill:#f5f8fc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+    style Execution fill:#f8faf8,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+```
+
+2️⃣ 更清晰的阶段分区版本
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 👤 用户
+    participant P as 📋 规划器（Planner）
+    participant E as ⚙️ 执行器（Executor）
+
+    rect rgb(235, 242, 250)
+        Note over U,P: 📐 规划阶段
+        U->>P: 用户任务
+        activate P
+        P->>P: 生成分步执行计划
+        Note over P: ├─ 步骤1：收集信息<br>├─ 步骤2：分析处理<br>└─ 步骤3：输出结果
+        P-->>E: 执行计划
+        deactivate P
+    end
+
+    rect rgb(245, 248, 245)
+        Note over E: ⚡ 执行阶段
+        activate E
+        E->>E: 依序完成每个步骤
+        
+        opt 🔄 动态重新规划（可选）
+            E->>P: 请求重新规划
+            activate P
+            P-->>E: 更新执行计划
+            deactivate P
+        end
+        
+        E-->>U: ✅ 完成任务
+        deactivate E
+    end
+```
+
+:::tip[规划 + 执行]
+Plan & Execute 的代价是增加了推理轮次，对于简单任务反而是一种浪费。如果一个任务可以在 3 步内完成，直接用单 Agent 循环更高效。
+:::
 ### 架构三：多 Agent 协作（Multi-Agent）
+
+```mermaid
+graph TD
+    subgraph Orchestrator[📋 协调者]
+        A[协调者（Orchestrator）<br>任务分解·调度·结果综合]
+    end
+    
+    A --> B[分发任务]
+    
+    subgraph Parallel[⚡ 并行执行阶段]
+        direction TB
+        B --> C[子Agent A<br>代码审查]
+        B --> D[子Agent B<br>安全检测]
+        B --> E[子Agent C<br>性能分析]
+    end
+    
+    subgraph Collection[📥 汇总阶段]
+        C -.-> F[返回结果]
+        D -.-> F
+        E -.-> F
+        F --> G[结果汇总<br>综合各子Agent输出]
+    end
+    
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style F fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style G fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    
+    style Orchestrator fill:#f5f8fc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+    style Parallel fill:#f8faf8,stroke:#d0d5dd,stroke-width:2px,stroke-dasharray:4,4
+    style Collection fill:#fafbfc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+```
+:::tip[子 Agent]
+子 Agent（Subagent）是短暂的、隔离的 — 完成一个任务后即销毁。Agent 团队（Agent Teams）则是多个独立 Agent 实例长时间协作、互相发消息，更像一个真实的团队。
+:::
 ### 架构四：反思与自我修正（Reflection）
+
+```mermaid
+graph TD
+    A[执行器（Executor）<br>生成初始输出] --> B[评判者（Critic）<br>评估质量与正确性]
+    B -->|通过| C[输出最终结果]
+    B -->|未通过| D[修正器（Reviser）<br>根据反馈改进输出]
+    D -.-> E[重新生成]
+    E -.-> |通常设置最大迭代次数限制|A
+    
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+```
+📙 两种实现方式
+
+
+| 方式        | 机制                               | 优点                       | 缺点                           |
+| ----------- | ---------------------------------- | -------------------------- | ------------------------------ |
+| 自我反思    | 同一个模型先执行再评估自己的输出   | 实现简单，无额外模型成本   | 模型可能对自己的错误“视而不见” |
+| Critic 模型 | 用独立的评判模型评估执行模型的输出 | 更客观，能发现执行模型盲区 | 增加模型调用成本和延迟         |
+
+:::tip[注意事项]
+"写单元测试 → 运行测试 → 观察失败 → 修复代码 → 再次运行" — 这就是反思架构的经典应用。测试结果本身就是 Critic 的反馈信号。
+:::
+
 ### 架构五：RAG + Agent（检索增强型智能体）
+
+1️⃣ Flowchart 图
+```mermaid
+graph TD
+    A[用户查询] --> B[主动检索<br>决定检索时机与内容]
+    B -->|增强上下文| C[增强推理<br>集合知识库内容推理]
+    C --> D[执行行动<br>基于知识的精确操作]
+    C -.->|按需检索| E[知识库<br>文档/向量数据库<br>代码块/记忆]
+    E --> |返回|B
+    B --> |查询|E
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+```
+
+2️⃣ 序列图
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 用户
+    participant A as Agent
+    participant K as 知识库
+
+
+    rect rgb(240, 248, 240)
+        Note over U,A: 1️⃣ 用户查询
+        U->>A: 查询
+        activate A
+    end
+    
+    rect rgb(240, 248, 240)
+        Note over A: 2️⃣ 主动检索<br>决定检索时机与内容
+        A->>K: 查询（文档/向量数据库/代码库/记忆）
+        activate K
+        K-->>A: 返回（所需知识库内容），增强上下文
+        deactivate K
+    end
+    
+    rect rgb(245, 248, 250)
+        Note over A: 3️⃣ 增强推理<br>结合知识库内容推理
+        A->>K: 按需再检索
+        activate K
+        K-->>A: 返回
+        deactivate K
+    end
+    rect rgb(240, 248, 240)
+        Note over A,U: 4️⃣ 执行行动<br>基于知识的精准操作
+        A-->>U: 执行行动
+        deactivate A
+    end
+```
+
 ### 架构六：工作流编排（Workflow / DAG）
+
+1️⃣ 流程图
+
+```mermaid
+graph TD
+    A[数据输入] --> B[任务 A<br>独立并行执行]
+    A --> C[任务 B<br>独立并行执行]
+    B --> |任务A完成|D[AB均完成]
+    C --> |任务B完成|D
+    D --> |触发|E[聚合节点<br>等待依赖，整合结果]
+    E --> F[输出]
+    
+    style A fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+```
+
+2️⃣ 序列图
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant I as 数据输入
+    participant A as 任务 A
+    participant B as 任务 B
+    participant D as 聚合节点
+    participant O as 输出
+
+    Note over I: 数据输入
+    
+    par 可并行
+        I->>A: 触发
+        activate A
+        Note over A: 独立并行执行
+        A-->>D: 完成
+        deactivate A
+    and
+        I->>B: 触发
+        activate B
+        Note over B: 独立并行执行
+        B-->>D: 完成
+        deactivate B
+    end
+    
+    Note over D: A、B均完成后才触发
+    
+    activate D
+    Note over D: 等待依赖，整合结果
+    D-->>O: 输出
+    deactivate D
+```
