@@ -73,7 +73,22 @@ tags: ["AI", "Claude Code", "DeepSeek", "Agent"]
 > (MCP 是一套开放标准协议，它允许 AI 模型安全、可控地访问外部工具和数据源)
 
 2️⃣ MCP 设计思想
-<img src="https://raw.githubusercontent.com/datawhalechina/Hello-Agents/main/docs/images/10-figures/10-1.png" width="100%" alt="MCP 设计思想">
+
+```mermaid
+  graph LR
+    A[智能体（Agent）]
+    B[MCP服务器]
+    C[文件系统]
+    D[数据库]
+    E[GitHub API]
+    F[其他服务]
+
+    A --> |MCP协议|B 
+    B --> C
+    B --> D 
+    B --> E 
+    B --> F
+```
 
 3️⃣ MCP 协议提供了三大核心能力，构成完整的工具访问框架
 
