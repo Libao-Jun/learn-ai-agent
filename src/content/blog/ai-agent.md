@@ -84,12 +84,12 @@ graph TB
 ## 从 Prompt 到 Reasoning Loop
 
 ```mermaid
-  graph TB
-    subgraph Execution[Repeat 循环]
-      A[LLM（大脑）<br>推理]
-      B[Thought（思考）<br>模型规划：该做什么?]
-      C[Action（行动）<br>调用工具（如搜索、API）]
-      D[Observation（观察）<br>获取工具反馈的结果]
+  graph LR
+    subgraph Execution[Repeat循环]
+      A[LLM（大脑）<br><span style='font-size:12px'>推理</span>]
+      B[Thought（思考）<br><span style='font-size:12px'>模型规划：该做什么?</span>]
+      C[Action（行动）<br><span style='font-size:12px'>调用工具（如搜索、API）</span>]
+      D[Observation（观察）<br><span style='font-size:12px'>获取工具反馈的结果</span>]
       E[输出最终结果]
 
       A --> B
