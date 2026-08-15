@@ -174,7 +174,24 @@ tags: # 标签
 - 只有在确实需要时才调用被允许的外部工具，否则在规则内完成逻辑。
 - 最终结果经过约束整合后输出，用户的下一次输入触发新一轮完整流程。
 
-<img src="https://www.runoob.com/wp-content/uploads/2026/01/claude-agent-skills-runoob.png" width="100%" alt="Skill 执行流程">
+```mermaid
+graph TD
+    A[用户输入指令] --> B{Skill 意图识别}
+    B -->|匹配成功| C
+    B -->|匹配失败| D[进入通用回复模式]
+    
+    subgraph C[Skill 执行核心]
+        direction TB
+        E[加载 SKILL.md 核心指令] --> F[上下文感知: 检索<br>Knowledge/Docs]
+        F --> G{是否需要操作?}
+        G -->|是: 读写/运行| H[调用外部工具<br>Tools/Terminal]
+        G -->|否: 逻辑完成| I[遵循规范整合信息]
+        H -->|检索结果| F
+    end
+    
+    I --> J[输出最终结果]
+    J --> K[用户反馈/持续迭代]
+```
 
 ## 创建自己的 Skills
 
