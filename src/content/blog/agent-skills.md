@@ -76,14 +76,16 @@ Agent Skills 的关键是渐进式披露，分三层加载
 | 作用范围 | 所有项目            | 当前项目                  |
 | 适用场景 | 个人通用技能        | 团队共享、项目特定规范    |
 
-## Skills vs 提示词
+## Skill vs 提示词
 
-| 提示词                     | Skills                 |
-| -------------------------- | ---------------------- |
-| 临时性的，每次都要重复说   | 持久化的，写一次反复用 |
-| 存在对话历史中，占用 Token | 按需加载，节省 Token   |
-| 无法在会话间共享           | 可以在团队中共享       |
-| 难以版本控制               | 可以用 Git 管理        |
+| 对比维度      | 提示词 (Prompt)                            | Skill (技能模块)                                       |
+| ------------- | ------------------------------------------ | ------------------------------------------------------ |
+| **本质**      | 单一文本指令/上下文（即自然语言描述）。    | 组合了提示词、工具（API/代码）的**结构化能力模块**。   |
+| **复杂度**    | 简单、单步任务（如：翻译、格式化代码等）。 | 复杂的、多步骤工作流。                                 |
+| **可复用性**  | 需手动微调。                               | 可重复使用，根据任务需求自动触发，无需关心细节。       |
+| **依赖**      | 仅依赖模型自身知识库。                     | 外部工具或数据源（如：搜索引擎、数据库、代码执行器等） |
+| **Token消耗** | 每次调用都计费消耗。                       | 按需加载，并存多个不增加消耗。                         |
+| **类比**      | 直接问专家一个简单问题。                   | 雇佣一个团队帮你完成复杂的工程项目。                   |
 
 ## Skills vs MCP
 
@@ -109,6 +111,7 @@ Agent Skills 的关键是渐进式披露，分三层加载
 - 根据 `description` 自动匹配触发
 
 ## 调试 Skill
+
 - 使用 `/skills` 回车，查看技能是否被识别
 - 直接输入技能名称手动触发
 - 检查 `SKILL.md` 文件内容是否正确
@@ -171,7 +174,24 @@ tags: # 标签
 - 只有在确实需要时才调用被允许的外部工具，否则在规则内完成逻辑。
 - 最终结果经过约束整合后输出，用户的下一次输入触发新一轮完整流程。
 
-<img src="https://www.runoob.com/wp-content/uploads/2026/01/claude-agent-skills-runoob.png" width="100%" alt="Skill 执行流程">
+```mermaid
+graph TD
+    A[用户输入指令] --> B{Skill 意图识别}
+    B -->|匹配成功| C
+    B -->|匹配失败| D[进入通用回复模式]
+    
+    subgraph C[Skill 执行核心]
+        direction TB
+        E[加载 SKILL.md 核心指令] --> F[上下文感知: 检索<br>Knowledge/Docs]
+        F --> G{是否需要操作?}
+        G -->|是: 读写/运行| H[调用外部工具<br>Tools/Terminal]
+        G -->|否: 逻辑完成| I[遵循规范整合信息]
+        H -->|检索结果| F
+    end
+    
+    I --> J[输出最终结果]
+    J --> K[用户反馈/持续迭代]
+```
 
 ## 创建自己的 Skills
 
@@ -196,7 +216,7 @@ tags: # 标签
 - 创建测试用例
 - 运行评估并优化
 
-## 培养 SKill 
+## 培养 SKill
 
 > 技能目录包含一个 `SKILL.md` 文件，该文件带有 `YAML` 前置元数据
 
@@ -240,41 +260,61 @@ Describe the scenarios where this skill should be used.
 
 1. First, do this
 2. Then, do that
-
 ```
 
 ## 进阶 Skill
 
 ### Skills 与 Hooks 配合
+
 > Hooks 可以在特定事件时自动执行操作，结合 Skills 可以实现更强大的自动化。
 
 ### Skills 与 Commands 配合
+
 > Commands 是简单的快捷命令，Skills 是复杂的工作流。两者可以配合使用。
 
 ### 团队协作
+
 1️⃣ 共享项目 Skills
+
 - 将 Skills 放在 `.claude/skills/` 目录
 - 提交到 Git 仓库
 - 团队成员克隆项目后即可使用
 
 2️⃣ 版本控制
+
 - Skills 可以像代码一样进行版本控制
 - 每个 commit 都可以记录 Skills 的变更
 - 可以回滚到旧版本
 
+## 常用 SKILLS
+
+| SKILL                                                                    | 说明                                                                                   |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| antfu/skills                                                             | 基于 Vue 3.5。始终使用带有 `<script setup lang="ts">` 的 Composition API 进行开发。    |
+| vueuse/vueuse-skills                                                     | 用于 VueUse 开发的技能。                                                               |
+| ui-ux-pro-max                                                            | 适用于复杂界面和交互设计的先进 UI/UX 设计模式。                                        |
+| frontend-design                                                          | 前端界面独具特色，属于专业级水准。通过精心设计，它们刻意避免了那种千篇一律的 AI 风格。 |
+| skill-creator                                                            | 技能创造者，用于创建 AI Agent Skill 的工具。                                           |
+| find-skills                                                              | 寻找技能/发掘才能，可以直接在代理会话中，从 skills.sh 网站获取并安装各种技能。         |
+| brainstorming                                                            | 头脑风暴/集思广益，将各种想法转化为具体的设计方案                                      |
+| onmax/nuxt-skills                                                        | 用于 Nuxt 开发的代理技能                                                               |
+| [code-review-skill](https://github.com/awesome-skills/code-review-skill) | 代码审查专项，覆盖 React / Vue / Rust / TypeScript                                     |
+
 ## Skills 相关资源整理
 
-| 资源说明                          | 链接                                                                                                                  |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| 开放代理技能生态系统              | [skills.sh](https://www.skills.sh/)                                                                                   |
-| 专为中国用户优化的 AI Skills 社区 | [skillhub.cn](https://skillhub.cn/)                                                                                   |
-| 发现并探索由社区构建的 Agent Skills | [skillsmp.com](https://skillsmp.com/zh)                                                                                   |
-| Skills 教程                       | [Skills 教程](https://www.runoob.com/ai-agent/skills-agent.html)                                                      |
-| skill-creator                     | [skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md)                         |
-| 自动生成 Skill 的 Skill           | [自动生成 Skill 的 Skill](https://github.com/anthropics/skills/tree/main/skills/skill-creator)                        |
-| 用 skill-creator 创建 Skill       | [用 skill-creator 创建 Skill](https://www.runoob.com/claude-code/skill-creator-usage.html)                            |
-| Skills 市场（中文界面）           | [Skills 市场（中文界面）](https://skillsmp.com/zh)                                                                    |
-| Agent Skills 官方标准站点         | [Agent Skills 官方标准站点](https://agentskills.io)                                                                   |
-| Anthropic 官方工程文章            | [Anthropic 官方工程文章](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) |
-| Anthropic 官方 Skills GitHub 仓库 | [Anthropic 官方 Skills GitHub 仓库](https://github.com/anthropics/skills)                                             |
-| Claude 技能精选列表               | [Claude 技能精选列表](https://github.com/ComposioHQ/awesome-claude-skills)                                            |
+| 资源说明                            | 链接                                                                                                                  |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 开放代理技能生态系统                | [skills.sh](https://www.skills.sh/)                                                                                   |
+| 官方代理人技能                      | [officialskills.sh](https://officialskills.sh/)                                                                       |
+| Agent Skills Marketplace            | [SkillsMP](https://skillsmp.com/zh)                                                                                   |
+| 专为中国用户优化的 AI Skills 社区   | [skillhub.cn](https://skillhub.cn/)                                                                                   |
+| 发现并探索由社区构建的 Agent Skills | [skillsmp.com](https://skillsmp.com/zh)                                                                               |
+| Skills 教程                         | [Skills 教程](https://www.runoob.com/ai-agent/skills-agent.html)                                                      |
+| skill-creator                       | [skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md)                         |
+| 自动生成 Skill 的 Skill             | [自动生成 Skill 的 Skill](https://github.com/anthropics/skills/tree/main/skills/skill-creator)                        |
+| 用 skill-creator 创建 Skill         | [用 skill-creator 创建 Skill](https://www.runoob.com/claude-code/skill-creator-usage.html)                            |
+| Skills 市场（中文界面）             | [Skills 市场（中文界面）](https://skillsmp.com/zh)                                                                    |
+| Agent Skills 官方标准站点           | [Agent Skills 官方标准站点](https://agentskills.io)                                                                   |
+| Anthropic 官方工程文章              | [Anthropic 官方工程文章](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) |
+| Anthropic 官方 Skills GitHub 仓库   | [Anthropic 官方 Skills GitHub 仓库](https://github.com/anthropics/skills)                                             |
+| Claude 技能精选列表                 | [Claude 技能精选列表](https://github.com/ComposioHQ/awesome-claude-skills)                                            |

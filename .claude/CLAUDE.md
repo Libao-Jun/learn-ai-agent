@@ -251,6 +251,47 @@ tags: ['主标签', '副标签1', '副标签2']
 …正文…
 ```
 
+> ⚠️ **「本节导读」为每篇文章的强制模块**。每篇文章开头（frontmatter 之后、正文首个二级标题之前）必须包含 `## 本节导读` + `<div class="sg-card">` 卡片，包含「学习目标 🎯」「预计阅读 ⏱️」「你将收获 📦」三项。若发现 `src/content/blog/` 下的文章缺少该模块，**必须根据文章内容自动补充**。`sg-card` 结构如下：
+
+```html
+## 本节导读
+
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">🎯</div>
+        <div class="sg-item-label">学习目标</div>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">关键词1</span>
+        <span class="sg-tag">关键词2</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">⏱️</div>
+        <div class="sg-item-label">预计阅读</div>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">N</span>
+        <span class="sg-time-unit">min</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">📦</div>
+        <div class="sg-item-label">你将收获</div>
+      </div>
+      <ul class="sg-list">
+        <li>收获点 1</li>
+        <li>收获点 2</li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
 ### 交叉引用
 
 每篇文章末尾推荐添加「延伸阅读」或文章导航表，参考 `ai-tools.md` 末尾的「附录：本系列文章导航」表格。
@@ -320,6 +361,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 5. **代码复制按钮** — 由 `BlogPostLayout.astro` 的 `initCodeCopy()` 脚本在 `<pre>` 上注入复制按钮
 6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
 7. **Apple 设计色板** — 单一 Action Blue `#0066cc` 强调色，近黑表面系统（纯黑→暗色瓷砖→悬停，无投影），SF Pro 字体栈（无 weight 500），Hero 底部唯一装饰缎带
+8. **组件导入别名** — 内容（`.mdx`）或组件中导入 `src/components` 下的组件统一使用 `@components/xxx.astro` 别名（由 `tsconfig.json` 的 `paths` 与 `astro.config.mjs` 的 `vite.resolve.alias` 共同配置），避免写 `../../components/` 相对路径
 
 ## CI/CD
 

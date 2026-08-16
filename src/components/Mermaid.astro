@@ -9,23 +9,28 @@
   async function renderMermaid() {
     mermaid.initialize({
       startOnLoad: false,
-      theme: document.documentElement.dataset.theme === "light" ? "default" : "dark",
+      theme:
+        document.documentElement.dataset.theme === "light" ? "default" : "dark",
       securityLevel: "loose",
       fontFamily: "inherit",
     });
 
     // Astro/Shiki versions may expose the language as either an attribute or a class.
-    const mermaidPres = new Set([
-      ...document.querySelectorAll('pre[data-language="mermaid"]'),
-      ...document.querySelectorAll("pre.language-mermaid"),
-      ...document.querySelectorAll('pre > code.language-mermaid, pre > code[data-language="mermaid"]'),
-    ].map((node) => node.tagName === "PRE" ? node : node.parentElement));
+    const mermaidPres = new Set(
+      [
+        ...document.querySelectorAll('pre[data-language="mermaid"]'),
+        ...document.querySelectorAll("pre.language-mermaid"),
+        ...document.querySelectorAll(
+          'pre > code.language-mermaid, pre > code[data-language="mermaid"]',
+        ),
+      ].map((node) => (node.tagName === "PRE" ? node : node.parentElement)),
+    );
     if (mermaidPres.size === 0) return;
 
     for (const pre of mermaidPres) {
       if (!pre) continue;
       const code = pre.querySelector("code");
-      if (pre.dataset.mermaidRendered === "true") continue;
+      if ((pre as HTMLElement).dataset.mermaidRendered === "true") continue;
       const source = (code?.textContent || pre.textContent || "").trim();
       if (!source) continue;
 
@@ -36,7 +41,7 @@
         const wrapper = document.createElement("div");
         wrapper.className = "mermaid-diagram";
         wrapper.innerHTML = svg;
-        pre.dataset.mermaidRendered = "true";
+        (pre as HTMLElement).dataset.mermaidRendered = "true";
         pre.replaceWith(wrapper);
       } catch (e) {
         console.error("Mermaid render error:", e);

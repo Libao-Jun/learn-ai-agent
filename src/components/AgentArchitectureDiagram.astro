@@ -1,0 +1,683 @@
+---
+import DiagramIcon from './DiagramIcon.astro';
+
+const userEntries = [
+  { icon: 'user', label: '用户' },
+  { icon: 'chat', label: '对话界面', detail: '(Web / App)' },
+  { icon: 'terminal', label: '命令行 / API' },
+  { icon: 'webhook', label: 'Webhook /', detail: '事件触发' },
+];
+
+const perceptionItems = [
+  { icon: 'document', label: '输入解析' },
+  { icon: 'target', label: '意图识别' },
+  { icon: 'brain', label: '上下文理解' },
+  { icon: 'filter', label: '信息抽取' },
+];
+
+const planningItems = [
+  { icon: 'flag', label: '目标理解', detail: '明确任务目标' },
+  { icon: 'tree', label: '任务分解', detail: '拆解子任务' },
+  { icon: 'clipboard', label: '计划生成', detail: '制定执行计划' },
+  { icon: 'reflect', label: '自我反思', detail: '评估与调整' },
+];
+
+const actionItems = [
+  { icon: 'wrench', label: '工具调用', detail: '使用外部工具' },
+  { icon: 'code', label: '代码执行', detail: '运行代码 / 脚本' },
+  { icon: 'search', label: '检索查询', detail: '搜索与检索' },
+  { icon: 'reply', label: '生成回复', detail: '生成最终结果' },
+];
+
+const memoryItems = [
+  { icon: 'memory', label: '短期记忆', detail: '对话上下文' },
+  { icon: 'database', label: '长期记忆', detail: '用户偏好 / 知识' },
+  { icon: 'book', label: '知识库', detail: '文档 / 向量存储' },
+  { icon: 'star', label: '经验记忆', detail: '成功经验 / 策略' },
+];
+
+const toolGroups = [
+  {
+    title: '工具（Tools）',
+    items: [
+      { icon: 'calculator', label: '计算器' },
+      { icon: 'folder', label: '文件读写' },
+      { icon: 'clock', label: '时间日期' },
+      { icon: 'more', label: '更多工具' },
+    ],
+  },
+  {
+    title: '数据与 API',
+    items: [
+      { icon: 'database', label: '数据库' },
+      { icon: 'globe', label: 'Web API' },
+      { icon: 'share', label: '第三方服务' },
+      { icon: 'more', label: '更多' },
+    ],
+  },
+  {
+    title: '检索与知识',
+    items: [
+      { icon: 'search', label: '搜索引擎' },
+      { icon: 'globe-search', label: '向量检索' },
+      { icon: 'document', label: '文档库' },
+      { icon: 'more', label: '更多' },
+    ],
+  },
+  {
+    title: '执行环境',
+    items: [
+      { icon: 'sandbox', label: '代码沙箱' },
+      { icon: 'terminal', label: '终端环境' },
+      { icon: 'globe', label: '浏览器' },
+      { icon: 'more', label: '更多' },
+    ],
+  },
+];
+
+const modelItems = [
+  { icon: 'llm', label: '大语言模型', detail: '(LLM)' },
+  { icon: 'embedding', label: '嵌入模型', detail: '(Embedding)' },
+  { icon: 'rerank', label: '重排模型', detail: '(Reranker)' },
+  { icon: 'image', label: '多模态模型', detail: '(Multimodal)' },
+];
+
+const supportItems = [
+  { icon: 'database-wide', label: '向量数据库' },
+  { icon: 'database', label: '关系数据库' },
+  { icon: 'archive', label: '对象存储' },
+  { icon: 'layers', label: '缓存（Redis）' },
+  { icon: 'queue', label: '消息队列' },
+  { icon: 'log', label: '日志存储' },
+  { icon: 'shield', label: '权限与安全' },
+];
+
+const observeItems = [
+  { icon: 'bars', label: '日志与追踪' },
+  { icon: 'chart', label: '性能监控' },
+  { icon: 'checklist', label: '评估指标' },
+  { icon: 'refresh', label: '反馈优化' },
+];
+---
+
+<div class="agent-arch-scroll" role="region" aria-label="AI Agent 架构图，可横向滚动查看完整内容" tabindex="0">
+  <section class="agent-arch" aria-label="AI Agent 架构图">
+    <svg class="connections" viewBox="0 0 1152 768" aria-hidden="true">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z"></path>
+        </marker>
+      </defs>
+      <path d="M156 238 H240" />
+      <path d="M240 312 H156" />
+      <path d="M525 156 V183" />
+      <path d="M376 244 H406" class="planning-flow-link" />
+      <path d="M511 244 H541" class="planning-flow-link" />
+      <path d="M646 244 H676" class="planning-flow-link" />
+      <path d="M323 299 V320" class="two-way planning-action-link" />
+      <path d="M458 299 V320" class="two-way planning-action-link" />
+      <path d="M593 299 V320" class="two-way planning-action-link" />
+      <path d="M728 299 V320" class="two-way planning-action-link" />
+      <path d="M525 296 V323" />
+      <path d="M525 405 V427" class="two-way" />
+      <path d="M812 283 H866" class="two-way tools-link" />
+      <path d="M512 549 V529" class="model-core-link" />
+      <path d="M998 646 V543" class="dashed observe-link" />
+    </svg>
+
+    <aside class="user-panel panel purple">
+      <h3>用户 / 外部系统</h3>
+      <div class="user-list">
+        {userEntries.map((item) => (
+          <article class="user-card">
+            <DiagramIcon name={item.icon} size={27} />
+            <div><strong>{item.label}</strong>{item.detail && <small>{item.detail}</small>}</div>
+          </article>
+        ))}
+      </div>
+    </aside>
+
+    <div class="io-label io-label--input">输入 / 需求</div>
+    <div class="io-label io-label--output">输出 / 响应</div>
+
+    <main class="agent-core panel blue">
+      <h2>AI Agent 核心</h2>
+
+      <section class="core-section perception">
+        <h3>感知与理解</h3>
+        <div class="core-grid compact-grid">
+          {perceptionItems.map((item) => (
+            <article class="core-card">
+              <DiagramIcon name={item.icon} size={25} />
+              <strong>{item.label}</strong>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="core-section planning">
+        <h3>决策与规划</h3>
+        <div class="core-grid detail-grid">
+          {planningItems.map((item) => (
+            <article class="core-card">
+              <div class="core-card__heading">
+                <DiagramIcon name={item.icon} size={25} />
+                <strong>{item.label}</strong>
+              </div>
+              <small>{item.detail}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="core-section action">
+        <h3>行动执行</h3>
+        <div class="core-grid detail-grid">
+          {actionItems.map((item) => (
+            <article class="core-card">
+              <div class="core-card__heading">
+                <DiagramIcon name={item.icon} size={24} />
+                <strong>{item.label}</strong>
+              </div>
+              <small>{item.detail}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="core-section memory">
+        <h3>记忆系统</h3>
+        <div class="core-grid detail-grid">
+          {memoryItems.map((item) => (
+            <article class="core-card">
+              <div class="core-card__heading">
+                <DiagramIcon name={item.icon} size={24} />
+                <strong>{item.label}</strong>
+              </div>
+              <small>{item.detail}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+
+    <aside class="tools-panel panel green">
+      <h2>外部工具与服务</h2>
+      <div class="tool-groups">
+        {toolGroups.map((group) => (
+          <section class="tool-group">
+            <h3>{group.title}</h3>
+            <div class="tool-grid">
+              {group.items.map((item) => (
+                <article>
+                  <DiagramIcon name={item.icon} size={25} />
+                  <strong>{item.label}</strong>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </aside>
+
+    <section class="model-layer panel blue">
+      <h2>模型层（Model Layer）</h2>
+      <div class="model-grid">
+        {modelItems.map((item) => (
+          <article>
+            <DiagramIcon name={item.icon} size={27} />
+            <div><strong>{item.label}</strong><small>{item.detail}</small></div>
+          </article>
+        ))}
+        <span class="ellipsis" aria-hidden="true">……</span>
+      </div>
+    </section>
+
+    <section class="support-layer panel navy">
+      <h2>基础设施与支撑</h2>
+      <div class="support-grid">
+        {supportItems.map((item) => (
+          <article>
+            <DiagramIcon name={item.icon} size={27} />
+            <strong>{item.label}</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="observe-layer panel navy">
+      <h2>观测与评估</h2>
+      <div class="observe-grid">
+        {observeItems.map((item) => (
+          <article>
+            <DiagramIcon name={item.icon} size={27} />
+            <strong>{item.label}</strong>
+          </article>
+        ))}
+      </div>
+    </section>
+  </section>
+</div>
+
+<style>
+  .agent-arch-scroll {
+    width: 100%;
+    margin: 1.75rem 0 2.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .agent-arch {
+    --blue: #0b58a4;
+    --blue-line: #2d73b8;
+    --blue-bg: #f7fbff;
+    --green: #087043;
+    --green-line: #32936d;
+    --green-bg: #fbfffd;
+    --orange: #9b5900;
+    --orange-line: #e1b64c;
+    --orange-bg: #fffaf0;
+    --purple: #4f3292;
+    --purple-line: #8064bd;
+    --purple-bg: #fcfaff;
+    --navy: #173b5c;
+    position: relative;
+    width: 1152px;
+    min-width: 1152px;
+    height: 768px;
+    overflow: hidden;
+    color: #142c42;
+    background: #fff;
+    font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .agent-arch *,
+  .agent-arch *::before,
+  .agent-arch *::after {
+    box-sizing: border-box;
+  }
+
+  .agent-arch h2,
+  .agent-arch h3,
+  .agent-arch strong,
+  .agent-arch small {
+    margin: 0;
+    letter-spacing: 0;
+  }
+
+  .agent-arch h2::before,
+  .agent-arch h2::after,
+  .agent-arch h3::before,
+  .agent-arch h3::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .agent-arch h2 {
+    font-size: 15px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .agent-arch h3 {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .agent-arch strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .agent-arch small {
+    display: block;
+    margin-top: 5px;
+    color: #30465a;
+    font-size: 10px;
+  }
+
+  .panel {
+    position: absolute;
+    border: 1.5px solid currentColor;
+    border-radius: 11px;
+    background: #fff;
+  }
+
+  .blue { color: var(--blue); }
+  .green { color: var(--green); }
+  .purple { color: var(--purple); }
+  .navy { color: var(--navy); }
+
+  .connections {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .connections path {
+    fill: none;
+    stroke: #14212c;
+    stroke-width: 1.5;
+    marker-end: url(#arrow);
+  }
+
+  .connections .two-way { marker-start: url(#arrow); }
+  .connections .dashed { stroke-dasharray: 6 6; }
+
+  .user-panel {
+    z-index: 2;
+    left: 23px;
+    top: 50px;
+    width: 134px;
+    height: 424px;
+    padding: 16px 8px 12px;
+    background: var(--purple-bg);
+  }
+
+  .user-panel > h3 {
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .user-list { display: grid; gap: 8px; }
+
+  .user-card {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    align-items: center;
+    min-height: 82px;
+    padding: 8px 7px;
+    border: 1px solid #c7b9e8;
+    border-radius: 9px;
+    background: #fff;
+    color: #172b3f;
+    text-align: center;
+  }
+
+  .user-card :global(.diagram-icon) { color: var(--purple); }
+  .user-card strong { font-size: 10.5px; white-space: nowrap; }
+  .user-card small { color: #172b3f; }
+
+  .io-label {
+    position: absolute;
+    z-index: 3;
+    left: 165px;
+    width: 72px;
+    padding: 2px 0;
+    color: #172331;
+    background: #fff;
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .io-label--input { top: 208px; }
+  .io-label--output { top: 318px; }
+
+  .agent-core {
+    z-index: 0;
+    left: 240px;
+    top: 20px;
+    width: 572px;
+    height: 509px;
+    padding: 14px 18px;
+    background: var(--blue-bg);
+  }
+
+  .agent-core > h2 { margin-bottom: 15px; }
+
+  .core-section {
+    position: absolute;
+    left: 17px;
+    width: 538px;
+    border: 1px solid;
+    border-radius: 11px;
+  }
+
+  .core-section > h3 {
+    height: 30px;
+    padding-top: 9px;
+    text-align: center;
+  }
+
+  .perception {
+    top: 45px;
+    height: 91px;
+    border-style: dashed;
+    border-color: #65a2d9;
+    background: #fbfdff;
+  }
+
+  .planning {
+    top: 163px;
+    height: 113px;
+    border-color: #63ad8d;
+    color: var(--green);
+    background: var(--green-bg);
+  }
+
+  .action {
+    top: 303px;
+    height: 82px;
+    border-color: var(--orange-line);
+    color: var(--orange);
+    background: var(--orange-bg);
+  }
+
+  .memory {
+    top: 407px;
+    height: 84px;
+    border-color: #9a82cf;
+    color: var(--purple);
+    background: var(--purple-bg);
+  }
+
+  .action > h3,
+  .memory > h3 {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+
+  .core-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 14px;
+  }
+
+  .perception .core-grid { gap: 23px; }
+
+  .core-card {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border: 1px solid currentColor;
+    border-radius: 9px;
+    background: #fff;
+    color: inherit;
+  }
+
+  .core-card strong { white-space: nowrap; }
+  .core-card small { line-height: 1.2; }
+
+  .detail-grid .core-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-items: center;
+    gap: 4px;
+    padding: 7px 6px;
+    text-align: center;
+  }
+
+  .core-card__heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .detail-grid .core-card small {
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .compact-grid .core-card { height: 48px; }
+  .detail-grid .core-card { height: 70px; }
+
+  .planning .core-grid { padding-top: 0; }
+  .action .core-grid,
+  .memory .core-grid {
+    gap: 33px;
+    padding-top: 20px;
+  }
+
+  .action .core-card,
+  .memory .core-card {
+    height: 56px;
+    border-color: currentColor;
+  }
+
+  .tools-panel {
+    z-index: 2;
+    left: 866px;
+    top: 44px;
+    width: 264px;
+    height: 499px;
+    padding: 15px 10px 10px;
+    background: var(--green-bg);
+  }
+
+  .tools-panel > h2 { margin-bottom: 12px; }
+  .tool-groups { display: grid; gap: 10px; }
+
+  .tool-group {
+    height: 104px;
+    padding: 10px 10px 8px;
+    border: 1px solid #70b59a;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .tool-group h3 { margin-bottom: 9px; }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+
+  .tool-grid article,
+  .support-grid article,
+  .observe-grid article {
+    display: grid;
+    justify-items: center;
+    gap: 5px;
+    color: var(--green);
+    text-align: center;
+  }
+
+  .tool-grid :global(.diagram-icon) { margin-bottom: 1px; }
+
+  .tool-grid strong {
+    color: #173128;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .model-layer {
+    z-index: 2;
+    left: 187px;
+    top: 549px;
+    width: 677px;
+    height: 79px;
+    padding: 11px 36px 8px;
+    background: #f5faff;
+  }
+
+  .model-layer > h2 { margin-bottom: 8px; }
+
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 44px;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .model-grid article {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--blue);
+    text-align: center;
+  }
+
+  .model-grid strong,
+  .model-grid small { color: #162536; }
+  .model-grid small { margin-top: 1px; }
+  .ellipsis { color: #111; font-size: 18px; }
+
+  .support-layer {
+    z-index: 2;
+    left: 34px;
+    top: 644px;
+    width: 699px;
+    height: 100px;
+    padding: 12px 25px 8px;
+    background: #fff;
+  }
+
+  .support-layer > h2,
+  .observe-layer > h2 { margin-bottom: 16px; }
+
+  .support-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 16px;
+  }
+
+  .support-grid article,
+  .observe-grid article { color: var(--navy); }
+  .support-grid strong,
+  .observe-grid strong { font-size: 10px; white-space: nowrap; }
+
+  .observe-layer {
+    z-index: 2;
+    left: 758px;
+    top: 646px;
+    width: 362px;
+    height: 98px;
+    padding: 12px 24px 8px;
+    background: #fff;
+  }
+
+  .observe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .agent-arch-scroll {
+      margin-inline: -0.75rem;
+      width: calc(100% + 1.5rem);
+      padding-inline: 0.75rem;
+    }
+  }
+</style>
