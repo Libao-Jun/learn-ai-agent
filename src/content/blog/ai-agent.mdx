@@ -1,0 +1,702 @@
+---
+title: "AI Agent（智能体）"
+date: 2026-08-16
+description: "AI Agent（Artificial Intelligence Agent） 称为智能体/人工智能代理，是一个能够感知环境、进行决策并自动执行行动，以达成特定目标的智能软件实体，它不仅仅是回答问题的聊天机器人，更是能够动手做事的智能执行者。"
+tags: ["AI Agent", "智能体", "人工智能代理", "Agent 架构"]
+---
+
+import AgentArchitectureDiagram from '../../components/AgentArchitectureDiagram.astro';
+
+## Agent
+
+`Agent = LLM (大脑) + Planning (规划) + Tool use (执行) + Memory (记忆)`。
+
+### AI Agent 核心组件
+
+```mermaid
+  graph TB
+    A[用户请求 / 需求]
+    B[Agent / 智能体]
+    C[Planning / 规划]
+    D[Tools / 工具]
+    E[Memory / 记忆]
+
+    A --> B -.-> A
+    B --> C -.-> B
+    B --> D -.-> B
+    B --> E -.-> B
+```
+
+📚 详解
+
+- **LLM (大脑)**： 作为核心推理机，负责理解意图、生成文本和进行逻辑判断。
+- **Planning (规划)**： 能够将复杂的目标（如"帮我策划一场技术沙龙"）拆解成可执行的步骤。
+- **Memory (记忆)**： 记录对话历史（短期）和存储专业知识库（长期）。
+- **Tool Use (工具使用)**： 能够根据需求去查谷歌搜索、读数据库、甚至跑 Python 代码。
+
+### AI Agent 五大核心组件
+
+- **感知层（Perception）**：感知 文本、图像、音频、文件
+- **大脑层（LLM）**：理解意图-推理决策
+- **规划层（Planning）**：任务分解-步骤排序、ReAct/CoT/ToT、自我反思-错误修正
+- **工具层（Tools）**：联网搜索/代码执行、文件读写/图像生成、API调用/数据库、邮件/日历/消息
+- **记忆层（Memory）**：短期记忆-上下文窗口、长期记忆-向量数据库/RAG、外部知识库-文档/数据库、情节记忆-历史操作日志
+
+1️⃣ AI Agent 五大核心组件职责和关键技术
+
+| 组件       | 核心职责                     | 关键技术                     |
+| ---------- | ---------------------------- | ---------------------------- |
+| **感知层** | 接收多模态输入，构建上下文   | 多模态模型、OCR、ASR         |
+| **大脑**   | 理解意图、推理决策、调用指令 | LLM、Function Calling        |
+| **规划**   | 任务分解、步骤排序、自我反思 | ReAct、CoT、ToT、Reflection  |
+| **工具**   | 执行具体操作，连接外部世界   | 搜索 / 代码 / API / 文件系统 |
+| **记忆**   | 管理上下文、存储长期知识     | 向量数据库、RAG、上下文窗口  |
+
+2️⃣ AI Agent 五大核心组件工作流程
+
+```mermaid
+  graph LR
+    A[<b>感知层（Perception）</b><br> 文本/图像/音频/文件]
+    B[<b>大脑层（LLM）</b><br>意图理解 ▪ 推理决策]
+    C[<b>规划层（Planning）</b><br>任务分解 ▪ 步骤排序<br>ReAct/CoT/ToT<br>自我反思 ▪ 错误修正]
+    D[<b>工具层（Tools）</b><br>联网搜索/代码执行<br>文件读写/图像生成<br>API调用/数据库<br>邮件/日历/消息]
+    E[<b>记忆层（Memory）</b><br>短期记忆-上下文窗口<br><br>外部知识库-文档/数据库<br>情节记忆-历史操作日志]
+    F[输出结果/反馈循环]
+
+    A --> B --> |需求规划|C --> D --> E
+    C --> |返回规划方案|B
+    B -.-> E
+    E -.-> D
+    D --> F
+    E -.-> F
+```
+
+:::tip[流程线]
+
+- **实线**：主流程（任务执行路径）
+- **虚线**：记忆层提供的全局支持
+
+:::
+
+### RAG-让 Agent 拥有"外挂知识库"
+
+**检索增强生成（Retrieval-Augmented Generation，RAG）** 是目前最主流的长期记忆实现方案。其核心流程如下
+
+```mermaid
+ graph LR
+  A[用户提问]-->B[向量化检索]-->C[召回相关内容]-->D[注入上下文生成]-->E[回答]
+
+```
+
+### Agent 运行循环 (Agent Loop)
+
+组成一个持续迭代的`感知—思考—行动—观察`闭环，这就是"Agent Loop"。
+
+```mermaid
+ graph LR
+  A[感知<br><small>接收输入/环境状态</small>]
+  B[思考<br><small>LLM推理/规划分解</small>]
+  C[行动<br><small>调用工具/执行操作</small>]
+  D[观察<br><small>获取结果/更新记忆</small>]
+  E[任务完成/达成终止条件]
+
+  A-->B-->C-->D-.->E
+  D-.->|任务未完成 — 继续循环|A
+
+```
+
+## Agent 架构
+
+### Agent 架构图
+
+<AgentArchitectureDiagram />
+
+### Agent 架构介绍
+
+#### Agent（智能体）
+
+在 AI 应用开发中，`Agent（智能体）`是指能够感知环境、自主做出决策、并采取行动的 AI 系统。
+
+#### Agent 架构
+
+`Agent 架构`是指 Agent 系统中各个组件的组织方式，决定了 Agent 的能力边界、可靠性、灵活性和适用场景。
+
+#### Agent 的工作方式本质
+
+Agent 的工作方式本质上是一个`循环（Loop）`——感知当前状态，推理下一步，执行行动，再次感知……直到任务完成。
+
+```mermaid
+graph LR
+    A0[用户输入]--->A[感知环境]
+    A --> B[推理决策]
+    B --> C[执行行动]
+    C -->|完成| D[输出结果]
+    C -->|观察结果，未完成，继续循环| A
+```
+
+### 常用架构
+
+#### 架构一：单 Agent 循环（Single Agent Loop）
+
+1️⃣ 单 Agent 循环简图
+
+```mermaid
+graph TD
+    A[用户输入任务/需求] --> |Agent感知模块|B[感知 ● 收集上下文<br>（读取文件、获取状态）]
+    B --> |Agent推理模块|C[LLM 推理 ● 决定下一步<br>（分析情况，选择工具）]
+    C -->|完成| D[输出结果]
+    C -->|Agent行动模块| E[行动 ● 调用工具<br>（Bash/Read/Edit...）]
+    E -.-> F[继续循环]
+    F -.-> B
+
+    style A fill:#ced4da,stroke:#868e96,stroke-width:2px
+    style B fill:#99e9f2,stroke:#22b8cf,stroke-width:2px
+    style C fill:#d0bfff,stroke:#845ef7,stroke-width:2px
+    style D fill:#98FB98,stroke:#228B22,stroke-width:2px
+    style E fill:#f9d3e3,stroke:#a76283,stroke-width:2px
+
+    classDef processClass fill:#87CEEB,stroke:#4682B4,stroke-width:2px
+    classDef decisionClass fill:#F0E68C,stroke:#DAA520,stroke-width:2px
+
+    class B processClass
+    class C decisionClass
+```
+
+2️⃣ 单 Agent 循环详图
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor 用户 as 👤 用户
+    participant Agent as 🤖 Agent核心
+    participant 感知 as 📡 感知模块
+    participant 推理 as 🧠 推理模块
+    participant 行动 as ⚡ 行动模块
+    participant 工具 as 🛠️ 工具集
+
+    用户->>Agent: 📝 任务输入
+
+    loop 🔄 Agent循环
+        Agent->>感知: 收集上下文
+        感知-->>Agent: 文件内容 / 状态信息
+
+        Agent->>推理: 分析决策
+        推理-->>Agent: 下一步计划
+
+        alt 需要执行工具
+            Agent->>行动: 调用工具
+            行动->>工具: Bash / Read / Edit
+            工具-->>行动: 执行结果
+            行动-->>Agent: 返回结果
+
+            Note over Agent: 继续下一轮循环
+
+        else 任务完成
+            Agent-->>用户: ✅ 输出结果
+            Note over Agent: 循环结束
+        end
+    end
+```
+
+#### 架构二：规划 + 执行（Plan & Execute）
+
+1️⃣ 大体流程版本
+
+```mermaid
+graph TD
+    subgraph Planning[规划阶段]
+        A[用户任务] --> B[规划器（Planner）<br>生成分步执行计划]
+        B --> C[执行计划<br>步骤1：收集信息<br>步骤2：分析处理<br>步骤3：输出结果]
+
+    end
+
+    subgraph Execution[执行阶段]
+        C --> D[执行器（Executor）<br>依序完成每个步骤]
+        D --> |完成任务|E[输出结果]
+        D --> |未完成任务|F[继续下一轮循环]
+    end
+
+    F -.->|动态重新规划<br>（可选）| C
+
+    style A fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+
+    style Planning fill:#f5f8fc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+    style Execution fill:#f8faf8,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+```
+
+2️⃣ 更清晰的阶段分区版本
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 👤 用户
+    participant P as 📋 规划器（Planner）
+    participant E as ⚙️ 执行器（Executor）
+
+    rect rgb(235, 242, 250)
+        Note over U,P: 📐 规划阶段
+        U->>P: 用户任务
+        activate P
+        P->>P: 生成分步执行计划
+        Note over P: ├─ 步骤1：收集信息<br>├─ 步骤2：分析处理<br>└─ 步骤3：输出结果
+        P-->>E: 执行计划
+        deactivate P
+    end
+
+    rect rgb(245, 248, 245)
+        Note over E: ⚡ 执行阶段
+        activate E
+        E->>E: 依序完成每个步骤
+
+        opt 🔄 动态重新规划（可选）
+            E->>P: 请求重新规划
+            activate P
+            P-->>E: 更新执行计划
+            deactivate P
+        end
+
+        E-->>U: ✅ 完成任务
+        deactivate E
+    end
+```
+
+:::tip[规划 + 执行]
+Plan & Execute 的代价是增加了推理轮次，对于简单任务反而是一种浪费。如果一个任务可以在 3 步内完成，直接用单 Agent 循环更高效。
+:::
+
+#### 架构三：多 Agent 协作（Multi-Agent）
+
+```mermaid
+graph TD
+    subgraph Orchestrator[📋 协调者]
+        A[协调者（Orchestrator）<br>任务分解·调度·结果综合]
+    end
+
+    A --> B[分发任务]
+
+    subgraph Parallel[⚡ 并行执行阶段]
+        direction TB
+        B --> C[子Agent A<br>代码审查]
+        B --> D[子Agent B<br>安全检测]
+        B --> E[子Agent C<br>性能分析]
+    end
+
+    subgraph Collection[📥 汇总阶段]
+        C -.-> F[返回结果]
+        D -.-> F
+        E -.-> F
+        F --> G[结果汇总<br>综合各子Agent输出]
+    end
+
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style F fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style G fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+
+    style Orchestrator fill:#f5f8fc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+    style Parallel fill:#f8faf8,stroke:#d0d5dd,stroke-width:2px,stroke-dasharray:4,4
+    style Collection fill:#fafbfc,stroke:#d0d5dd,stroke-width:1px,stroke-dasharray:4,4
+```
+
+:::tip[子 Agent]
+子 Agent（Subagent）是短暂的、隔离的 — 完成一个任务后即销毁。Agent 团队（Agent Teams）则是多个独立 Agent 实例长时间协作、互相发消息，更像一个真实的团队。
+:::
+
+#### 架构四：反思与自我修正（Reflection）
+
+```mermaid
+graph TD
+    A[执行器（Executor）<br>生成初始输出] --> B[评判者（Critic）<br>评估质量与正确性]
+    B -->|通过| C[输出最终结果]
+    B -->|未通过| D[修正器（Reviser）<br>根据反馈改进输出]
+    D -.-> E[重新生成]
+    E -.-> |通常设置最大迭代次数限制|A
+
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+```
+
+📙 两种实现方式
+
+| 方式        | 机制                               | 优点                       | 缺点                           |
+| ----------- | ---------------------------------- | -------------------------- | ------------------------------ |
+| 自我反思    | 同一个模型先执行再评估自己的输出   | 实现简单，无额外模型成本   | 模型可能对自己的错误“视而不见” |
+| Critic 模型 | 用独立的评判模型评估执行模型的输出 | 更客观，能发现执行模型盲区 | 增加模型调用成本和延迟         |
+
+:::tip[注意事项]
+"写单元测试 → 运行测试 → 观察失败 → 修复代码 → 再次运行" — 这就是反思架构的经典应用。测试结果本身就是 Critic 的反馈信号。
+:::
+
+#### 架构五：RAG + Agent（检索增强型智能体）
+
+1️⃣ Flowchart 图
+
+```mermaid
+graph TD
+    A[用户查询] --> B[主动检索<br>决定检索时机与内容]
+    B -->|增强上下文| C[增强推理<br>集合知识库内容推理]
+    C --> D[执行行动<br>基于知识的精确操作]
+    C -.->|按需检索| E[知识库<br>文档/向量数据库<br>代码块/记忆]
+    E --> |返回|B
+    B --> |查询|E
+    style A fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+```
+
+2️⃣ 序列图
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 用户
+    participant A as Agent
+    participant K as 知识库
+
+
+    rect rgb(240, 248, 240)
+        Note over U,A: 1️⃣ 用户查询
+        U->>A: 查询
+        activate A
+    end
+
+    rect rgb(240, 248, 240)
+        Note over A: 2️⃣ 主动检索<br>决定检索时机与内容
+        A->>K: 查询（文档/向量数据库/代码库/记忆）
+        activate K
+        K-->>A: 返回（所需知识库内容），增强上下文
+        deactivate K
+    end
+
+    rect rgb(245, 248, 250)
+        Note over A: 3️⃣ 增强推理<br>结合知识库内容推理
+        A->>K: 按需再检索
+        activate K
+        K-->>A: 返回
+        deactivate K
+    end
+    rect rgb(240, 248, 240)
+        Note over A,U: 4️⃣ 执行行动<br>基于知识的精准操作
+        A-->>U: 执行行动
+        deactivate A
+    end
+```
+
+#### 架构六：工作流编排（Workflow / DAG）
+
+1️⃣ 流程图
+
+```mermaid
+graph TD
+    A[数据输入] --> B[任务 A<br>独立并行执行]
+    A --> C[任务 B<br>独立并行执行]
+    B --> |任务A完成|D[AB均完成]
+    C --> |任务B完成|D
+    D --> |触发|E[聚合节点<br>等待依赖，整合结果]
+    E --> F[输出]
+
+    style A fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+    style B fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style C fill:#f0f4fa,stroke:#d0d5dd,stroke-width:2px
+    style D fill:#e8edf5,stroke:#d0d5dd,stroke-width:2px
+    style E fill:#f8fafc,stroke:#d0d5dd,stroke-width:2px
+```
+
+2️⃣ 序列图
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant I as 数据输入
+    participant A as 任务 A
+    participant B as 任务 B
+    participant D as 聚合节点
+    participant O as 输出
+
+    Note over I: 数据输入
+
+    par 可并行
+        I->>A: 触发
+        activate A
+        Note over A: 独立并行执行
+        A-->>D: 完成
+        deactivate A
+    and
+        I->>B: 触发
+        activate B
+        Note over B: 独立并行执行
+        B-->>D: 完成
+        deactivate B
+    end
+
+    Note over D: A、B均完成后才触发
+
+    activate D
+    Note over D: 等待依赖，整合结果
+    D-->>O: 输出
+    deactivate D
+```
+
+## AI底层框架全景图
+
+- `应用层（行动）`： **面向用户的特定技能与行为**，实现复杂任务的自动化执行
+  :::tip[Agent Skill（定制化技能）]
+  领域知识 | 业务流程 | 任务编排 | 行动指令
+  :::
+- `智能体层（决策）`：**自主决策与任务规划**，感知环境、制定计划、执行行动，形成闭环控制
+  :::tip[Agent（自主大脑）]
+  Export（探索） | Plan（规划） | Act（行动）
+  :::
+- `能力扩展层（工具）`：**连接外部工具与服务**，扩展模型能力，访问真实世界数据与服务
+  :::tip[MCP（能力拓展层）]
+  搜索引擎 | 代码解读器 | API调用 | 数据库 | 更多工具
+  :::
+- `上下文层（记忆）`：**整合与管理上下文信息**，记忆存在、检索与增强、提升回答准确与连贯性
+  :::tip[Context Window（记忆加工）]
+  - Prompt（用户）：意图理解 | 指令封装 | 上下文构建
+  - Memory（记忆管理）：短期记忆 | 长期记忆 | 对话历史 | 状态跟踪
+  - RAG（外部知识库）：检索增强 | 向量检索 | 知识融合
+    :::
+- `基础层（模型）`：**AI 能力的基石**，提供语言理解与生成能力，处理和生成Token序列
+  :::tip[LLM & Token（基础模型与令牌层）]
+  Transfomer架构 | 预训练模型 | Token化 | 位置编码 | 注意力机制
+  :::
+
+### 核心名词释义
+
+| 概念             | 说明                                                                                   |
+| :--------------- | :------------------------------------------------------------------------------------- |
+| **Transformer**  | 当前大模型核心架构，通过自注意力机制建立 Token 之间关联关系。                          |
+| **Token**        | 模型处理文本最小单位，可为字词、单词、字符或符号。                                     |
+| **Prompt**       | 给到模型的输入指令，用来设定角色、控制行为、规范输出格式与目标。                       |
+| **RAG**          | 检索增强生成，先检索外部专业知识库，再交由 LLM 整合生成精准答案。                      |
+| **MCP**          | 模型上下文协议（Model Context Protocol），统一 AI 与工具、数据库、外部服务的通信标准。 |
+| **Agent**        | 在 LLM 基础上叠加`目标 + 规划 + 执行`能力的自主智能系统。                              |
+| **Tool Calling** | 模型主动识别需求、调用外部工具完成实际操作，不局限纯文本回复。                         |
+| **Memory**       | 为 AI 提供短期会话记忆 + 长期持久记忆，解决上下文遗忘问题。                            |
+
+### AI Agent 完整运行流程
+
+- **用户输入**：用户下发指令 Prompt，进入上下文窗口 Context Window。
+- **记忆增强**：系统联动 Memory 会话记忆 + RAG 外部知识库，补充上下文与专业知识。
+- **LLM 推理**：通过 Transformer 架构对 Token 序列做注意力计算，进行语义理解与初步生成。
+- **Agent 规划**：智能体自主判断、拆解任务，决策是否需要多步骤执行或调用外部工具。
+- **工具执行**：基于 MCP 协议，调用 API、数据库、搜索引擎等外部能力完成实操。
+- **输出结果**：汇总工具返回数据与模型推理结果，整理后返回用户，同时写入记忆存档。
+
+## RAG 与知识检索
+
+RAG（Retrieval-Augmented Generation，检索增强生成）
+`核心思想`：**让 LLM（大语言模型） 在回答问题时，先从外部知识库中检索相关内容，再基于检索结果生成回答**，而不是仅依赖模型训练时记住的知识。
+
+## Agent 上下文工程
+
+Agent 上下文工程，就是系统地收集、组织、管理和使用上下文，让 Agent 在合适的时间，获得合适的信息，从而做出更好的决策和行动。
+
+```mermaid
+graph TD
+    subgraph Phase1[1.收集与筛选]
+        A1[代码与文档<br>代码库、README、API文档等]
+        A2[数据与知识<br>数据库、知识库、业务数据等]
+        A3[用户与业务<br>用户需求、业务流程、规则约束等]
+        A4[历史与记忆<br>对话历史、决策记录、经验教训等]
+        A5[外部信息<br>网页、行业信息、第三方服务等]
+        A6[越相关、越准确，越有价值]
+
+        A1 --> A6
+        A2 --> A6
+        A3 --> A6
+        A4 --> A6
+        A5 --> A6
+
+    end
+
+    subgraph Phase2[2.组织与结构化]
+        B1[摘要与提炼]
+        B2[建立知识结构（如目录、索引）]
+        B3[标注关系与依赖]
+        B4[形成可检索的知识单元]
+    end
+
+    subgraph Phase3[3.打包成上下文包]
+        C1[关键信息摘要]
+        C2[相关代码片段]
+        C3[业务规则与约束]
+        C4[最近的对话历史]
+        C5[在需要时，高效注入给 Agent]
+    end
+
+    subgraph Phase4[4.Agent 使用上下文完成任务]
+        D1[1️⃣ <b>理解</b><br>基于上下文理解问题和目标]
+        D2[2️⃣ <b>推理</b><br>结合上下文进行分析和推理]
+        D3[3️⃣ <b>规划</b><br>制定步骤和计划]
+        D4[4️⃣ <b>行动</b><br>调用工具、生成代码、执行操作]
+        D5[5️⃣ <b>输出</b><br>产出更准确、更符合预期的结果]
+
+    end
+
+    subgraph Summary[📌 上下文的作用]
+        S1[帮助理解背景]
+        S2[减少歧义]
+        S3[提供依据]
+        S4[保证一致性]
+        S5[提升输出质量]
+    end
+
+    Phase1 --> Phase2 --> Phase3 --> Phase4
+    Phase1 -.-> Summary
+
+    style Phase1 fill:#f5f8fc,stroke:#d0d5dd,stroke-width:2px
+    style Phase2 fill:#f8faf8,stroke:#d0d5dd,stroke-width:2px
+    style Phase3 fill:#f5f8fc,stroke:#d0d5dd,stroke-width:2px
+    style Phase4 fill:#f8faf8,stroke:#d0d5dd,stroke-width:2px
+    style Summary fill:#fafbfc,stroke:#d0d5dd,stroke-width:2px
+```
+
+## AI Agent 流程
+
+- **规划模块：任务的大脑与指挥官**
+  - **任务分解**：将大目标拆解为小步骤。(连接数据/按产品和地区分类/计算环比增长率/生成可视化图表)
+  - **反思与调整**：Agent 会评估每一步行动的结果。(若失败了，它会反思原因，并调整计划。)
+- **记忆模块：经验的笔记本**
+  - **短期记忆**：记住当前对话的上下文，确保回答不跑题。
+  - **长期记忆**：将重要的交互信息、学到的知识存储到数据库或向量数据库中，供未来查询和使用，实现越用越聪明。
+- **工具调用模块：灵活的双手**
+  - 搜索（联网查询）
+  - 代码执行（运行执行）
+  - 数据库（数据库操作）
+  - API 调用（外部服务）
+  - ...
+- **自我调整**：根据反馈优化策略
+- **持续执行**：直到完成任务或遇到无法解决的问题
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '14px' }}}%%
+graph TB
+    A[目标/指令]
+    B["<b style='font-size:18px;color:#1a1a2e'>规划模块</b>"<br>分解任务，制定计划]
+    C["<b style='font-size:18px;color:#1a1a2e'>记忆模块</b>"<br>存储历史、知识、上下文]
+    D["<b style='font-size:18px;color:#1a1a2e'>工具调用模块</b>"<br>使用API、搜索、计算等]
+    E["<b style='font-size:18px;color:#1a1a2e'>行动执行模块</b>"<br>运行代码、操作软件]
+    F["<b style='font-size:18px;color:#1a1a2e'>结果评估</b>"<br>校验执行状态是否达标]
+    G[输出最终结果]
+
+    A-->B-->C-->D-->E-->F-->|已完成|G
+    F -.-> |未完成|B
+
+    style A fill:#1a1a2e,color:#ffffff,font-size:16px,font-weight:bold
+    style B fill:#ffffff,color:#333
+    style C fill:#ffffff,color:#333
+    style D fill:#ffffff,color:#333
+    style E fill:#ffffff,color:#333
+    style F fill:#ffffff,color:#333
+    style G fill:#f0f9f0,color:#2e7d32,font-weight:bold
+```
+
+## Agent vs 传统 AI 模型
+
+| 维度         | 传统 AI 模型         | AI Agent                              |
+| ------------ | -------------------- | ------------------------------------- |
+| **交互方式** | 单次输入输出         | 多轮对话、持续交互                    |
+| **决策能力** | 基于输入直接推理     | 规划、反思、迭代优化、bug修复         |
+| **工具使用** | 无法主动调用外部工具 | 可调用搜索、查询知识库、计算器、API等 |
+| **记忆机制** | 仅限当前上下文       | 短期+长期记忆                         |
+| **目标导向** | 完成单一预测任务     | 完成复杂目标                          |
+| **错误处理** | 输出即结束           | 可自我纠错、重试                      |
+
+## 从 Prompt 到 Reasoning Loop
+
+```mermaid
+  graph LR
+    subgraph Execution[Repeat循环]
+      A[LLM（大脑）<br><span style='font-size:12px'>推理</span>]
+      B[Thought（思考）<br><span style='font-size:12px'>模型规划：该做什么?</span>]
+      C[Action（行动）<br><span style='font-size:12px'>调用工具（如搜索、API）</span>]
+      D[Observation（观察）<br><span style='font-size:12px'>获取工具反馈的结果</span>]
+      E[输出最终结果]
+
+      A --> B
+      B --> C
+      C --> D
+      D -.-> A
+      D --> E
+    end
+
+    style A fill:#339af0,stroke:#1864ab,stroke-width:3px,color:#fff,font-weight:700
+    style B fill:#fff,stroke:#228B22,stroke-width:3px,color:#000,font-weight:700
+    style C fill:#fff,stroke:#228B22,stroke-width:3px,color:#000,font-weight:700
+    style D fill:#fff,stroke:#228B22,stroke-width:3px,color:#000,font-weight:700
+    style E fill:#90EE90,stroke:#228B22,stroke-width:3px,color:#228B22,font-weight:700
+```
+
+📚 Reasoning Loop详解
+
+- **Thought (思考)**： 模型描述当前要做什么，为什么要这么做。
+- **Action (行动)**： 模型选择一个工具（如：Google Search）。
+- **Observation (观察)**： 模型读取工具返回的结果。
+- **Repeat (循环)**： 重复上述步骤，直到得出最终答案。
+
+## 常见挑战与局限性
+
+:::danger[幻觉问题 (Hallucination)]
+Agent 可能生成看似合理但实际错误的信息，需要通过检索增强和验证机制来降低风险。
+:::
+:::danger[边界失控 (Scope Creep)]
+自主性过高可能导致 Agent 执行超出预期范围的操作，需要设置明确的权限边界。
+:::
+:::danger[成本控制]
+多轮迭代调用 LLM 和工具会产生较高成本，需要优化调用策略和缓存机制。
+:::
+:::danger[安全与隐私]
+Agent 可能访问敏感数据，需要实施严格的访问控制和审计机制。
+:::
+
+## 最佳实践
+
+:::note[渐进式自主]
+从简单任务开始，逐步增加 Agent 的自主权限，循序渐进。
+:::
+:::note[人工监督]
+关键决策节点设置人工审核，平衡效率与安全性。
+:::
+:::note[持续评估]
+建立完善的评估指标体系，定期测试和优化 Agent 表现。
+:::
+:::note[容错机制]
+实现重试、降级、告警等机制，确保系统稳定性。
+:::
+:::note[权限控制]
+手动控制 Agent 的权限，手动审批、自动审批、完全控制等
+:::
+
+## 未来发展趋势
+
+:::tip[多模态交互深化]
+Agent 将更好地整合视觉、听觉、触觉等多模态感知能力，实现更自然的人机交互。
+:::
+:::tip[多 Agent 协作系统]
+多个专业 Agent 协同工作，形成类似"AI 团队"的组织架构，处理复杂任务。
+:::
+:::tip[边缘计算部署]
+轻量化 Agent 将在手机、IoT 设备等边缘侧运行，实现本地化智能服务。
+:::
+:::tip[垂直领域深耕]
+医疗、法律、金融等专业领域的 Agent 将具备更强的领域知识和推理能力。
+:::
+
+## 资源文献
+
+- [AI Agent(智能体) 教程](https://www.runoob.com/ai-agent/ai-agent-tutorial.html)
+- [AI Agent 简介](https://www.runoob.com/ai-agent/ai-agent-intro.html)
