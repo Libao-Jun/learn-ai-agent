@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
@@ -21,6 +22,13 @@ export default defineConfig({
       autoTheme: true
     })
   ],
+  vite: {
+    resolve: {
+      alias: {
+        '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+      },
+    },
+  },
   markdown: {
     processor: unified({
       remarkPlugins: [remarkDirective, remarkCallout],
