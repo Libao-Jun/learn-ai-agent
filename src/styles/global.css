@@ -35,10 +35,10 @@
   --color-logo-icon-text: #ffffff;
   --color-nav-backdrop: rgba(0, 0, 0, 0.8);
 
-  /* Fonts — Apple SF Pro stack */
-  --font-display: 'SF Pro Display', system-ui, -apple-system, 'Inter', sans-serif;
-  --font-body: 'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif;
-  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  /* Fonts — CJK-first stack (参照 sanity DESIGN.md) */
+  --font-display: 'Inter', 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'STXihei', 'Microsoft YaHei', 'WenQuanYi Micro Hei', system-ui, sans-serif;
+  --font-body: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'STXihei', 'Microsoft YaHei', 'WenQuanYi Micro Hei', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Layout */
   --max-width: 1150px;

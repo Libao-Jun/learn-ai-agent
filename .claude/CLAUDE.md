@@ -140,11 +140,11 @@ const posts = await getCollection('blog', ({ data }) => {
 
 | 用途 | 字体栈 |
 |------|--------|
-| 标题 | `'SF Pro Display', system-ui, -apple-system, 'Inter', sans-serif` |
-| 正文 | `'SF Pro Text', system-ui, -apple-system, 'Inter', sans-serif` |
-| **等宽（标签/代码）** | `'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace` |
+| 标题 | `'Inter', 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'STXihei', 'Microsoft YaHei', 'WenQuanYi Micro Hei', system-ui, sans-serif` |
+| 正文 | `'Inter', 'PingFang SC', 'Hiragino Sans GB', 'STXihei', 'Microsoft YaHei', 'WenQuanYi Micro Hei', system-ui, sans-serif` |
+| **等宽（标签/代码）** | `'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace` |
 
-> **Apple 字体层级**：SF Pro Display（标题 20px+）、SF Pro Text（正文 19px-）、SF Mono（代码/标签）。导航链接使用 SF Pro Text（body 字体），标签 pill 使用 SF Mono。Apple 体系**不使用 weight 500**，字重阶梯为 300 / 400 / 600 / 700。
+> **中文优先 CJK 字体层级**：Latin 用 Inter（标题可用 Space Grotesk），中文回退到 PingFang SC（苹方）→ Hiragino Sans GB（冬青黑体简体）→ STXihei（华文细黑）→ Microsoft YaHei（微软雅黑）→ WenQuanYi Micro Hei（文泉驿微米黑），覆盖 macOS / Windows / Linux。字重阶梯为 300 / 400 / 600 / 700（不使用 weight 500）。
 
 ### 动画
 
@@ -160,7 +160,7 @@ const posts = await getCollection('blog', ({ data }) => {
 - **Apple Pill 按钮**：Action Blue 固体背景，9999px 圆角，`scale(0.95)` 按压反馈，无 inset 阴影
 - **近黑表面卡片**：hover 时背景色向上一级 + 发丝边框加强，**无投影**
 - **Hero 渐变缎带**：底部 2px Action Blue 单色渐变线（全站唯一装饰性元素）
-- **排版**：17px 正文（Apple 标志性尺寸），标题 weight ≤ 600，SF Pro 字体栈；导航用 body 字体 12px/400，标签用 mono + 正向 tracking
+- **排版**：17px 正文（Apple 标志性尺寸），标题 weight ≤ 600，中文优先 CJK 字体栈；导航用 body 字体 12px/400，标签用 mono + 正向 tracking
 - **视图过渡**：`@view-transition { navigation: auto }` 已启用
 
 ### 代码高亮
@@ -360,7 +360,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 4. **前/后导航** — 「上一篇」= 时间上更旧的（索引 +1），「下一篇」= 更新的（索引 -1）
 5. **代码复制按钮** — 由 `BlogPostLayout.astro` 的 `initCodeCopy()` 脚本在 `<pre>` 上注入复制按钮
 6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
-7. **Apple 设计色板** — 单一 Action Blue `#0066cc` 强调色，近黑表面系统（纯黑→暗色瓷砖→悬停，无投影），SF Pro 字体栈（无 weight 500），Hero 底部唯一装饰缎带
+7. **Apple 设计色板** — 单一 Action Blue `#0066cc` 强调色，近黑表面系统（纯黑→暗色瓷砖→悬停，无投影），中文优先 CJK 字体栈（无 weight 500），Hero 底部唯一装饰缎带
 8. **组件导入别名** — 内容（`.mdx`）或组件中导入 `src/components` 下的组件统一使用 `@components/xxx.astro` 别名（由 `tsconfig.json` 的 `paths` 与 `astro.config.mjs` 的 `vite.resolve.alias` 共同配置），避免写 `../../components/` 相对路径
 
 ## CI/CD
