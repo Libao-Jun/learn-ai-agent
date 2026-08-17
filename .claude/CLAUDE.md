@@ -362,6 +362,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 6. **表格响应式** — 同样由 `BlogPostLayout.astro` 脚本自动包裹为 `.table-wrapper`
 7. **Apple 设计色板** — 单一 Action Blue `#0066cc` 强调色，近黑表面系统（纯黑→暗色瓷砖→悬停，无投影），中文优先 CJK 字体栈（无 weight 500），Hero 底部唯一装饰缎带
 8. **组件导入别名** — 内容（`.mdx`）或组件中导入 `src/components` 下的组件统一使用 `@components/xxx.astro` 别名（由 `tsconfig.json` 的 `paths` 与 `astro.config.mjs` 的 `vite.resolve.alias` 共同配置），避免写 `../../components/` 相对路径
+9. **dev server 热更新失效** — 若新增文章后页面未更新（尤其是长时间运行或系统睡眠/休眠唤醒后），是 Windows 文件监视器（`fs.watch`/chokidar）失效所致，**非代码问题**。重启 `pnpm dev` 即可恢复，内容集合会重新扫描并收录新文章。
+10. **后台进程随会话结束而停止** — Claude 在本项目自行启动的任何后台进程（如 `pnpm dev` 等长驻服务），**必须在会话结束前主动停止**，不得在会话结束后遗留后台进程占用端口。
 
 ## CI/CD
 
