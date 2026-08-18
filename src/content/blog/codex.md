@@ -15,9 +15,13 @@ tags: ["Codex", "OpenAI", "Agent", "AI", "Skills", "MCP"]
         <div class="sg-item-label">学习目标</div>
       </div>
       <div class="sg-tags">
+        <span class="sg-tag">安装配置</span>
         <span class="sg-tag">订阅方案</span>
+        <span class="sg-tag">安全规则</span>
         <span class="sg-tag">任务六要素</span>
+        <span class="sg-tag">标准工作流</span>
         <span class="sg-tag">Skills/MCP</span>
+        <span class="sg-tag">记忆系统</span>
         <span class="sg-tag">全局规则</span>
       </div>
     </div>
@@ -27,7 +31,7 @@ tags: ["Codex", "OpenAI", "Agent", "AI", "Skills", "MCP"]
         <div class="sg-item-label">预计阅读</div>
       </div>
       <div class="sg-time">
-        <span class="sg-time-num">10</span>
+        <span class="sg-time-num">30</span>
         <span class="sg-time-unit">min</span>
       </div>
     </div>
@@ -37,9 +41,13 @@ tags: ["Codex", "OpenAI", "Agent", "AI", "Skills", "MCP"]
         <div class="sg-item-label">你将收获</div>
       </div>
       <ul class="sg-list">
-        <li>对比三种 Codex 订阅方案，选择最适合自己的方式</li>
-        <li>掌握任务六要素与黄金法则，写出高质量任务描述</li>
-        <li>配置 Skills、MCP、定时任务等进阶能力</li>
+        <li>完成 Codex App / CLI 的安装、登录与环境配置</li>
+        <li>对比三种订阅方案，选择最适合自己的方式</li>
+        <li>遵守安全规则，防范 API Key 泄露与越权风险</li>
+        <li>掌握任务六要素、黄金法则与标准六步工作流</li>
+        <li>理解插件、Skill、MCP 三者关系，按需选型</li>
+        <li>用 AGENTS.md 与记忆系统沉淀项目规则</li>
+        <li>配置定时任务、Hooks 等进阶能力</li>
         <li>通过全局规则让 Codex 按你的协作风格工作</li>
       </ul>
     </div>
