@@ -16,7 +16,7 @@ tags: ["LangGraph"]
       </div>
       <div class="sg-tags">
         <span class="sg-tag">了解 LangGraph</span>
-        <span class="sg-tag">了解 LangGraph 三大核心组件</span>
+        <span class="sg-tag">了解 LangGraph 四大核心组件</span>
         <span class="sg-tag">了解 LangGraph 的安装与环境搭建</span>
         <span class="sg-tag">了解 LangGraph 创建 Agent 步骤</span>
       </div>
@@ -51,7 +51,7 @@ tags: ["LangGraph"]
 LangGraph 是 LangChain 团队推出的 **Agent 编排框架**。它用"图"（Graph）来定义 Agent 的工作流——每个处理步骤是一个节点，
 步骤之间的流转是边，整个 Agent 就是一张有向图。
 
-## LangGraph 三大核心组件
+## LangGraph 四大核心组件
 
 ### State（状态）
 
@@ -70,6 +70,12 @@ State 不是某一个节点的局部变量，而是整个图共享的全局状�
 > Edge 定义节点之间的执行顺序。
 
 定义节点间的执行路径，支持普通边、条件边、条件入口边，实现动态路由和循环。
+
+### Checkpointer（检查点）
+
+> LangGraph 中负责**状态持久化**的核心机制
+
+Checkpointer 在 **每个节点执行后**自动保存完整 State 快照，是持久化、时间旅行、HIL 的基础
 
 ## 安装与环境搭建
 
@@ -91,6 +97,7 @@ State 不是某一个节点的局部变量，而是整个图共享的全局状�
 - 5、**验证安装**
 
 ## 创建 Agent 步骤
+
 - 第一步：**定义状态**。这个状态会在节点之间传递。
 - 第二步：**定义节点函数**。每个节点函数接收完整的 State，返回 State 的部分更新
 - 第三步：**构建图**。先创建 StateGraph 实例，然后用 add_node 添加节点，用 add_edge 添加边。
