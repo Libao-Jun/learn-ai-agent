@@ -1,0 +1,212 @@
+---
+/**
+ * DeepAgentsPanorama.astro
+ * Deep Agents 技术全景（示意图）——依据用户原图结构重绘
+ * 左侧自下而上：LangGraph (Runtime) → LangChain (Framework) → Deep Agents (Harness)
+ * 右侧：LangSmith 可观测性平台，接入各层运行数据
+ * 使用方式：<DeepAgentsPanorama />，层级与模块都在下方 frontmatter 数据中。
+ */
+
+interface Layer {
+  name: string;
+  role: string;
+  modules: string[];
+  tint: string;
+}
+
+const layers: Layer[] = [
+  {
+    name: "Deep Agents",
+    role: "Harness",
+    modules: ["文件系统", "任务规划", "子 Agent", "存储后端", "长期记忆"],
+    tint: "linear-gradient(135deg, rgba(163,213,232,0.16), rgba(163,213,232,0.30))",
+  },
+  {
+    name: "LangChain",
+    role: "Framework",
+    modules: ["模型抽象", "工具接口", "Agent 循环", "中间件"],
+    tint: "linear-gradient(135deg, rgba(155,187,244,0.15), rgba(155,187,244,0.28))",
+  },
+  {
+    name: "LangGraph",
+    role: "Runtime",
+    modules: ["图执行引擎", "持久化执行", "流式输出", "状态管理"],
+    tint: "linear-gradient(135deg, rgba(148,212,208,0.15), rgba(148,212,208,0.30))",
+  },
+];
+
+const observability = {
+  name: "LangSmith",
+  subtitle: "可观测性平台",
+  note: "接入各层运行数据",
+  modules: ["追踪", "调试", "评估", "部署"],
+};
+---
+
+<div class="wrap">
+  <div class="body">
+    <!-- 左侧：三层技术栈 -->
+    <div class="stack">
+      {layers.map((layer, i) => (
+        <div>
+          {i > 0 && <div class="arrow">▲ 构建于其上</div>}
+          <section class="layer" style={`background:${layer.tint}`}>
+            <div class="layer-title">
+              <h3>{layer.name}</h3>
+              <span class="role">{layer.role}</span>
+            </div>
+            <div class="modules">
+              {layer.modules.map((m) => (
+                <div class="module">{m}</div>
+              ))}
+            </div>
+          </section>
+        </div>
+      ))}
+    </div>
+
+    <!-- 右侧：LangSmith 可观测性 -->
+    <aside class="obs">
+      <div class="obs-head">
+        <div class="obs-name">{observability.name}</div>
+        <div class="obs-sub">{observability.subtitle}</div>
+      </div>
+      <div class="obs-note">⇠ {observability.note}</div>
+      <div class="obs-modules">
+        {observability.modules.map((m) => (
+          <div class="obs-module">{m}</div>
+        ))}
+      </div>
+    </aside>
+  </div>
+</div>
+
+<style>
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4px 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'PingFang SC', 'Segoe UI', Arial, sans-serif;
+    color: #1a1b1c;
+  }
+
+  .body {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  .stack {
+    flex: 1 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .arrow {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 3px 0;
+  }
+
+  .layer {
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-sizing: border-box;
+  }
+
+  .layer-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .layer-title h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .role {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    padding: 1px 8px;
+  }
+
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 8px;
+  }
+
+  .module {
+    background: #ffffff;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .obs {
+    flex: 0 1 190px;
+    min-width: 0;
+    background: linear-gradient(160deg, #2b2f36, #1f2328);
+    border-radius: 14px;
+    padding: 14px;
+    box-sizing: border-box;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .obs-head {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .obs-name {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .obs-sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.72);
+    margin-top: 2px;
+  }
+
+  .obs-note {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.72);
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .obs-modules {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .obs-module {
+    background: rgba(255, 255, 255, 0.1);
+    border: 0.5px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+</style>

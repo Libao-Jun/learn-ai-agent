@@ -6,6 +6,7 @@ tags: ["Deep Agents"]
 ---
 
 import AgentStack from "@components/AgentStack.astro"
+import DeepAgentsPanorama from "@components/DeepAgentsPanorama.astro"
 
 ## 本节导读
 
@@ -20,6 +21,8 @@ import AgentStack from "@components/AgentStack.astro"
         <span class="sg-tag">Deep Agents 介绍</span>
         <span class="sg-tag">Deep Agents 全景图</span>
         <span class="sg-tag">Deep Agents、LangChain、LangGraph</span>
+        <span class="sg-tag">Agent 开发的三个层次</span>
+        <span class="sg-tag">为什么需要 Harness</span>
       </div>
     </div>
     <div class="sg-item">
@@ -28,7 +31,7 @@ import AgentStack from "@components/AgentStack.astro"
         <div class="sg-item-label">预计阅读</div>
       </div>
       <div class="sg-time">
-        <span class="sg-time-num">30</span>
+        <span class="sg-time-num">10</span>
         <span class="sg-time-unit">min</span>
       </div>
     </div>
@@ -39,7 +42,9 @@ import AgentStack from "@components/AgentStack.astro"
       </div>
       <ul class="sg-list">
         <li>Deep Agents 是什么</li>
+        <li>Agent 开发的三个层次</li>
         <li>Deep Agents、LangChain、LangGrapht的关系</li>
+        <li>为什么需要 Harness</li>
       </ul>
     </div>
   </div>
@@ -55,7 +60,7 @@ Deep Agents 可以理解为一个面向生产环境的高级 Agent 框架（Agen
 
 ## Deep Agents 全景图
 
-**一句话记忆**：把 LangGraph 想成 "操作系统（运行时）"，LangChain 是它上面那层 "编程框架"，Deep Agents 是再上面的 "开箱即用工具包"。
+**一句话记忆**：把 LangGraph 想成 "操作系统（运行时）" ，LangChain 是它上面那层 "编程框架"，Deep Agents 是再上面的 "开箱即用工具包"。
 
 ```txt
 ================ Deep Agents（Harness） ==================
@@ -96,6 +101,10 @@ Agent 运行时框架 —— 提供状态管理、工作流编排、持久化等
 > 深度研究、代码生成、数据分析、内容创作、自动化任务、...。
 :::
 
+## Deep Agents 技术全景
+
+<DeepAgentsPanorama />
+
 ## Deep Agents/LangChain/LangGraph
 
 | 框架            | 层级定位   | 核心职责                                                                    | 适用场景                                   |
@@ -116,3 +125,13 @@ Framework：Agent 怎么快速开发
 ===================== Runtime（底层） =====================
 Runtime：Agent 怎么可靠运行
 ```
+
+## 为什么需要 Harness?
+:::tip
+因为成功的 AI Agent 产品（如 Claude Code、Manus、Cursor）已被市场验证出共同的核心能力模式（文件操作、任务规划、子委派、上下文管理），
+而 Harness的价值是 将这些 **“验证过的模式”** 固化为开箱即用的标准组件，**让你无需从零重复造轮子**，直接站在成熟架构上快速构建生产级 Agent。
+:::
+
+## 本章回顾
+- Runtime → Framework →Harness, 自底向上
+- Harness = 验证过的 Agent 模式的固化
