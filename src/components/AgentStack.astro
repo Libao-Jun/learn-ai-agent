@@ -1,0 +1,231 @@
+---
+/**
+ * AgentStack.astro
+ * LangChain / LangGraph / Deep Agents 三者关系图（示意）
+ * 依据 LangChain 官方文档绘制：LangGraph overview / Deep Agents overview（2026-08 更新）
+ * 结论：图2 正确 —— LangGraph(运行时) → LangChain(框架) → Deep Agents(装配层)
+ *
+ * 使用方式：<AgentStack />，分层与功能标签都在下方 frontmatter 数据中，改数据即可改图。
+ */
+
+interface Layer {
+  name: string;
+  tag: string;
+  desc: string;
+  chips: string[];
+  tint: string;
+}
+
+interface Verdict {
+  mark: string;
+  title: string;
+  desc: string;
+  tone: "bad" | "good";
+}
+
+const layers: Layer[] = [
+  {
+    name: "Deep Agents",
+    tag: "Agent Harness · 装配层（最上层）",
+    desc: "开箱即用的 Agent 套件：在 LangGraph（及其上的 LangChain 抽象）之上提供规划、子 Agent、文件系统、上下文管理",
+    chips: [
+      "任务规划 write_todos",
+      "虚拟文件系统（ls / read / write / edit / glob / grep）",
+      "子 Agent 委派",
+      "记忆 / 上下文压缩 / 技能",
+      "人工审批与中断",
+    ],
+    tint: "linear-gradient(135deg, rgba(163,213,232,0.16), rgba(163,213,232,0.30))",
+  },
+  {
+    name: "LangChain",
+    tag: "Framework · 框架层",
+    desc: "模型 / 工具 / Agent 循环的抽象与集成；高层 Agent API（create_agent）构建在 LangGraph 之上",
+    chips: [
+      "模型抽象（统一 LLM 调用接口）",
+      "Agent 循环（model→tools→model）",
+      "工具接口（标准化工具定义）",
+      "中间件（可插拔行为模块）",
+      "create_agent()",
+    ],
+    tint: "linear-gradient(135deg, rgba(155,187,244,0.15), rgba(155,187,244,0.28))",
+  },
+  {
+    name: "LangGraph",
+    tag: "Runtime · 低层编排运行时（底座 / 操作系统）",
+    desc: "专注 Agent 编排：持久化执行、流式传输、人工介入与持久化（官方原文）",
+    chips: [
+      "状态管理（跨对话保存上下文）",
+      "持久化执行（崩溃后从断点恢复）",
+      "流式输出（实时观察思考过程）",
+      "人机协作（关键操作前暂停审批）",
+      "检查点 Checkpoint",
+    ],
+    tint: "linear-gradient(135deg, rgba(148,212,208,0.15), rgba(148,212,208,0.30))",
+  },
+];
+---
+
+<div class="wrap">
+  <p class="hint">自下而上读取：下层为上层提供运行与构建基础</p>
+
+  <!-- 三层架构 -->
+  {layers.map((layer, i) => (
+    <div>
+      {i > 0 && <div class="arrow">▲ 构建于其上</div>}
+      <section class="layer" style={`background:${layer.tint}`}>
+        <div class="layer-head">
+          <h3>{layer.name}</h3>
+          <span class="tag">{layer.tag}</span>
+        </div>
+        <p class="layer-desc">{layer.desc}</p>
+        <div class="chips">
+          {layer.chips.map((chip) => (
+            <span class="chip">{chip}</span>
+          ))}
+        </div>
+      </section>
+    </div>
+  ))}
+
+  <!-- 附注：langchain-core 原语层 -->
+  <div class="note">
+    <div class="note-title">附注 · langchain-core（原语层，不在官方三层对比中）</div>
+    <div class="note-desc">
+      Message / Runnable / Tool / Retriever 等基础原语；LangGraph 与 LangChain 都构建在这些原语之上——这是
+      2024 年旧文档称"LangGraph 构建于 LangChain 之上"的来源（当时指对 langchain-core 的依赖）。
+    </div>
+  </div>
+
+  <p class="src">
+    示意 · 依据 LangChain 官方文档绘制（LangGraph overview / Deep Agents overview，2026-08 更新）。
+    连线含义：下层为上层提供运行与构建基础。
+  </p>
+</div>
+
+<style>
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 4px 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'PingFang SC', 'Segoe UI', Arial, sans-serif;
+    color: #1a1b1c;
+  }
+
+  .verdict {
+    flex: 1 1 230px;
+    min-width: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    border: 1px solid;
+  }
+
+  .tone-bad {
+    background: rgba(234, 102, 104, 0.1);
+    border-color: rgba(234, 102, 104, 0.35);
+  }
+
+  .tone-good {
+    background: rgba(82, 196, 26, 0.1);
+    border-color: rgba(82, 196, 26, 0.4);
+  }
+
+  .verdict-title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .verdict-desc {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 12px;
+  }
+
+  .arrow {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 3px 0;
+  }
+
+  .layer {
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-sizing: border-box;
+  }
+
+  .layer-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .layer-head h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .tag {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    padding: 1px 8px;
+  }
+
+  .layer-desc {
+    font-size: 12.5px;
+    color: #6b7280;
+    margin: 4px 0 8px;
+  }
+
+  .chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    background: #ffffff;
+    border: 0.5px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .note {
+    margin-top: 10px;
+    border: 1px dashed rgba(0, 0, 0, 0.22);
+    border-radius: 12px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.6);
+    box-sizing: border-box;
+  }
+
+  .note-title {
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .note-desc {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 3px;
+  }
+
+  .src {
+    font-size: 11.5px;
+    color: #6b7280;
+    margin-top: 10px;
+  }
+</style>
