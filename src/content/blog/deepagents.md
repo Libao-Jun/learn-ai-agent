@@ -4,3 +4,96 @@ date: 2026-08-17
 description: "基于 LangChain / LangGraph 生态系统构建生产级 AI Agent 的完整指南"
 tags: ["Deep Agents"]
 ---
+
+## 本节导读
+
+<div class="sg-card">
+  <div class="sg-body">
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">🎯</div>
+        <div class="sg-item-label">学习目标</div>
+      </div>
+      <div class="sg-tags">
+        <span class="sg-tag">Deep Agents 介绍</span>
+        <span class="sg-tag">Deep Agents 全景图</span>
+        <span class="sg-tag">Deep Agents、LangChain、LangGraph</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">⏱️</div>
+        <div class="sg-item-label">预计阅读</div>
+      </div>
+      <div class="sg-time">
+        <span class="sg-time-num">30</span>
+        <span class="sg-time-unit">min</span>
+      </div>
+    </div>
+    <div class="sg-item">
+      <div class="sg-item-head">
+        <div class="sg-item-icon">📦</div>
+        <div class="sg-item-label">你将收获</div>
+      </div>
+      <ul class="sg-list">
+        <li>Deep Agents 是什么</li>
+        <li>Deep Agents、LangChain、LangGrapht的关系</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+## 介绍
+
+Deep Agents 是一个 **Agent Harness 框架**，基于 LangChain Core 构建，使用 **LangGraph Runtime** 运行。它在通用的工具调用循环之上，内置了 Task Planning、虚拟文件系统、子智能体、长期记忆与 Human-in-the-loop 等能力，让 Agent 能够可靠处理真实、长流程的任务。
+
+:::danger[Deep Agents]
+Deep Agents 可以理解为一个面向生产环境的高级 Agent 框架（Agent Harness）。
+:::
+
+## Deep Agents 全景图
+
+```txt
+================ Deep Agents ==================
+高级 Agent 框架（开箱即用）—— 在 LangGraph 之上，提供生产级 Agent 所需的完整能力
+1、Planning（任务规划/任务拆解）
+2、FileSystem（文件系统）
+3、Sub Agents（子 Agent）
+4、Memory（记忆管理）
+5、Context Mgmt（上下文压缩）
+6、Human-in-the-Loop（人工审批）
+
+================ LangGraph ==================
+Agent 运行时框架 —— 提供状态管理、工作流编排、持久化等运行时能力
+1、State（状态管理）
+2、WorkFlow（工作流编排）
+3、Node/Edge（节点与边）
+4、Checkpoint（检查点）
+5、Persistencs（持久化存储）
+6、Streaming（流式输出）
+
+================ LangChain ==================
+基础组件库 —— 提供构建 AI应用 和 Agent 的基础模块
+1、Model（模型）
+2、Prompt（提示词）
+3、Tool（工具）
+4、Retriever（检索器）
+5、Output Parser（输出解析器）
+6、Memory（记忆）
+```
+
+:::tip[适用场景]
+- Deep Agents：面向生产的高级 Agent 框架，开箱即用的完整能力，专注于复杂任务的自动化执行与协作。
+- LangGrapha：Agent 的运行时框架，负责工作流执行、状态管理、持久化和可靠性保障。
+- LangChain：AI 应用开发的基础组件库，提供模型、工具、检索等核心能力。
+
+> 深度研究、代码生成、数据分析、内容创作、自动化任务、...。
+:::
+
+## Deep Agents/LangChain/LangGraph
+
+| 框架            | 层级定位   | 核心职责                                                                    | 适用场景                                   |
+| --------------- | ---------- | --------------------------------------------------------------------------- | ------------------------------------------ |
+| **LangChain**   | 基础组件层 | 提供 Model、Prompt、Tool、Retriever等 AI 基础组件                           | 构建单个 Agent / AI 应用的基础能力         |
+| **LangGraph**   | 运行时层   | 提供状态管理、工作流编排、节点与边、持久化能力                              | 需要自定义图结构和执行流程                 |
+| **Deep Agents** | 应用框架层 | 在 LangGraph 之上封装规划、文件系统、子 Agent、记忆、上下文压缩等生产级能力 | 快速构建复杂多步骤 Agent，无需从头设计架构 |
