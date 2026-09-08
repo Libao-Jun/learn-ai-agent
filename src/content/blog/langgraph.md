@@ -53,6 +53,8 @@ LangGraph 是 LangChain 团队推出的 **Agent 编排框架**。它用"图"（G
 
 ## LangGraph 四大核心组件
 
+LangGraph 的四大核心组件/核心概念：State / Node / Edge / Checkpointer。
+
 ### State（状态）
 
 > State 是在节点之间传递的共享数据。
@@ -95,6 +97,24 @@ Checkpointer 在 **每个节点执行后**自动保存完整 State 快照，是�
 > 日常开发只需要 `pip install langgraph`，不需要单独安装子包。
 
 - 5、**验证安装**
+
+## 适用场景决策
+
+:::tip[适合 LangGraph 的场景]
+- 需要多轮循环推理的 Agent（ReAct / Plan-and-Execute）
+- 需要跨请求保持状态的长时任务
+- 需要人工审核介入的高风险操作
+- 需要多个专业 Agent 协作的复杂任务
+- 企业级、需要精确行为控制的生产系统
+
+:::
+
+:::warning[不适合 LangGraph 的场景]
+- 简单的单次问答（过度设计）
+- 纯粹的 RAG 检索（LangChain LCEL 更轻量）
+- 快速原型验证（CrewAI 上手更快）
+
+:::
 
 ## 创建 Agent 步骤
 
